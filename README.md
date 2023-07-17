@@ -1,7 +1,9 @@
-<span style="font-size: 45px; color: skyblue">Zenga Front-End
+# Zenga Front-end  
 
-## Commit Convention
-### 제목
+### Commit Convention
+
+
+#### 제목
 
 `제목`은 다음과 같이 작성합니다.
 
@@ -31,7 +33,7 @@ Feat: 로그인 함수 추가
 - Rename : 파일 및 폴더명 수정
 - Remove : 파일 삭제
 
-### 본문
+#### 본문
 
 `본문` 은 다음과 같이 작성합니다.
 
@@ -45,7 +47,7 @@ Feat: 로그인 함수 추가
 3. 아무리 길어도 괜찮으니, 최대한 상세히 작성
 4. 무엇을, 왜 변경했는지 작성 (코드 자체를 상세히 적는 것은 지양)
 
-### 꼬리말
+#### 꼬리말
 
 `꼬리말`은 다음과 같이 작성합니다.
 
