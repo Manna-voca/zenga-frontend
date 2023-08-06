@@ -8,12 +8,16 @@ interface InputTextProps {
   isNecessary: boolean;
   label: string;
   placeholder: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputText: FC<InputTextProps> = ({
   isNecessary,
   label,
   placeholder,
+  value,
+  onChange,
 }: InputTextProps) => {
   return (
     <div
@@ -51,6 +55,8 @@ const InputText: FC<InputTextProps> = ({
         placeholder={placeholder}
         css={inputTextStyle}
         style={{ ...typography.body2Medium }}
+        value={value}
+        onChange={onChange}
       />
     </div>
   );
@@ -67,6 +73,9 @@ const inputTextStyle = css`
   color: ${color.onSurfaceActive};
   &::placeholder {
     color: ${color.onSurfaceMuted};
+  }
+  &:focus {
+    border-color: ${color.primary500};
   }
 `;
 
