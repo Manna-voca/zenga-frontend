@@ -1,6 +1,6 @@
 export const typography = {
   heading1Semibold: {
-    fontWeight: "500",
+    fontWeight: "600",
     fontSize: "24px",
     lineHeight: "150%",
     letterSpacing: "0px",
