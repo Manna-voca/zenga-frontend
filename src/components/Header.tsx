@@ -26,10 +26,12 @@ const Header = ({type, link = '/login'}: Props) => {
 
     const handleChannelButtonClick = () => {
         setSidebarState(1);
+        document.body.style.overflow = "hidden";
     };
 
     const handleOutsideClick = () => {
         setSidebarState(0);
+        document.body.style.overflow = "unset";
     };
 
     if(type === 'back'){
