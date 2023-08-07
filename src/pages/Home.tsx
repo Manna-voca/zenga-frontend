@@ -62,7 +62,7 @@ const Home = () => {
             )}
 
             {popupState === 3 && (
-                <PopupComplaint></PopupComplaint>
+                <PopupComplaint func={setPopupState}></PopupComplaint>
             )}
 
         </>
