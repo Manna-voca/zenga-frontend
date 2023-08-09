@@ -1,25 +1,56 @@
 import { FC } from "react";
+import channelAdminIcon from "../assets/icons/ic-channelAdmin.svg";
 
 interface CircularImageProps {
   size: string;
   image: string;
   alt?: string;
+  isChannelAdmin?: true;
 }
 
 const CircularImage: FC<CircularImageProps> = ({
   size,
   image,
   alt,
+  isChannelAdmin,
 }: CircularImageProps) => {
+  if (size !== "36" && isChannelAdmin) {
+    console.error("36px 크기의 사진에서만 isChannelAdmin 속성을 제공하세요");
+    return null;
+  }
   return (
-    <img
-      width={size}
-      height={size}
-      src={image}
-      alt={alt}
-      style={{ borderRadius: "500px", cursor: "pointer" }}
-      loading="lazy"
-    />
+    <div
+      style={{
+        width: `${size}`,
+        height: `${size}`,
+        position: "relative",
+      }}
+    >
+      <img
+        width={size}
+        height={size}
+        src={image}
+        alt={alt}
+        style={{
+          borderRadius: "500px",
+          cursor: "pointer",
+          display: "block",
+        }}
+        loading="lazy"
+      ></img>
+      {isChannelAdmin && (
+        <img
+          src={channelAdminIcon}
+          alt="채널장"
+          style={{
+            cursor: "pointer",
+            position: "absolute",
+            right: "0",
+            top: "0",
+          }}
+        />
+      )}
+    </div>
   );
 };
 
