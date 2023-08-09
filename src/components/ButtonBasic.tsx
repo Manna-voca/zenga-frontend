@@ -3,22 +3,36 @@ import { FC } from "react";
 import { color } from "../styles/color";
 
 interface ButtonBasicProps {
-  disable: boolean;
   innerText: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
+  disable?: boolean;
+  btnColor?: "#FDB639" | "#1F94FF" | "FAFAFA";
 }
 
 const ButtonBasic: FC<ButtonBasicProps> = ({
   disable,
   innerText,
   onClick,
+  btnColor,
 }: ButtonBasicProps) => {
+  if (
+    (disable !== undefined && btnColor !== undefined) ||
+    (disable === undefined && btnColor === undefined)
+  ) {
+    console.error("disable, btnColor 중 한 개의 속성을 선택하여 제공하세요");
+    return null;
+  }
+
   return (
     <MyButton
       onClick={onClick}
       disabled={disable}
       style={{
-        backgroundColor: disable ? "" : `${color.primary500}`,
+        backgroundColor: btnColor
+          ? btnColor
+          : disable
+          ? `${color.surface}`
+          : `${color.primary500}`,
         color: disable ? "" : `${color.onPrimaryActive}`,
         cursor: disable ? "" : "pointer",
       }}

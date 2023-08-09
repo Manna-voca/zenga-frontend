@@ -55,7 +55,14 @@ const DatePicker: FC<DatePickerProps> = ({
           height: "21px",
         }}
       >
-        <div>{label}</div>
+        <div
+          style={{
+            ...typography.body2Medium,
+            color: `${color.onSurfaceDefault}`,
+          }}
+        >
+          {label}
+        </div>
         <div
           style={{
             display: isNecessary ? "" : "none",

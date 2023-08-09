@@ -1,24 +1,24 @@
 /** @jsxImportSource @emotion/react */
-import { jsx, css } from "@emotion/react";
+import { css } from "@emotion/react";
 import { FC } from "react";
-import { color } from "../styles/color";
 import { typography } from "../styles/typography";
+import { color } from "../styles/color";
 
-interface InputTextProps {
-  isNecessary: boolean;
+interface TextFieldProps {
   label: string;
   placeholder: string;
+  maxLength?: number;
   value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const InputText: FC<InputTextProps> = ({
-  isNecessary,
+const TextField: FC<TextFieldProps> = ({
   label,
   placeholder,
+  maxLength,
   value,
   onChange,
-}: InputTextProps) => {
+}: TextFieldProps) => {
   return (
     <div
       style={{
@@ -30,53 +30,53 @@ const InputText: FC<InputTextProps> = ({
     >
       <div
         style={{
+          ...typography.body2Medium,
+          color: `${color.onSurfaceDefault}`,
           display: "flex",
-          gap: "2px",
           alignItems: "center",
           height: "21px",
         }}
       >
-        <div
-          style={{
-            ...typography.body2Medium,
-            color: `${color.onSurfaceDefault}`,
-          }}
-        >
-          {label}
-        </div>
-        <div
-          style={{
-            display: isNecessary ? "" : "none",
-            color: `${color.primary500}`,
-            height: "16px",
-            fontSize: "12px",
-            fontWeight: "500",
-            lineHeight: "100%",
-          }}
-        >
-          *
-        </div>
+        <div>{label}</div>
       </div>
-      <input
-        type="text"
+      <textarea
+        css={TextFieldStyle}
         placeholder={placeholder}
-        css={inputTextStyle}
         style={{ ...typography.body2Medium }}
         value={value}
         onChange={onChange}
+        maxLength={maxLength ? maxLength : undefined}
       />
+      {maxLength && (
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            color: `${color.onSurfaceMuted}`,
+            ...typography.body3Regular,
+          }}
+        >
+          {value.length > 100 ? 100 : value.length}/{maxLength}
+        </div>
+      )}
     </div>
   );
 };
 
-const inputTextStyle = css`
+export default TextField;
+
+const TextFieldStyle = css`
   font-family: Pretendard;
   width: 100%;
-  height: 44px;
+  height: 146px;
+  resize: none;
   box-sizing: border-box;
   padding: 10px 16px;
   border: 1px solid ${color.outline};
   border-radius: 8px;
+  background-color: ${color.input};
   color: ${color.onSurfaceActive};
   &::placeholder {
     color: ${color.onSurfaceMuted};
@@ -85,5 +85,3 @@ const inputTextStyle = css`
     border-color: ${color.primary500};
   }
 `;
-
-export default InputText;
