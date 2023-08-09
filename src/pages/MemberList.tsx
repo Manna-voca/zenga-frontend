@@ -45,7 +45,7 @@ export default function MemberList() {
   return (
     <>
       <Header type="common"></Header>
-      <div style={{ padding: "0 20px" }}>
+      <div style={{ padding: "0 20px", margin: "8px 0 4px 0" }}>
         <SearchWrapper>
           <img
             onClick={() => callSearchApi(searchWord)}
@@ -66,13 +66,18 @@ export default function MemberList() {
           style={{
             ...typography.caption1Medium,
             color: `${color.onSurfaceMuted}`,
-            marginBottom: "4px",
+            height: "12px",
           }}
         >
           멤버 {memberDummy.length}
         </div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {memberDummy.map((item) => {
           return (
             <MemberWrapper
@@ -98,7 +103,7 @@ const SearchWrapper = styled.div`
   gap: 8px;
   background-color: ${color.outline};
   border-radius: 8px;
-  margin: 8px 0 12px 0;
+  margin-bottom: 12px;
 `;
 
 const SearchInput = styled.input`
