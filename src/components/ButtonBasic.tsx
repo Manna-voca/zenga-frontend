@@ -15,8 +15,11 @@ const ButtonBasic: FC<ButtonBasicProps> = ({
   onClick,
   btnColor,
 }: ButtonBasicProps) => {
-  if (disable !== undefined && btnColor !== undefined) {
-    console.error("disable 속성이 필요없는 버튼에서만 btnColor를 입력하세요");
+  if (
+    (disable !== undefined && btnColor !== undefined) ||
+    (disable === undefined && btnColor === undefined)
+  ) {
+    console.error("disable, btnColor 중 한 개의 속성을 선택하여 제공하세요");
     return null;
   }
 
@@ -25,8 +28,8 @@ const ButtonBasic: FC<ButtonBasicProps> = ({
       onClick={onClick}
       disabled={disable}
       style={{
-        backgroundColor: 
-        btnColor ? btnColor
+        backgroundColor: btnColor
+          ? btnColor
           : disable
           ? `${color.surface}`
           : `${color.primary500}`,
