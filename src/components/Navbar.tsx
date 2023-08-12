@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as ComplimentImg } from "../images/compliment.svg";
 import { ReactComponent as GatheringImg } from "../images/gathering.svg";
 import { ReactComponent as MemberImg } from "../images/member.svg";
@@ -11,12 +12,14 @@ interface Props {
 };
 
 const Navbar = ({state = 1}: Props) => {
+    const navigate = useNavigate();
 
     // navbar의 순서대로 1, 2, 3, 4라는 숫자 부여
     const [check, setCheck] = useState<number>(state);
 
     const handleComplimentImgClick = () => {
         setCheck(1);
+        navigate('/home');
     };
 
     const handleGatheringImgClick = () => {
@@ -25,6 +28,7 @@ const Navbar = ({state = 1}: Props) => {
 
     const handleMemberImgClick = () => {
         setCheck(3);
+        navigate('/member-list');
     };
 
     const handleMyImgClick = () => {
@@ -35,7 +39,8 @@ const Navbar = ({state = 1}: Props) => {
         <>
             <div style={{ padding: '0 20px 0 20px', height: '49px',
                         borderTop: '0.5px solid var(--surface-outline, rgba(10, 10, 10, 0.10))',
-                        position: 'sticky', bottom: '0px', backgroundColor: 'white',
+                        backgroundColor: 'white', width: "100%", maxWidth: "500px",
+                        position: 'fixed', boxSizing: "border-box", bottom: '0px',
                         display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between'
             }}>
                 <div
