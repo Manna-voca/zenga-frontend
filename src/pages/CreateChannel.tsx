@@ -3,36 +3,33 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { ReactComponent as WhaleImg } from "../images/subtract.svg";
+import ButtonBasic from "../components/ButtonBasic";
 
 const CreateChannel = () => {
     const navigate = useNavigate();
 
-    // 채널 유형에 따라 새 채널이면 1, 기존 채널이면 2
-    const [check, setCheck] = useState<number>(0);
+    // 채널 유형에 따른 상태
+    const [isNew, setIsNew] = useState<boolean>();
+
+    let checkBtnDisable = true;
 
     const handleCreateNewChannel = () => {
-        if(check === 1){
-            setCheck(0);
-        }
-        else{
-            setCheck(1);
+        if(isNew !== true){
+            setIsNew(true);
         }
     };
 
     const handleEnterChannel = () => {
-        if(check === 2){
-            setCheck(0);
-        }
-        else{
-            setCheck(2);
+        if(isNew !== false){
+            setIsNew(false);
         }
     };
 
     const handleConfirmButtonClick = () => {
-        if(check === 1){
+        if(isNew === true){
             navigate('/createchannel/newonboarding');
         }
-        else if(check === 2){
+        else if(isNew === false){
             navigate('/createchannel/oldonboarding');
         }
          
@@ -57,8 +54,8 @@ const CreateChannel = () => {
                 onClick={handleCreateNewChannel}
                 style={{ margin: '0 20px 0 20px', borderRadius: '8px',
                         height: '100px', cursor: 'pointer',
-                        border: check === 1 ? '1px solid var(--surface-outline, #1F94FF' : '1px solid var(--surface-outline, rgba(10, 10, 10, 0.10))',
-                        backgroundColor: check === 1 ? '#E3F2FF' : '#FAFAFA', 
+                        border: isNew === true ? '1px solid var(--surface-outline, #1F94FF' : '1px solid var(--surface-outline, rgba(10, 10, 10, 0.10))',
+                        backgroundColor: isNew === true ? '#E3F2FF' : '#FAFAFA', 
                         display: 'flex', alignItems: 'center'
             }}>
                 <div style={{ marginLeft: '24px' }}>
@@ -76,8 +73,8 @@ const CreateChannel = () => {
                 onClick={handleEnterChannel}
                 style={{ margin: '0 20px 0 20px', borderRadius: '8px',
                         height: '100px', cursor: 'pointer',
-                        border: check === 2 ? '1px solid var(--surface-outline, #1F94FF' : '1px solid var(--surface-outline, rgba(10, 10, 10, 0.10)',
-                        backgroundColor: check === 2 ? '#E3F2FF' : '#FAFAFA',
+                        border: isNew === false ? '1px solid var(--surface-outline, #FEC33E' : '1px solid var(--surface-outline, rgba(10, 10, 10, 0.10)',
+                        backgroundColor: isNew === false ? '#FFF8E4' : '#FAFAFA',
                         display: 'flex', alignItems: 'center'
             }}>
                 <div style={{ marginLeft: '24px' }}>
@@ -92,10 +89,13 @@ const CreateChannel = () => {
             </div>
             <div style={{ height: '248px' }}></div>
             <div
-                onClick={handleConfirmButtonClick} 
                 style={{ margin: '0 20px 0 20px'
             }}>
-                석민이형 버튼
+                <ButtonBasic
+                innerText="확인"
+                onClick={handleConfirmButtonClick}
+                disable={isNew === undefined}
+                ></ButtonBasic>
             </div>
         </>
     );
