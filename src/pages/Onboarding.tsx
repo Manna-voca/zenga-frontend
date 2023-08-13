@@ -1,8 +1,5 @@
-/** @jsxImportSource @emotion/react */
-import { jsx, css } from "@emotion/react";
 import react, { useState } from "react";
 
-import icBack from "../assets/icons/ic-back.svg";
 import { typography } from "../styles/typography";
 import { color } from "../styles/color";
 import InputText from "../components/InputText";
@@ -11,13 +8,6 @@ import DatePicker from "../components/DatePicker";
 import ButtonBasic from "../components/ButtonBasic";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-
-const backNavigationBarStyle = css`
-  display: flex;
-  padding-left: 16px;
-  align-items: center;
-  height: 40px;
-`;
 
 export default function Onboarding() {
   const navigate = useNavigate();
