@@ -44,7 +44,7 @@ export default function MemberList() {
 
   return (
     <>
-      <Header type="common"></Header>
+      <Header type="common" isChannelAdmin={false}></Header>
       <div style={{ padding: "0 20px", margin: "8px 0 4px 0" }}>
         <SearchWrapper>
           <img
