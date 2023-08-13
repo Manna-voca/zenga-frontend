@@ -3,6 +3,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from '../components/Header';
 import { ReactComponent as CameraImg } from "../images/camera.svg";
+import InputText from '../components/InputText';
+import ButtonBasic from '../components/ButtonBasic';
+import TextField from '../components/TextField';
+import BtnInfoDuplicate from '../components/BtnInfoDuplicate';
 
 // 기존 뒤로가기 기능과 상단의 버튼을 통해 뒤로가기에 대해 이전 단계로 돌아가도록 추후 구현
 
@@ -10,6 +14,18 @@ const NewChannelOnboarding = () => {
     const navigate = useNavigate();
 
     const [step, setStep] = useState<number>(1);
+    const [clubname, setClubname] = useState<string>("");
+    const [nickname, setNickname] = useState<string>("");
+    const [intro, setIntro] = useState<string>("");
+    const handleClubnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setClubname(event.target.value);
+    };
+    const handleNicknameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNickname(event.target.value);
+    };
+    const handleIntroChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setIntro(event.target.value);
+    };
 
     const handleNextButtonClick = () => {
         console.log(step);
@@ -77,14 +93,31 @@ const NewChannelOnboarding = () => {
                         <CameraImg />
                     </div>
                     <div style={{ height: '40px' }}></div>
-                    <div style={{ height: '103px' }}>
-                        링크 - 석민이형의 inputText 변형 후 추가 예정
-                    </div>
-                    <div style={{ height: '30px' }}></div>
-                    <div style={{ height: '103px' }}>
-                        코드 - 석민이형의 inputText 변형 후 추가 예정2
+                    <div
+                        style={{ margin: '0 20px 0 20px'
+                    }}>
+                        <BtnInfoDuplicate
+                            label='링크'
+                            text='www.zenga/kusitms4834'
+                            message='링크를 누르면 생성한 채널로 들어갈 수 있어요.'
+                        ></BtnInfoDuplicate>
+                        <div style={{ height: '30px' }}></div>
+                        <BtnInfoDuplicate
+                            label='코드'
+                            text='ad3f78e1'
+                            message='코드를 입력하면 생성한 채널로 들어갈 수 있어요.'
+                        ></BtnInfoDuplicate>
                     </div>
                     <div style={{ height: '109px' }}></div>
+                    <div
+                        style={{ margin: '0 20px 0 20px'
+                    }}>
+                        <ButtonBasic
+                            innerText='확인'
+                            onClick={() => navigate('/home')}
+                            disable={false}
+                        ></ButtonBasic>
+                    </div>
                 </>
             )}
 
@@ -100,35 +133,67 @@ const NewChannelOnboarding = () => {
                         <CameraImg />
                     </div>
                     <div style={{ height: '40px' }}></div>
-                    <div style={{ height: '69px' }}>
-                        동아리명 - 석민이형 inputText
+                    <div
+                        style={{ margin: '0 20px 0 20px'
+                    }}>
+                        <InputText
+                            isNecessary={true}
+                            label='동아리명'
+                            placeholder='이름을 입력해 주세요.'
+                            value={clubname}
+                            onChange={handleClubnameChange}
+                        />
                     </div>
                     <div style={{ height: '281px' }}></div>
+                    <div
+                        style={{ margin: '0 20px 0 20px'
+                    }}>
+                        <ButtonBasic
+                            innerText='다음'
+                            onClick={handleNextButtonClick}
+                            disable={clubname === ""}
+                        ></ButtonBasic>
+                    </div>
                 </>
             )}
 
             {step === 2 && (
                 <>
-                    <div style={{ height: '69px' }}>
-                        방장 닉네임 - 석민이형 inputText
+                    <div
+                        style={{ margin: '0 20px 0 20px'
+                    }}>
+                        <InputText
+                            isNecessary={true}
+                            label='방장 닉네임(본인)'
+                            placeholder='닉네임을 입력해 주세요.'
+                            value={nickname}
+                            onChange={handleNicknameChange}
+                        />
                     </div>
                     <div style={{ height: '32px' }}></div>
-                    <div style={{ height: '205px' }}>
-                        한줄 소개 - 석민이형 textArea
+                    <div
+                        style={{ margin: '0 20px 0 20px'
+                    }}>
+                        <TextField
+                            label="한줄 소개"
+                            placeholder="나를 한줄로 소개해 보세요."
+                            value={intro}
+                            onChange={handleIntroChange}
+                            maxLength={100}
+                        />
                     </div>
                     <div style={{ height: '182px' }}></div>
+                    <div
+                        style={{ margin: '0 20px 0 20px'
+                    }}>
+                        <ButtonBasic
+                            innerText='확인'
+                            onClick={handleNextButtonClick}
+                            disable={nickname === ""}
+                        ></ButtonBasic>
+                    </div>
                 </>
             )}
-
-            <div
-                onClick={handleNextButtonClick}
-                style={{ margin: '0 20px 0 20px'
-            }}>
-                석민이형 버튼
-            </div>
-
-            
-            
         </>
     );
 }

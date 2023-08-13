@@ -81,6 +81,8 @@ const PopupComplaint = ({func}: Props) => {
                         <span>www.instagram.com/moa_zzi/</span>
                     </div>
                     <DuplicateImg
+                        fill="#0A0A0A"
+                        fillOpacity={0.7}
                         onClick={handleDuplicateImgClick}
                         style={{ marginRight: '16px', cursor: 'pointer' }}
                     />
