@@ -10,6 +10,7 @@ import DropDown from "../components/DropDown";
 import DatePicker from "../components/DatePicker";
 import ButtonBasic from "../components/ButtonBasic";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 const backNavigationBarStyle = css`
   display: flex;
@@ -34,10 +35,8 @@ export default function Onboarding() {
 
   return (
     <>
-      <div css={backNavigationBarStyle}>
-        <img /* onClick={ 뒤로가기 } */ src={icBack} alt="뒤로가기" />
-      </div>
-      <div style={{ padding: "0 20px" }}>
+      <Header type="back" />
+      <div style={{ padding: "0 20px", marginTop: "16px" }}>
         <h1
           style={{
             ...typography.heading1Semibold,
@@ -47,7 +46,7 @@ export default function Onboarding() {
             flexDirection: "column",
             flexShrink: "0",
             justifyContent: "center",
-            marginTop: "16px",
+
             marginBottom: "40px",
           }}
         >
