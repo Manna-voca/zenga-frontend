@@ -47,7 +47,7 @@ const Header = ({type, text, isChannelAdmin}: Props) => {
 
     if(type === 'back' || type === 'out'){
         return(
-            <div style={{ height: '44px', margin: '0 16px 0 16px',
+            <div style={{ height: '44px', margin: '0 16px 0 16px', zIndex: '1',
                         position: 'sticky', top: '0px', backgroundColor: 'white',
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
@@ -78,7 +78,7 @@ const Header = ({type, text, isChannelAdmin}: Props) => {
             <>
                 <div style={{ height: '44px', padding: '0 20px 0 16px',
                             alignItems: 'center', display: 'flex',
-                            justifyContent: 'space-between',
+                            justifyContent: 'space-between', zIndex: '1',
                             position: 'sticky', top: '0px', backgroundColor: 'white'
                 }}>
                     <div 
