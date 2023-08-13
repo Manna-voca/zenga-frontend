@@ -49,7 +49,7 @@ const Header = ({type, text, isChannelAdmin}: Props) => {
         return(
             <div style={{ height: '44px', margin: '0 16px 0 16px',
                         position: 'sticky', top: '0px', backgroundColor: 'white',
-                        display: 'flex', alignItems: 'center'
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
                 <div 
                     onClick={handleBackButtonClick}
