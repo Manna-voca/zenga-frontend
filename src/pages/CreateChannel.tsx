@@ -37,7 +37,7 @@ const CreateChannel = () => {
 
     return(
         <>
-            <Header type='back' link = {'/'} ></Header>
+            <Header type='back' ></Header>
             <div style={{ height: '16px' }}></div>
             <div
                 style={{ width: '274px', height: '59px',

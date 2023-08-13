@@ -37,9 +37,9 @@ const OldChannelOnboarding = () => {
     return(
         <>
             {step === 1 || step === 2 ? (
-                <Header type='back' link = {'/createchannel'}></Header>
+                <Header type='back'></Header>
             ) : (
-                <Header></Header>
+                <div></div>
             )}
             <div style={{ height: '16px' }}></div>
             

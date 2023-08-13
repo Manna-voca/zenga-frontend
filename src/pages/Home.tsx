@@ -24,7 +24,7 @@ const Home = () => {
 
     return(
         <>
-            <Header type='common'></Header>
+            <Header type='common' isChannelAdmin={true}></Header>
             <div style={{ height: '20px' }}></div>
             <div
                 onClick={handlePopup1Click}
