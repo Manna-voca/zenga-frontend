@@ -9,6 +9,7 @@ import Onboarding from "./pages/Onboarding";
 import ChannelHome from "./pages/ChannelHome";
 import MemberList from "./pages/MemberList";
 import Notification from "./pages/Notification";
+import CreateMeetup from "./pages/CreateMeetup";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="/home" element={<Home />}></Route>
       <Route path="/member-list" element={<MemberList />}></Route>
       <Route path="/notification" element={<Notification />}></Route>
+      <Route path="/create-meetup" element={<CreateMeetup />}></Route>
     </Routes>
   );
 }
