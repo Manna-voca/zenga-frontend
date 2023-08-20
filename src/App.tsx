@@ -24,6 +24,7 @@ function App() {
       <Route path="/member-list" element={<MemberList />}></Route>
       <Route path="/notification" element={<Notification />}></Route>
       <Route path="/create-meetup" element={<CreateMeetup />}></Route>
+      <Route path="/edit-meetup/:meetupId" element={<CreateMeetup />}></Route>
     </Routes>
   );
 }
