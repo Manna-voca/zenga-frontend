@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { jsx, css } from "@emotion/react";
+import { css } from "@emotion/react";
 import React, { useState, useCallback } from "react";
 import Header from "../components/Header";
 import InputText from "../components/InputText";
@@ -12,8 +12,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import styled from "@emotion/styled";
 import downArrowActiveIcon from "../assets/icons/ic-downArrowActive.svg";
 import downArrowMutedIcon from "../assets/icons/ic-downArrowMuted.svg";
-import cameraIcon from "../assets/icons/ic-camera.svg";
-import ImagePreview from "../components/ImagePreview";
 import MeetupImageEditor from "../components/MeetupImageEditor";
 import ButtonBasic from "../components/ButtonBasic";
 
