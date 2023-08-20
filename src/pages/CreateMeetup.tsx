@@ -67,6 +67,7 @@ const CreateMeetup = () => {
     if (files.length > 0) {
       setAttachment({ file: files[0] });
     }
+    event.target.value = "";
   };
 
   const handleImageDelete = useCallback(() => {
@@ -111,7 +112,7 @@ const CreateMeetup = () => {
           onChange={handleDateChange}
           showTimeSelect
           timeFormat="HH:mm"
-          timeIntervals={15}
+          timeIntervals={30}
           dateFormat="MMMM d일 (E) HH:mm"
           onFocus={(e) => e.target.blur()}
           timeCaption="시간"
@@ -214,7 +215,7 @@ const CreateMeetup = () => {
           maxWidth: "100%",
           marginTop: "48px",
           padding: "8px 0",
-          boxShadow: "0px -1px 2px 0px rgba(0, 0, 0, 0.10)",
+          boxShadow: "0px -1px 4px 0px rgba(0, 0, 0, 0.10)",
           background: `${color.background}`,
         }}
       >
