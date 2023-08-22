@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { jsx, css } from "@emotion/react";
 import React, { useState, useCallback } from "react";
 import Header from "../components/Header";
 import InputText from "../components/InputText";
@@ -27,15 +27,16 @@ interface Attachment {
   file: File;
 }
 
+// api로 받아와야함
 const initialMeetupInfo: MeetupInfoProps = {
-  title: "",
-  date: null,
-  place: "",
-  content: "",
-  personNum: "",
+  title: "우하하하",
+  date: new Date(),
+  place: undefined,
+  content: "석방 파티 올사람",
+  personNum: "6",
 };
 
-const CreateMeetup = () => {
+const EditMeetup = () => {
   const [meetupInfo, setMeetupInfo] =
     useState<MeetupInfoProps>(initialMeetupInfo);
 
@@ -71,10 +72,9 @@ const CreateMeetup = () => {
   const handleImageDelete = useCallback(() => {
     setAttachment(null);
   }, []);
-
   return (
     <>
-      <Header type="out" text="모임 만들기" />
+      <Header type="out" text="모임 내용 수정" />
       <div style={{ padding: "0 20px" }}>
         <div style={{ height: "28px" }} />
         {/* 모임 제목 ----------------------------------- start */}
@@ -281,4 +281,4 @@ const undefinedButtonStyle = css`
   border: 1px solid ${color.outline};
 `;
 
-export default CreateMeetup;
+export default EditMeetup;
