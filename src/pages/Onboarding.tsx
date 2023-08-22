@@ -1,8 +1,5 @@
-/** @jsxImportSource @emotion/react */
-import { jsx, css } from "@emotion/react";
 import react, { useState } from "react";
 
-import icBack from "../assets/icons/ic-back.svg";
 import { typography } from "../styles/typography";
 import { color } from "../styles/color";
 import InputText from "../components/InputText";
@@ -10,13 +7,7 @@ import DropDown from "../components/DropDown";
 import DatePicker from "../components/DatePicker";
 import ButtonBasic from "../components/ButtonBasic";
 import { useNavigate } from "react-router-dom";
-
-const backNavigationBarStyle = css`
-  display: flex;
-  padding-left: 16px;
-  align-items: center;
-  height: 40px;
-`;
+import Header from "../components/Header";
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -34,10 +25,8 @@ export default function Onboarding() {
 
   return (
     <>
-      <div css={backNavigationBarStyle}>
-        <img /* onClick={ 뒤로가기 } */ src={icBack} alt="뒤로가기" />
-      </div>
-      <div style={{ padding: "0 20px" }}>
+      <Header type="back" />
+      <div style={{ padding: "0 20px", marginTop: "16px" }}>
         <h1
           style={{
             ...typography.heading1Semibold,
@@ -47,7 +36,7 @@ export default function Onboarding() {
             flexDirection: "column",
             flexShrink: "0",
             justifyContent: "center",
-            marginTop: "16px",
+
             marginBottom: "40px",
           }}
         >

@@ -6,7 +6,7 @@ interface ButtonBasicProps {
   innerText: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   disable?: boolean;
-  btnColor?: "#FDB639" | "#1F94FF" | "FAFAFA";
+  btnColor?: "#FDB639" | "#1F94FF";
 }
 
 const ButtonBasic: FC<ButtonBasicProps> = ({

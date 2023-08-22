@@ -78,9 +78,10 @@ export default function MemberList() {
           flexDirection: "column",
         }}
       >
-        {memberDummy.map((item) => {
+        {memberDummy.map((item, index) => {
           return (
             <MemberWrapper
+              key={index}
               name={item.name}
               image={item.image}
               isChannelAdmin={item.isChannelAdmin}
