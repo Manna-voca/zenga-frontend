@@ -24,6 +24,7 @@ const Navbar = ({state = 1}: Props) => {
 
     const handleGatheringImgClick = () => {
         setCheck(2);
+        navigate('/meetup-home');
     };
 
     const handleMemberImgClick = () => {
