@@ -11,6 +11,7 @@ import MemberList from "./pages/MemberList";
 import Notification from "./pages/Notification";
 import CreateMeetup from "./pages/CreateMeetup";
 import EditMeetup from "./pages/EditMeetup";
+import ModifyChannelInfo from "./pages/ModifyChannelInfo";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/notification" element={<Notification />}></Route>
       <Route path="/create-meetup" element={<CreateMeetup />}></Route>
       <Route path="/edit-meetup/:meetupId" element={<EditMeetup />}></Route>
+      <Route path="/modify-channel-info" element={<ModifyChannelInfo />}></Route>
     </Routes>
   );
 }
