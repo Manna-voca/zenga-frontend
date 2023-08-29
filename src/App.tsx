@@ -13,6 +13,7 @@ import CreateMeetup from "./pages/CreateMeetup";
 import EditMeetup from "./pages/EditMeetup";
 import ModifyChannelInfo from "./pages/ModifyChannelInfo";
 import MeetupHome from "./pages/MeetupHome";
+import Comment from "./components/Comment";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <Route path="/edit-meetup/:meetupId" element={<EditMeetup />}></Route>
       <Route path="/modify-channel-info" element={<ModifyChannelInfo />}></Route>
       <Route path="/meetup-home" element={<MeetupHome />}></Route>
+      <Route path="/comment" element={<Comment />}></Route>
     </Routes>
   );
 }
