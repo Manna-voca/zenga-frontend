@@ -13,7 +13,7 @@ import CreateMeetup from "./pages/CreateMeetup";
 import EditMeetup from "./pages/EditMeetup";
 import ModifyChannelInfo from "./pages/ModifyChannelInfo";
 import MeetupHome from "./pages/MeetupHome";
-import Comment from "./components/Comment";
+import Comment from "./pages/Comment";
 
 function App() {
   return (
