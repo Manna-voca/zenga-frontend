@@ -21,6 +21,8 @@ import UserProfile from "./pages/UserProfile";
 import MyMeetup from "./pages/MyMeetup";
 import ModifyProfileInfo from "./pages/ModifyProfileInfo";
 import PointDetail from "./pages/PointDetail";
+import Comment from "./pages/Comment";
+
 
 function App() {
   return (
@@ -46,6 +48,7 @@ function App() {
       <Route path="/meetup-my" element={<MyMeetup />}></Route>
       <Route path="/modify-profile-info" element={<ModifyProfileInfo />}></Route>
       <Route path="/point" element={<PointDetail />}></Route>
+      <Route path="/comment" element={<Comment />}></Route>
     </Routes>
   );
 }

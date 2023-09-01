@@ -53,10 +53,11 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
         document.body.style.overflow = "hidden";
     };
 
-    const handleOutsideClick = () => {
-        setSidebarState(0);
-        document.body.style.overflow = "unset";
-    };
+
+  const handleOutsideClick = () => {
+    setSidebarState(0);
+    document.body.style.overflow = "unset";
+  };
 
     const handleParticipantImgClick = () =>{
         func();

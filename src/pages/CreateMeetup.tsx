@@ -125,7 +125,10 @@ const CreateMeetup = () => {
               meetupInfo.date === undefined ? `${color.primary500}` : "",
             color:
               meetupInfo.date === undefined ? `${color.onPrimaryActive}` : "",
-            border: meetupInfo.date === undefined ? "none" : "",
+            border:
+              meetupInfo.date === undefined
+                ? `1px solid ${color.primary500}`
+                : "",
           }}
           css={undefinedButtonStyle}
           onClick={() => setDateUndefined()}
@@ -152,7 +155,10 @@ const CreateMeetup = () => {
               meetupInfo.place === undefined ? `${color.primary500}` : "",
             color:
               meetupInfo.place === undefined ? `${color.onPrimaryActive}` : "",
-            border: meetupInfo.place === undefined ? "none" : "",
+            border:
+              meetupInfo.place === undefined
+                ? `1px solid ${color.primary500}`
+                : "",
           }}
           css={undefinedButtonStyle}
           onClick={() => setPlaceUndefined()}
