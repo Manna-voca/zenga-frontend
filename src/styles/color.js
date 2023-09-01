@@ -20,7 +20,7 @@ export const color = {
   secondary300: "#FFD663",
   secondary200: "#FFE18E",
   secondary100: "#FFEcb9",
-  secondary50: "#E3F2FF",
+  secondary50: "#FFF8E4",
   onPrimary: "rgba(252, 252, 252, 1)",
   onPrimaryActive: "rgba(252, 252, 252, 1)",
   onPrimaryDefault: "rgba(252, 252, 252, 0.7)",
