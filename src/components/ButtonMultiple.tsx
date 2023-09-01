@@ -13,7 +13,6 @@ const ButtonMultiple = ({ textList, onClickList, closeHandler }: OwnProps) => {
   return (
     <>
       <div
-        onClick={closeHandler}
         style={{
           position: "fixed",
           top: "0",

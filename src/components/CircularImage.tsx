@@ -35,10 +35,8 @@ const CircularImage: FC<CircularImageProps> = ({
         alt={alt}
         style={{
           borderRadius: "500px",
-          cursor: "pointer",
           display: "block",
         }}
-        loading="lazy"
       ></img>
       {isChannelAdmin && (
         <img

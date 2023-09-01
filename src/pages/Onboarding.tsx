@@ -68,7 +68,7 @@ export default function Onboarding() {
             value={gender}
           />
           <DatePicker
-            isNecessary={true}
+            isNecessary={false}
             label="생년월일"
             placeholder="생년월일을 선택해 주세요."
             value={birthDate}
