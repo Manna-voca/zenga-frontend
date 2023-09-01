@@ -1,11 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import Header from "../components/Header";
-import CircularImage from "../components/CircularImage";
-import cameraImg from "../images/camera.svg";
 import InputText from "../components/InputText";
 import BtnInfoDuplicate from "../components/BtnInfoDuplicate";
 import ButtonBasic from "../components/ButtonBasic";
+import InputProfile from "../components/InputProfile";
 
 const ModifyChannelInfo = () => {
 
@@ -22,6 +21,22 @@ const ModifyChannelInfo = () => {
         alert("채널 수정!!!");
     };
 
+    const [channelProfileImage, setChannelProfileImage] = useState<string | ArrayBuffer | null>();
+    const [channelImageFile, setChannelImageFile] = useState<File | null>();
+
+    const handleChannelProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(event.target.files || []);
+        if(files.length > 0){
+            setChannelImageFile(files[0]);
+            const reader = new FileReader();
+            reader.readAsDataURL(files[0]);
+            reader.onloadend = () => {
+                setChannelProfileImage(reader.result);
+            };
+        }
+        event.target.value = "";
+    };
+
     return(
         <>
             <Header type="back" text="채널 정보 수정"></Header>
@@ -30,11 +45,10 @@ const ModifyChannelInfo = () => {
                 style={{ display: 'flex', alignItems: 'center',
                         justifyContent: 'center', height: '98px'
             }}>
-                <CircularImage
-                    size="98"
-                    image={cameraImg}
-                    alt="image"
-                />
+                <InputProfile
+                    image={channelProfileImage}
+                    handleProfileImageUpload={handleChannelProfileImageUpload}
+                ></InputProfile>
             </div>
             <div style={{ height: '30px' }}></div>
             <div

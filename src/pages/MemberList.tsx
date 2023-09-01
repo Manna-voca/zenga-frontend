@@ -89,6 +89,7 @@ export default function MemberList() {
           );
         })}
       </div>
+      <div style={{ height: '57px' }}></div>
       <Navbar state={3}></Navbar>
     </>
   );

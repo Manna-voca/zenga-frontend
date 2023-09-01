@@ -51,6 +51,8 @@ const Home = () => {
                         borderRadius: '16px',
                         background: 'linear-gradient(135deg, #2A99FF 0%, #ABD7FF 100%)'
             }}></div>
+            <div style={{ height: '44px' }}></div>
+            <div style={{ height: '57px' }}></div>
             <Navbar></Navbar>
 
             {popupState === 1 && (
