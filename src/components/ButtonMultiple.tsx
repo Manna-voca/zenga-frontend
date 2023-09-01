@@ -42,11 +42,13 @@ const ButtonMultiple = ({ textList, onClickList, closeHandler }: OwnProps) => {
         {textList.map((item, index) => {
           return (
             <button
+              key={index}
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 height: "47px",
+                cursor: "pointer",
                 color: `${color.onSurfaceDefault}`,
                 backgroundColor: `${color.surface}`,
                 ...typography.body1Medium,
