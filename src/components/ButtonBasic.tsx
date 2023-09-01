@@ -33,7 +33,7 @@ const ButtonBasic: FC<ButtonBasicProps> = ({
           : disable
           ? `${color.surface}`
           : `${color.primary500}`,
-        color: disable ? "" : `${color.onPrimaryActive}`,
+        color: disable ? "" : btnColor === 'FAFAFA' ? `${color.onSurfaceDefault}` : `${color.onPrimaryActive}`,
         cursor: disable ? "" : "pointer",
       }}
     >

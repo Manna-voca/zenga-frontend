@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { ReactComponent as WhaleImg } from "../images/subtract.svg";
 import ButtonBasic from "../components/ButtonBasic";
+import { color } from "../styles/color";
 
 const CreateChannel = () => {
     const navigate = useNavigate();
@@ -89,13 +90,18 @@ const CreateChannel = () => {
             </div>
             <div style={{ height: '248px' }}></div>
             <div
-                style={{ margin: '0 20px 0 20px'
+                style={{ margin: '0', background: `${color.background}`,
+                        position: 'fixed', bottom: '0', maxWidth: '500px',
+                        width: '100%', display: 'flex', justifyContent: 'center',
+                        height: '47px', padding: '8px 0'
             }}>
-                <ButtonBasic
-                innerText="확인"
-                onClick={handleConfirmButtonClick}
-                disable={isNew === undefined}
-                ></ButtonBasic>
+                <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
+                    <ButtonBasic
+                        innerText="확인"
+                        onClick={handleConfirmButtonClick}
+                        disable={isNew === undefined}
+                    ></ButtonBasic>
+                </div>
             </div>
         </>
     );

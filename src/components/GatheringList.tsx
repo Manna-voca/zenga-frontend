@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as ClockImg } from "../images/clock.svg";
 import { ReactComponent as LocationImg } from "../images/location.svg";
 import { ReactComponent as PeopleImg } from "../images/people.svg"
@@ -8,6 +9,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import CircularImage from "./CircularImage";
 
 interface Props {
+    meetupId? : number;
     title : string;
     image? : string;
     date : Date | null;
@@ -18,16 +20,22 @@ interface Props {
     maxNum: number;
 };
 
-const GatheringList = ({title, image, date = null,
+const GatheringList = ({meetupId = 1, title, image, date = null,
     location = null, userImg, userName, currentNum, maxNum}: Props) => {
     
+    const navigate = useNavigate();
     dayjs.extend(relativeTime);
     dayjs.locale('ko');
     const meetingAt = dayjs(date);
     
+    const handleListClick = () => {
+        navigate(`/meetup-detail/${meetupId}`)
+    };
+
     return(
         <>
             <div
+                onClick={handleListClick}
                 style={{ height: '72px', display: 'flex', cursor: 'pointer',
                         justifyContent: 'space-between', borderRadius: '8px',
                         background: 'var(--surface-surface, #FAFAFA)'
@@ -59,14 +67,14 @@ const GatheringList = ({title, image, date = null,
                             style={{ display: 'flex', alignItems: 'center',
                                     gap: '4px'
                         }}>
-                            <ClockImg />
+                            <ClockImg width={12} height={12}/>
                             <span>{date === null ? '날짜 미정' : meetingAt.format('M월 D일(ddd) HH:mm')}</span>
                         </div>
                         <div
                             style={{ display: 'flex', alignItems: 'center',
                                     gap: '4px'
                         }}>
-                            <LocationImg />
+                            <LocationImg width={12} height={12}/>
                             <span>{location === null ? '장소 미정' : location}</span>
                         </div>
                     </div>
@@ -86,7 +94,7 @@ const GatheringList = ({title, image, date = null,
                             style={{ display: 'flex', alignItems: 'center',
                                     gap: '4px', fontWeight: '400'
                         }}>
-                            <PeopleImg />
+                            <PeopleImg width={12} height={12}/>
                             <span>{currentNum}/{maxNum}</span>
                         </div>
                     </div>

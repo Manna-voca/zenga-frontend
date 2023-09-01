@@ -19,26 +19,27 @@ const Navbar = ({state = 1}: Props) => {
 
     const handleComplimentImgClick = () => {
         setCheck(1);
-        navigate('/home');
+        navigate('/home', {replace: true});
     };
 
     const handleGatheringImgClick = () => {
         setCheck(2);
-        navigate('/meetup-home');
+        navigate('/meetup-home', {replace: true});
     };
 
     const handleMemberImgClick = () => {
         setCheck(3);
-        navigate('/member-list');
+        navigate('/member-list', {replace: true});
     };
 
     const handleMyImgClick = () => {
         setCheck(4);
+        navigate('/mypage', {replace: true});
     };
 
     return(
         <>
-            <div style={{ padding: '0 20px 0 20px', height: '49px',
+            <div style={{ padding: '5px 20px 8px 20px', height: '57px',
                         borderTop: '0.5px solid var(--surface-outline, rgba(10, 10, 10, 0.10))',
                         backgroundColor: 'white', width: "100%", maxWidth: "500px",
                         position: 'fixed', boxSizing: "border-box", bottom: '0px',

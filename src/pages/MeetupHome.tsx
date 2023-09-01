@@ -137,7 +137,7 @@ const MeetupHome = () => {
                     currentNum={1}
                     maxNum={4}
                 ></GatheringList>
-                <div style={{ height: '49px' }}></div>
+                <div style={{ height: '57px' }}></div>
             </div>
             <div
                 style={{ height: '60px', width: '60px', borderRadius: '30px',

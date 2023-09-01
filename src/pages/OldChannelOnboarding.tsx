@@ -1,11 +1,14 @@
 import React from 'react';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import CheckLottie from "../lotties/channelCreateCompleteLottie.json";
 import Header from '../components/Header';
-import { ReactComponent as CameraImg } from "../images/camera.svg";
 import InputText from '../components/InputText';
 import ButtonBasic from '../components/ButtonBasic';
 import TextField from '../components/TextField';
+import { color } from "../styles/color";
+import InputProfile from '../components/InputProfile';
 
 // 기존 뒤로가기 기능과 상단의 버튼을 통해 뒤로가기에 대해 이전 단계로 돌아가도록 추후 구현
 
@@ -26,11 +29,27 @@ const OldChannelOnboarding = () => {
         setIntro(event.target.value);
     };
 
+    const [userProfileImage, setUserProfileImage] = useState<string | ArrayBuffer | null>();
+    const [userImageFile, setUserImageFile] = useState<File | null>();
+
+    const handleUserProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(event.target.files || []);
+        if(files.length > 0){
+            setUserImageFile(files[0]);
+            const reader = new FileReader();
+            reader.readAsDataURL(files[0]);
+            reader.onloadend = () => {
+                setUserProfileImage(reader.result);
+            };
+        }
+        event.target.value = "";
+    };
+
     const handleButtonClick = () => {
         console.log(step);
         setStep((current) => (current) + 1);
         if(step === 3){
-            navigate('/home');
+            navigate('/home', {replace: true});
         }
     };
 
@@ -53,7 +72,7 @@ const OldChannelOnboarding = () => {
                                 display: 'flex', flexDirection: 'column',
                                 justifyContent: 'center', flexShrink: '0'
                     }}>
-                        <span>{step === 1 ? '초대받은 채널의' : '동아리에서 사용할 정보를'}
+                        <span>{step === 1 ? '초대받은 채널의' : '채널에서 사용할 정보를'}
                             <br></br>{step === 1 ? '코드를 입력해 주세요' : '입력해 주세요'}
                         </span>
                     </div>
@@ -71,7 +90,19 @@ const OldChannelOnboarding = () => {
                     }}>
                         <span>채널이 생성되었어요!</span>
                     </div>
-                    <div>채널 생성 lottie</div>
+                    <div style={{ height: '114px' }}></div>
+                    <Player
+                        onEvent={event => {
+                            if(event === 'complete') setTimeout(() => {navigate('/home', {replace: true})}, 500);
+                        }}
+                        autoplay
+                        keepLastFrame
+                        src={CheckLottie}
+                        style={{
+                            width: '181px',
+                            height: '181px'
+                        }}
+                    />
                 </>
             )}
 
@@ -88,11 +119,20 @@ const OldChannelOnboarding = () => {
                             onChange={handleCodeChange}
                         />
                         <div style={{ height: '399px' }}></div>
-                        <ButtonBasic
-                            innerText='채널 입장하기'
-                            onClick={handleButtonClick}
-                            disable={code === ""}
-                        ></ButtonBasic>
+                    </div>
+                    <div
+                        style={{ margin: '0', background: `${color.background}`,
+                                position: 'fixed', bottom: '0', maxWidth: '500px',
+                                width: '100%', display: 'flex', justifyContent: 'center',
+                                height: '47px', padding: '8px 0'
+                    }}>
+                        <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
+                            <ButtonBasic
+                                innerText='채널 입장하기'
+                                onClick={handleButtonClick}
+                                disable={code === ""}
+                            ></ButtonBasic>
+                        </div>
                     </div>
                 </>
             )}
@@ -100,13 +140,12 @@ const OldChannelOnboarding = () => {
             {step === 2 && (
                 <>
                     <div
-                        style={{ marginLeft: '20px', cursor: 'pointer',
-                                width: '98px', height: '98px', display: 'flex',
-                                alignItems: 'center', justifyContent: 'center',
-                                borderRadius: '500px', backgroundColor: '#FAFAFA',
-                                border: '1px solid var(--surface-outline, rgba(10, 10, 10, 0.10)'
+                        style={{ marginLeft: '20px'
                     }}>
-                        <CameraImg />
+                        <InputProfile
+                            image={userProfileImage}
+                            handleProfileImageUpload={handleUserProfileImageUpload}
+                        ></InputProfile>
                     </div>
                     <div style={{ height: '40px' }}></div>
                     <div
@@ -121,18 +160,27 @@ const OldChannelOnboarding = () => {
                         />
                         <div style={{ height: '32px' }}></div>
                         <TextField
-                            label='한줄 소개'
+                            label='자기소개'
                             placeholder='나를 한줄로 소개해 보세요.'
                             value={intro}
                             onChange={handleIntroChange}
-                            maxLength={100}
+                            maxLength={50}
                         />
                         <div style={{ height: '44px' }}></div>
-                        <ButtonBasic
-                            innerText='확인'
-                            onClick={handleButtonClick}
-                            disable={nickname === ""}
-                        ></ButtonBasic>
+                    </div>
+                    <div
+                        style={{ margin: '0', background: `${color.background}`,
+                                position: 'fixed', bottom: '0', maxWidth: '500px',
+                                width: '100%', display: 'flex', justifyContent: 'center',
+                                height: '47px', padding: '8px 0'
+                    }}>
+                        <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
+                            <ButtonBasic
+                                innerText='확인'
+                                onClick={handleButtonClick}
+                                disable={nickname === ""}
+                            ></ButtonBasic>
+                        </div>
                     </div>
                 </>
             )}
