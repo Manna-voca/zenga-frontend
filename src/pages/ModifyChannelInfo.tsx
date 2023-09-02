@@ -56,8 +56,8 @@ const ModifyChannelInfo = () => {
             }}>
                 <InputText
                     isNecessary={true}
-                    label="동아리명"
-                    placeholder="이름을 입력해 주세요."
+                    label="채널명"
+                    placeholder="채널명을 입력해 주세요."
                     value={clubname}
                     onChange={handleClubnameChange}
                 />

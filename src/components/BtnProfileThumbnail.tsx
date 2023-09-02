@@ -15,6 +15,7 @@ const BtnProfileThumbnail = ({userImg, userName, isChannelAdmin}: Props) => {
     return(
         <>
             <div
+                onClick={() => navigate('/memberpage/1')}
                 title={userName}
                 style={{ width: '36px', height: '56px',
                         display: 'flex', flexDirection: 'column',

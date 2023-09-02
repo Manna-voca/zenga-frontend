@@ -65,7 +65,7 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
 
     if(type === 'back' || type === 'out'){
         return(
-            <div style={{ height: '44px', margin: '0 16px 0 16px', zIndex: '1',
+            <div style={{ height: '44px', padding: '0 16px 0 16px', zIndex: '1',
                         position: 'sticky', top: '0px', backgroundColor: 'white',
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
@@ -142,7 +142,7 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
     else if(type === 'detail'){
         return(
             <>
-                <div style={{ height: '44px', margin: '0 16px 0 16px', zIndex: '1',
+                <div style={{ height: '44px', padding: '0 16px 0 16px', zIndex: '1',
                             position: 'sticky', top: '0px', backgroundColor: 'white',
                             display: 'flex', alignItems: 'center', justifyContent: 'space-between'
                 }}>
@@ -174,7 +174,7 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
     else if(type === 'card'){
         return(
             <>
-                <div style={{ height: '44px', margin: '0 16px 0 16px', zIndex: '1',
+                <div style={{ height: '44px', padding: '0 16px 0 16px', zIndex: '1',
                             position: 'sticky', top: '0px', backgroundColor: 'white',
                             display: 'flex', alignItems: 'center', justifyContent: 'space-between'
                 }}>
@@ -222,8 +222,7 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
                             justifyContent: 'space-between', zIndex: '1',
                             position: 'sticky', top: '0px', backgroundColor: 'white'
                 }}>
-                    <div 
-                        onClick={handleChannelButtonClick}
+                    <div
                         style={{ fontSize: '16px', fontStyle: 'normal',
                                 fontWeight: '400', lineHeight: '150%',
                                 color: 'var(--on-surface-active, #0A0A0A)'

@@ -135,7 +135,7 @@ const NewChannelOnboarding = () => {
                                 justifyContent: 'center', flexShrink: '0'
 
                     }}>
-                        <span>2가지 방법으로 동아리원이 들어올 수 있어요.</span>
+                        <span>2가지 방법으로 멤버가 들어올 수 있어요.</span>
                     </div>
                     {lottieState === true ? (
                         <>

@@ -97,3 +97,7 @@
       url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Black.ttf') format("truetype");
   font-display: swap;
 }
+@font-face{
+  font-family: 'OmyuPretty';
+  src: url('../styles/omyu_pretty.ttf');
+}

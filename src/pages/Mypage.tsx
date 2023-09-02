@@ -6,22 +6,35 @@ import CircularImage from "../components/CircularImage";
 import defaultChannelProfile from '../images/defaultchannelprofile.png';
 import ButtonBasic from "../components/ButtonBasic";
 import ProfileUpper from "../components/ProfileUpper";
+import Navbar from "../components/Navbar";
+import ProfileAlbum from "../components/ProfileAlbum";
+import ProfileZenga from "../components/ProfileZenga";
+import ProfileMeetup from "../components/ProfileMeetup";
 
 const Mypage = () => {
     const navigate = useNavigate();
 
-    const [textState, setTextState] = useState<string>("앨범");
+    const [textState, setTextState] = useState<string | null>("앨범");
+
+    const [local, setLocal] = useState(() => {
+        if(localStorage.getItem("mypage")){
+            setTextState(localStorage.getItem("mypage"));
+        }
+    });
 
     const handleAlbumTextClick = () => {
         setTextState("앨범");
+        localStorage.setItem("mypage", "앨범");
     };
 
     const handleZengaTextClick = () => {
         setTextState("젠가");
+        localStorage.setItem("mypage", "젠가");
     };
 
     const handleMeetupTextClick = () => {
         setTextState("모임");
+        localStorage.setItem("mypage", "모임");
     };
 
     return(
@@ -99,6 +112,23 @@ const Mypage = () => {
                     }}></div>
                 </div>
             </div>
+            {textState === "앨범" ? (
+                <>
+                    <ProfileAlbum></ProfileAlbum>
+                </>
+            ) : (
+                textState === "젠가" ? (
+                    <>
+                        <ProfileZenga></ProfileZenga>
+                    </>
+                ) : (
+                    <>
+                        <ProfileMeetup></ProfileMeetup>
+                    </>
+                )
+            )}
+            <div style={{ height: '57px' }}></div>
+            <Navbar state={4}></Navbar>
         </>
     );
 }
