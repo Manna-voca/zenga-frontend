@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import CircularImage from "./CircularImage";
 import { color } from "../styles/color";
+import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
   name: string;
@@ -12,8 +13,10 @@ interface OwnProps {
 }
 
 const MemberWrapper = ({ name, image, isChannelAdmin }: OwnProps) => {
+  const navigate = useNavigate();
+
   return (
-    <Container>
+    <Container onClick={() => navigate('/memberpage/1')}>
       <CircularImage
         image={image}
         size="36"
@@ -34,6 +37,7 @@ const Container = styled.div`
   gap: 24px;
   align-items: center;
   border-bottom: 0.5px solid ${color.outline};
+  cursor: pointer;
 `;
 
 const MemberName = styled.div`

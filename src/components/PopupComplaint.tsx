@@ -73,12 +73,18 @@ const PopupComplaint = ({func}: Props) => {
                     <div
                         style={{ height: '20px', display: 'flex',
                                 justifyContent: 'center', alignItems: 'center',
-                                color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))',
                                 fontSize: '14px', fontStyle: 'normal',
                                 fontWeight: '500', marginLeft: '16px'
 
                     }}>
-                        <span>www.instagram.com/moa_zzi/</span>
+                        <a
+                            href="https://www.instagram.com/moa_zzi/"
+                            target="_blank"
+                            style={{ textDecoration: 'none',
+                                    color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))',
+                        }}>
+                            www.instagram.com/moa_zzi/
+                        </a>
                     </div>
                     <DuplicateImg
                         fill="#0A0A0A"

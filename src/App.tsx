@@ -17,11 +17,12 @@ import MeetupDetail from "./pages/MeetupDetail";
 import MeetupMember from "./pages/MeetupMember";
 import CreateCard from "./pages/CreateCard";
 import Mypage from "./pages/Mypage";
-import UserProfile from "./pages/UserProfile";
+import Memberpage from "./pages/Memberpage";
 import MyMeetup from "./pages/MyMeetup";
 import ModifyProfileInfo from "./pages/ModifyProfileInfo";
 import PointDetail from "./pages/PointDetail";
 import Comment from "./pages/Comment";
+import "./styles/font.css"
 
 
 function App() {
@@ -44,7 +45,7 @@ function App() {
       <Route path="/meetup-member/:meetupId" element={<MeetupMember />}></Route>
       <Route path="/create-card/:meetupId" element={<CreateCard />}></Route>
       <Route path="/mypage" element={<Mypage />}></Route>
-      <Route path="/userprofile/:userId" element={<UserProfile />}></Route>
+      <Route path="/memberpage/:userId" element={<Memberpage />}></Route>
       <Route path="/meetup-my" element={<MyMeetup />}></Route>
       <Route path="/modify-profile-info" element={<ModifyProfileInfo />}></Route>
       <Route path="/point" element={<PointDetail />}></Route>

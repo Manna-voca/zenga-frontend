@@ -17,7 +17,7 @@ const CreateCard = () => {
     };
 
     const handleParticipantImgClick = () => {
-        setPreventPopstate(false);
+        setPreventPopstate(true);
         setMemberState(true);
     };
 
@@ -42,7 +42,7 @@ const CreateCard = () => {
         event.target.value = "";
     };
 
-    const [preventPopState, setPreventPopstate] = useState<boolean>(true);
+    const [preventPopState, setPreventPopstate] = useState<boolean>(false);
 
     useEffect(() => {
         if(preventPopState){

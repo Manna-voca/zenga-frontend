@@ -18,10 +18,11 @@ interface Props {
     userName: string;
     currentNum: number;
     maxNum: number;
+    isEnd?: boolean;
 };
 
 const GatheringList = ({meetupId = 1, title, image, date = null,
-    location = null, userImg, userName, currentNum, maxNum}: Props) => {
+    location = null, userImg, userName, currentNum, maxNum, isEnd = false}: Props) => {
     
     const navigate = useNavigate();
     dayjs.extend(relativeTime);
@@ -49,7 +50,7 @@ const GatheringList = ({meetupId = 1, title, image, date = null,
                     <div
                         style={{ height: '14px', display: 'block',
                                 alignItems: 'center', overflow: 'hidden',
-                                color: 'var(--text-text-active, var(--light-text-text-active, #0D0D0D))',
+                                color: isEnd ? 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))' : 'var(--text-text-active, var(--light-text-text-active, #0D0D0D))',
                                 textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                                 fontSize: '14px', fontStyle: 'normal',
                                 fontWeight: '600'
@@ -61,20 +62,20 @@ const GatheringList = ({meetupId = 1, title, image, date = null,
                         style={{ height: '15px', display: 'flex',
                                 gap: '6px', fontSize: '10px',
                                 fontStyle: 'normal', fontWeight: '400',
-                                color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
+                                color: isEnd ? 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))' : 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
                     }}>
                         <div
                             style={{ display: 'flex', alignItems: 'center',
                                     gap: '4px'
                         }}>
-                            <ClockImg width={12} height={12}/>
+                            <ClockImg width={12} height={12} fillOpacity={isEnd ? 0.45 : 0.7}/>
                             <span>{date === null ? '날짜 미정' : meetingAt.format('M월 D일(ddd) HH:mm')}</span>
                         </div>
                         <div
                             style={{ display: 'flex', alignItems: 'center',
                                     gap: '4px'
                         }}>
-                            <LocationImg width={12} height={12}/>
+                            <LocationImg width={12} height={12} fillOpacity={isEnd ? 0.45 : 0.7}/>
                             <span>{location === null ? '장소 미정' : location}</span>
                         </div>
                     </div>
@@ -83,7 +84,7 @@ const GatheringList = ({meetupId = 1, title, image, date = null,
                         style={{ display: 'inline-flex', alignItems: 'center',
                                 height: '16px', gap: '6px', fontSize: '10px',
                                 fontStyle: 'normal', fontWeight: '500',
-                                color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
+                                color: isEnd ? 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))' : 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
                     }}>
                         <CircularImage
                             image={userImg}
@@ -94,7 +95,7 @@ const GatheringList = ({meetupId = 1, title, image, date = null,
                             style={{ display: 'flex', alignItems: 'center',
                                     gap: '4px', fontWeight: '400'
                         }}>
-                            <PeopleImg width={12} height={12}/>
+                            <PeopleImg width={12} height={12} fillOpacity={isEnd ? 0.45 : 0.7}/>
                             <span>{currentNum}/{maxNum}</span>
                         </div>
                     </div>

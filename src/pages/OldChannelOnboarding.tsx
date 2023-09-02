@@ -58,7 +58,7 @@ const OldChannelOnboarding = () => {
             {step === 1 || step === 2 ? (
                 <Header type='back'></Header>
             ) : (
-                <div></div>
+                <div style={{ height: '44px' }}></div>
             )}
             <div style={{ height: '16px' }}></div>
             
