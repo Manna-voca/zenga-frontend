@@ -320,7 +320,7 @@ const Comment = () => {
       {showOthersReplyControl && (
         <ButtonMultiple
           closeHandler={() => setShowOthersReplyControl(false)}
-          textList={["대댓글 남기기", "대댓글 신고하기", "취소"]}
+          textList={["대댓글 남기기", "댓글 신고하기", "취소"]}
           onClickList={[
             async () => {
               await setIsCommentFocused((prev) => !prev);

@@ -18,7 +18,7 @@ const ChannelList = ({type = 'channel', name}: Props) => {
             navigate('/createchannel');
         }
         else if(type === 'channel'){
-
+            navigate('/home')
         }
     };
 

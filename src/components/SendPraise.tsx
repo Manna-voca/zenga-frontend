@@ -15,6 +15,15 @@ import Timer from "./Timer";
 import rightArrowIcon from "../assets/icons/ic-rightArrow.svg";
 import xIcon from "../assets/icons/ic-x32.svg";
 import checkboxIcon from "../assets/icons/ic-checkbox.svg";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Mousewheel, Keyboard } from "swiper";
+import "swiper/swiper-bundle.min.css";
+import "swiper/swiper.min.css";
+import "swiper/css";
+import "swiper/css/pagination";
+import "../styles/sendpraiseSwiper.css";
+import whaleClock from "../assets/images/whale-clock.png";
+import sendPraiseModalImage from "../assets/images/sendPraiseModal.png";
 
 interface MemberProps {
   name: string;
@@ -213,7 +222,7 @@ const FirstModal = ({
           zIndex: "2",
           width: "calc(100% - 85px)",
           maxWidth: "415px",
-          height: "360px",
+          // height: "360px",
           backgroundColor: `${color.background}`,
           borderRadius: "16px",
           padding: "12px 12px 28px 12px",
@@ -224,9 +233,54 @@ const FirstModal = ({
         }}
       >
         <div style={{ width: "100%", textAlign: "end" }}>
-          <img onClick={firstModalCloseOnClick} src={xIcon} alt="" style={{ cursor: "pointer" }} />
+          <img
+            onClick={firstModalCloseOnClick}
+            src={xIcon}
+            alt=""
+            style={{ cursor: "pointer" }}
+          />
         </div>
-        <div>swiper</div>
+        <Swiper
+          style={{ width: "100%", height: "288px" }}
+          // spaceBetween={200}
+          pagination={{ clickable: true }}
+          mousewheel
+          keyboard
+          modules={[Pagination, Mousewheel, Keyboard]}
+          allowTouchMove
+        >
+          <MySwiperSlide>
+            <div css={firstPraiseModalPstyle} style={{ marginBottom: "20px" }}>
+              4시간마다 <b>칭찬 질문</b>이 <br /> 달라져요 !
+            </div>
+            <img width={"176px"} src={whaleClock} alt="" />
+          </MySwiperSlide>
+          <MySwiperSlide>
+            <div css={firstPraiseModalPstyle} style={{ marginBottom: "35px" }}>
+              질문에 가장 잘 어울리는
+              <br /> 사람을 선택하면 <br /> <b>익명으로 전달돼요 !</b>
+            </div>
+            <img
+              width="100%"
+              src={sendPraiseModalImage}
+              alt=""
+              style={{ paddingLeft: "20px" }}
+            />
+            <div
+              style={{
+                marginTop: "20px",
+                height: "20px",
+                ...typography.body3Semibold,
+                color: `${color.primary500}`,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <span style={{ fontSize: "8px", marginRight: "5px" }}>▲</span>{" "}
+              상대방은 이렇게 받아요 !
+            </div>
+          </MySwiperSlide>
+        </Swiper>
         <div
           style={{
             position: "absolute",
@@ -560,4 +614,16 @@ const PraiseAddButton = styled.button`
 `;
 const aTagStyle = css`
   text-decoration: none;
+`;
+const firstPraiseModalPstyle = css`
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+`;
+const MySwiperSlide = styled(SwiperSlide)`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
