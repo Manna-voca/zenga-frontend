@@ -245,16 +245,18 @@ const MeetupDetail = () => {
                     댓글
                 </div>
                 <ArrowImg
+                    onClick={() => navigate('/comment')}
                     style={{ cursor: 'pointer' }}
                 />
             </div>
             <div style={{ height: '10px' }}></div>
             <div
+                onClick={() => navigate('/comment')}
                 style={{ margin: '0 20px 0 20px', padding: '12px 16px',
                         height: '62px', borderRadius: '8px',
                         background: 'var(--surface-surface, #FAFAFA)',
                         display: 'flex', flexDirection: 'column',
-                        alignItems: 'flex-start', gap: '20px'
+                        alignItems: 'flex-start', gap: '20px', cursor: "pointer"
             }}>
                 <div
                     style={{ display: 'flex', gap: '20px',

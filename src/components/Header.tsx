@@ -29,6 +29,9 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
 
     const [sidebarState, setSidebarState] = useState<number>(0);
 
+    if(type === "common") {
+      // 알림있는지확인하는api();
+    }
 
     if(
         (type === "common" && isChannelAdmin === undefined) ||
@@ -115,11 +118,11 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
                     }}>
                         {isChannelAdmin === true ? (
                             <>
-                                <NoticeImg style={{ cursor: 'pointer' }}/>
+                                <NoticeImg onClick={()=>navigate('/notification')} style={{ cursor: 'pointer' }}/>
                                 <FrameImg style={{ cursor: 'pointer' }}/>
                             </>
                          ) : (
-                            <NoticeImg style={{ cursor: 'pointer' }}/>
+                            <NoticeImg onClick={()=>navigate('/notification')} style={{ cursor: 'pointer' }}/>
                         )}
                         
                     </div>

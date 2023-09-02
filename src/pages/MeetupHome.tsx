@@ -9,8 +9,10 @@ import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import testUserImg from '../images/channelprofile.png';
 import testImg from '../images/jun.png';
+import { useNavigate } from "react-router-dom";
 
 const MeetupHome = () => {
+    const navigate = useNavigate();
     dayjs.extend(relativeTime);
     dayjs.locale('ko');
     const [width, setWidth] = useState(window.innerWidth);
@@ -147,7 +149,7 @@ const MeetupHome = () => {
                         bottom: '65px', cursor: 'pointer',
                         right: width >= 500 ? 'calc(50% - 230px)' : '20px'
             }}>
-                <WhiteplusImg />
+                <WhiteplusImg onClick={() => navigate('/create-meetup')} />
             </div>
             <Navbar state={2}></Navbar>
         </>

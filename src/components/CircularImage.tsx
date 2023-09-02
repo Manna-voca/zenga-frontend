@@ -43,7 +43,6 @@ const CircularImage: FC<CircularImageProps> = ({
           src={channelAdminIcon}
           alt="채널장"
           style={{
-            cursor: "pointer",
             position: "absolute",
             right: "0",
             top: "0",
