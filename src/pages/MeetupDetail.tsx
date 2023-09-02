@@ -245,13 +245,13 @@ const MeetupDetail = () => {
                     댓글
                 </div>
                 <ArrowImg
-                    onClick={() => navigate('/comment')}
+                    onClick={() => navigate('/comment/1')}
                     style={{ cursor: 'pointer' }}
                 />
             </div>
             <div style={{ height: '10px' }}></div>
             <div
-                onClick={() => navigate('/comment')}
+                onClick={() => navigate('/comment/1')}
                 style={{ margin: '0 20px 0 20px', padding: '12px 16px',
                         height: '62px', borderRadius: '8px',
                         background: 'var(--surface-surface, #FAFAFA)',

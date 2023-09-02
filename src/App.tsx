@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import CreateChannel from "./pages/CreateChannel";
 import NewChannelOnboarding from "./pages/NewChannelOnboarding";
 import OldChannelOnboarding from "./pages/OldChannelOnboarding";
-import Home from "./pages/Home";
+import Praise from "./pages/Praise";
 import Onboarding from "./pages/Onboarding";
 import ChannelHome from "./pages/ChannelHome";
 import MemberList from "./pages/MemberList";
@@ -31,10 +31,10 @@ function App() {
       <Route path="/" element={<Login />}></Route>
       <Route path="/onboarding" element={<Onboarding />}></Route>
       <Route path="/channel-home" element={<ChannelHome />}></Route>
-      <Route path="/createchannel" element={<CreateChannel />}></Route>
-      <Route path="/createchannel/newonboarding" element={<NewChannelOnboarding />}></Route>
-      <Route path="/createchannel/oldonboarding" element={<OldChannelOnboarding />}></Route>
-      <Route path="/home" element={<Home />}></Route>
+      <Route path="/create-channel" element={<CreateChannel />}></Route>
+      <Route path="/create-channel/new-onboarding" element={<NewChannelOnboarding />}></Route>
+      <Route path="/create-channel/old-onboarding" element={<OldChannelOnboarding />}></Route>
+      <Route path="/praise" element={<Praise />}></Route>
       <Route path="/member-list" element={<MemberList />}></Route>
       <Route path="/notification" element={<Notification />}></Route>
       <Route path="/create-meetup" element={<CreateMeetup />}></Route>
@@ -44,12 +44,12 @@ function App() {
       <Route path="/meetup-detail/:meetupId" element={<MeetupDetail />}></Route>
       <Route path="/meetup-member/:meetupId" element={<MeetupMember />}></Route>
       <Route path="/create-card/:meetupId" element={<CreateCard />}></Route>
+      <Route path="/comment/:meetupId" element={<Comment />}></Route>
       <Route path="/mypage" element={<Mypage />}></Route>
       <Route path="/memberpage/:userId" element={<Memberpage />}></Route>
-      <Route path="/meetup-my" element={<MyMeetup />}></Route>
+      <Route path="/my-meetup" element={<MyMeetup />}></Route>
       <Route path="/modify-profile-info" element={<ModifyProfileInfo />}></Route>
       <Route path="/point" element={<PointDetail />}></Route>
-      <Route path="/comment" element={<Comment />}></Route>
     </Routes>
   );
 }

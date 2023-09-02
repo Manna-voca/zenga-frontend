@@ -5,7 +5,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const goCreateChannel = () => {
-        navigate('/createchannel');
+        navigate('/create-channel');
     };
 
     return(

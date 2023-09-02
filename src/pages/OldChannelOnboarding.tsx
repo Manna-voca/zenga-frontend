@@ -49,7 +49,7 @@ const OldChannelOnboarding = () => {
         console.log(step);
         setStep((current) => (current) + 1);
         if(step === 3){
-            navigate('/home', {replace: true});
+            navigate('/praise', {replace: true});
         }
     };
 
@@ -93,7 +93,7 @@ const OldChannelOnboarding = () => {
                     <div style={{ height: '114px' }}></div>
                     <Player
                         onEvent={event => {
-                            if(event === 'complete') setTimeout(() => {navigate('/home', {replace: true})}, 500);
+                            if(event === 'complete') setTimeout(() => {navigate('/praise', {replace: true})}, 500);
                         }}
                         autoplay
                         keepLastFrame

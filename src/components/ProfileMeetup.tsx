@@ -17,7 +17,7 @@ const ProfileMeetup = () => {
 
     const handleArrowBtnClick = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         const meetupState : string = event.currentTarget.id
-        navigate('/meetup-my', { state: {meetupState}});
+        navigate('/my-meetup', { state: {meetupState}});
     };
 
     return(

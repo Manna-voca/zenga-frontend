@@ -15,10 +15,10 @@ const ChannelList = ({type = 'channel', name}: Props) => {
 
     const handleClick = () => {
         if(type === 'new'){
-            navigate('/createchannel');
+            navigate('/create-channel');
         }
         else if(type === 'channel'){
-            navigate('/home')
+            navigate('/praise')
         }
     };
 
