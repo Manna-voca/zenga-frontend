@@ -67,12 +67,12 @@ export default function ChannelHome() {
           padding: "0 20px",
         }}
       >
-        <div onClick={() => navigate("/createchannel")} css={ChannelDivStyle}>
+        <div onClick={() => navigate("/create-channel")} css={ChannelDivStyle}>
           <CircularImage image={btnChannelAdd} size="98" />
         </div>
         {channelDummy.map((item) => {
           return (
-            <div onClick={() => navigate("/home")} css={ChannelDivStyle}>
+            <div onClick={() => navigate("/praise")} css={ChannelDivStyle}>
               <CircularImage image={item.image} size="98" />
               <div
                 css={css`

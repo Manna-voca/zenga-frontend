@@ -19,7 +19,7 @@ const Navbar = ({state = 1}: Props) => {
 
     const handleComplimentImgClick = () => {
         setCheck(1);
-        navigate('/home', {replace: true});
+        navigate('/praise', {replace: true});
     };
 
     const handleGatheringImgClick = () => {

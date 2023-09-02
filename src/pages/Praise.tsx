@@ -157,7 +157,7 @@ const ChannelCode = ({ channelCode }: ChannelCodeProps) => {
   );
 };
 
-const Home = () => {
+const Praise = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
   const [isChannelActive, setIsChannelActive] = useState<boolean>(true);
 
@@ -244,7 +244,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Praise;
 
 const CategoryContainer = styled.div`
   padding: 0 0 0 20px;

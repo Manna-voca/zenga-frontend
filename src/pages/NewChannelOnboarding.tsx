@@ -86,7 +86,7 @@ const NewChannelOnboarding = () => {
             setPreventPopstate(false);
         }
         else if(step === 3){
-            navigate('/home', {replace: true});
+            navigate('/praise', {replace: true});
         }
     };
 
@@ -195,7 +195,7 @@ const NewChannelOnboarding = () => {
                                 <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
                                     <ButtonBasic
                                         innerText='확인'
-                                        onClick={() => navigate('/home', {replace: true})}
+                                        onClick={() => navigate('/praise', {replace: true})}
                                         disable={false}
                                     ></ButtonBasic>
                                 </div>

@@ -28,10 +28,10 @@ const CreateChannel = () => {
 
     const handleConfirmButtonClick = () => {
         if(isNew === true){
-            navigate('/createchannel/newonboarding');
+            navigate('/create-channel/new-onboarding');
         }
         else if(isNew === false){
-            navigate('/createchannel/oldonboarding');
+            navigate('/create-channel/old-onboarding');
         }
          
     };
