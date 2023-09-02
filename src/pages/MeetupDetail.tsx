@@ -30,6 +30,7 @@ const MeetupDetail = () => {
                         color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
             }}>
                 <div
+                    onClick={() => navigate('/memberpage/1')}
                     style={{ display: 'flex', alignItems: 'center',
                             gap: '6px', cursor: 'pointer'
                 }}>
@@ -116,7 +117,7 @@ const MeetupDetail = () => {
                     <div
                         style={{ display: 'flex', gap: '8px'
                     }}>
-                        <ClockImg width={18} height={18}/>
+                        <ClockImg width={18} height={18} fillOpacity={0.7}/>
                         <div
                             style={{ fontSize: '14px', fontStyle: 'normal',
                                     fontWeight: '600'
@@ -137,7 +138,7 @@ const MeetupDetail = () => {
                     <div
                         style={{ display: 'flex', gap: '8px'
                     }}>
-                        <LocationImg width={18} height={18}/>
+                        <LocationImg width={18} height={18} fillOpacity={0.7}/>
                         <div
                             style={{ fontSize: '14px', fontStyle: 'normal',
                                     fontWeight: '600'
@@ -185,7 +186,7 @@ const MeetupDetail = () => {
                     <div
                         style={{ display: 'flex', gap: '8px'
                     }}>
-                        <PeopleImg width={18} height={18}/>
+                        <PeopleImg width={18} height={18} fillOpacity={0.7}/>
                         <div
                             style={{ fontSize: '14px', fontStyle: 'normal',
                                     fontWeight: '600'
