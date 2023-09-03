@@ -12,6 +12,7 @@ import { ReactComponent as DownloadImg } from "../images/download.svg";
 import { ReactComponent as ParticipantImg } from "../images/participant.svg";
 import { ReactComponent as PointsImg } from "../images/points.svg";
 import Sidebar from "./Sidebar";
+import CircularImage from "./CircularImage";
 
 // 타입: 뒤로가기, 기본(동아리명, 알림), 모임 만들기, 모임 상세
 //       알림, 참여한 멤버, 댓글, 모임 수정, 카드 만들기
@@ -114,7 +115,10 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
                                 cursor: 'pointer', alignItems: 'center',
                                 display: 'flex'
                     }}>
-                        <img width='24px' height='24px' src={profileImg} alt="channelprofile"></img>
+                        <CircularImage
+                            size="24"
+                            image={profileImg}
+                        />
                         <span style={{ marginLeft: '10px' }}>멋쟁이사자처럼 10기</span>
                     </div>
                     <div
