@@ -77,7 +77,6 @@ const PraiseMemberWrapper = ({
       <CircularImage
         image={profileImage}
         size="36"
-        isChannelAdmin={isChannelAdmin ? true : undefined}
       />
       <span
         style={{
@@ -363,7 +362,7 @@ const SendPraise = () => {
     <>
       {showPraiseNotTimer ? (
         <SendPraiseContainer>
-          <SendPraiseTitle>{praiseInfo.content}</SendPraiseTitle>
+          <SendPraiseContent>{praiseInfo.content}</SendPraiseContent>
           <ShuffleButton
             onClick={handleShuffleClick}
             style={{
@@ -467,7 +466,7 @@ const SendPraiseContainer = styled.div`
   align-items: center;
 `;
 
-const SendPraiseTitle = styled.h1`
+const SendPraiseContent = styled.h1`
   font-size: 21px;
   font-weight: 600;
   line-height: 1.5;

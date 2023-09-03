@@ -51,6 +51,7 @@ export default function MemberList() {
             onClick={() => callSearchApi(searchWord)}
             src={searchIcon}
             alt="검색"
+            style={{ cursor: "pointer" }}
           />
           <SearchInput
             placeholder="멤버를 검색해 보세요"
@@ -88,7 +89,7 @@ export default function MemberList() {
           );
         })}
       </div>
-      <div style={{ height: '57px' }}></div>
+      <div style={{ height: "57px" }}></div>
       <Navbar state={3}></Navbar>
     </>
   );
