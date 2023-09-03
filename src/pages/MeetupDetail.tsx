@@ -147,7 +147,7 @@ const MeetupDetail = () => {
             </div>
             <div style={{ height: '28px' }}></div>
             <div
-                style={{ background: 'var(--surface-divider, #D9D9D9)',
+                style={{ background: 'var(--surface-surface, #FAFAFA)',
                         height: '8px', width: '100%'
             }}></div>
             <div style={{ height: '28px' }}></div>

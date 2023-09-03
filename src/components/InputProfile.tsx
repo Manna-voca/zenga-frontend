@@ -38,7 +38,7 @@ const InputProfile = ({image, handleProfileImageUpload}: Props) => {
                         )}
                     </div>
                     <input
-                        style={{ width: '0', height: '0' }}
+                        style={{ width: '0', height: '0', position: 'absolute', padding: '0', margin: '-1', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', border: '0' }}
                         type="file"
                         id="ex_file"
                         name="profileImage"
