@@ -9,6 +9,8 @@ interface InputTextProps {
   label: string;
   placeholder: string;
   value: string;
+  errorStatus?: boolean;
+  onErrorHelpMessage?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -17,6 +19,8 @@ const InputText: FC<InputTextProps> = ({
   label,
   placeholder,
   value,
+  errorStatus,
+  onErrorHelpMessage,
   onChange,
 }: InputTextProps) => {
   return (
@@ -61,10 +65,26 @@ const InputText: FC<InputTextProps> = ({
         type="text"
         placeholder={placeholder}
         css={inputTextStyle}
-        style={{ ...typography.body2Medium }}
+        style={{
+          ...typography.body2Medium,
+          borderColor: errorStatus ? `${color.error}` : "",
+        }}
         value={value}
         onChange={onChange}
       />
+      {errorStatus && (
+        <div
+          style={{
+            height: "30px",
+            display: "flex",
+            alignItems: "center",
+            ...typography.body3Regular,
+            color: `${color.error}`,
+          }}
+        >
+          {onErrorHelpMessage}
+        </div>
+      )}
     </div>
   );
 };
