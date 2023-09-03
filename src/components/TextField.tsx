@@ -58,7 +58,7 @@ const TextField: FC<TextFieldProps> = ({
             ...typography.body3Regular,
           }}
         >
-          {value.length > 100 ? 100 : value.length}/{maxLength}
+          {value.length > 50 ? 50 : value.length}/{maxLength}
         </div>
       )}
     </div>

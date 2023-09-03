@@ -251,14 +251,14 @@ const FirstModal = ({
         >
           <MySwiperSlide>
             <div css={firstPraiseModalPstyle} style={{ marginBottom: "20px" }}>
-              4시간마다 <b>칭찬 질문</b>이 <br /> 달라져요 !
+              4시간마다 <b>칭찬 질문</b>이 <br /> 달라져요!
             </div>
             <img width={"176px"} src={whaleClock} alt="" />
           </MySwiperSlide>
           <MySwiperSlide>
             <div css={firstPraiseModalPstyle} style={{ marginBottom: "35px" }}>
               질문에 가장 잘 어울리는
-              <br /> 사람을 선택하면 <br /> <b>익명으로 전달돼요 !</b>
+              <br /> 사람을 선택하면 <br /> <b>익명으로 전달돼요!</b>
             </div>
             <img
               width="100%"
@@ -529,6 +529,7 @@ const WaveWhaleDiv = styled.div`
   width: 262px;
   margin: 120px 0 40px 0;
   overflow: hidden;
+  border-radius: 0 0 8px 8px;
 `;
 const moveWave = keyframes`
   0% {

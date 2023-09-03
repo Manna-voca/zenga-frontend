@@ -54,7 +54,6 @@ export default function MemberList() {
           />
           <SearchInput
             placeholder="멤버를 검색해 보세요"
-            type="search"
             name="member-search"
             style={{ ...typography.body3Regular }}
             value={searchWord}

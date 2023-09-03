@@ -84,6 +84,7 @@ const InputNumber: FC<InputNumberProps> = ({
         style={{ ...typography.body2Medium }}
         value={value}
         onChange={handleInputChange}
+        min={0}
         max={20}
       />
     </div>

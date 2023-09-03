@@ -3,3 +3,6 @@
   left: 2px !important;
   width: 100%;
 }
+.swiper-pagination-bullet-active {
+  background-color: rgba(31, 148, 255, 1);
+}

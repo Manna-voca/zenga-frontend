@@ -338,7 +338,7 @@ const Comment = () => {
         />
       )}
       {showReport && <PopupComplaint func={() => setShowReport(false)} />}
-      {showDeletePopup &&
+      {showDeletePopup && (
         <Popup2
           title="알림"
           text="댓글을 삭제하시나요?"
@@ -347,7 +347,7 @@ const Comment = () => {
           leftFunc={() => setShowDeletePopup(false)}
           rightFunc={() => setShowDeletePopup(false)}
         />
-      }
+      )}
     </>
   );
 };
@@ -385,11 +385,12 @@ const CommentButton = styled.button`
   cursor: pointer;
   min-width: 28px;
   width: 28px;
+  color: ${color.onSurfaceDefault};
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
 `;
