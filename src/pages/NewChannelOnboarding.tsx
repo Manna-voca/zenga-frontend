@@ -41,6 +41,9 @@ const NewChannelOnboarding = () => {
         setNickname(event.target.value);
     };
     const handleIntroChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (event.target.value.length > 50) {
+          event.target.value = event.target.value.slice(0, 50);
+        }
         setIntro(event.target.value);
     };
 
