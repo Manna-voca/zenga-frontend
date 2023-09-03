@@ -20,7 +20,7 @@ const Login = () => {
       <button css={buttonStyles} onClick={() => navigate('/onboarding')}>
         서비스 온보딩
       </button>
-      <button css={buttonStyles} onClick={goCreateChannel}>
+      <button css={buttonStyles} onClick={() => navigate('/channel-home')}>
         채널 홈으로
       </button>
     </>
