@@ -15,6 +15,7 @@ import Timer from "./Timer";
 import rightArrowIcon from "../assets/icons/ic-rightArrow.svg";
 import xIcon from "../assets/icons/ic-x32.svg";
 import checkboxIcon from "../assets/icons/ic-checkbox.svg";
+import checkedboxIcon from "../assets/icons/ic-checkedbox.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Mousewheel, Keyboard } from "swiper";
 import "swiper/swiper-bundle.min.css";
@@ -242,7 +243,6 @@ const FirstModal = ({
         </div>
         <Swiper
           style={{ width: "100%", height: "288px" }}
-          // spaceBetween={200}
           pagination={{ clickable: true }}
           mousewheel
           keyboard
@@ -282,7 +282,9 @@ const FirstModal = ({
           </MySwiperSlide>
         </Swiper>
         <div
+          onClick={() => setFirstModalNeverShow((prev) => !prev)}
           style={{
+            cursor: "pointer",
             position: "absolute",
             bottom: "-30px",
             display: "flex",
@@ -294,7 +296,10 @@ const FirstModal = ({
             lineHeight: "150%",
           }}
         >
-          <img src={checkboxIcon} alt="" />
+          <img
+            src={firstModalNeverShow ? checkedboxIcon : checkboxIcon}
+            alt=""
+          />
           다시 보지 않기
         </div>
       </div>
@@ -313,7 +318,7 @@ const SendPraise = () => {
       { name: "윤석민", profileImage: ex, isChannelAdmin: true, userId: 5 },
       { name: "변지현", profileImage: ex, isChannelAdmin: false, userId: 6 },
       { name: "송예지", profileImage: ex, isChannelAdmin: false, userId: 7 },
-      { name: "이은경", profileImage: ex, isChannelAdmin: false, userId: 8 },
+      { name: "김수한무", profileImage: ex, isChannelAdmin: false, userId: 8 },
     ],
     hasShuffled: false,
   });
@@ -328,7 +333,9 @@ const SendPraise = () => {
   const firstModalCloseOnClick = () => {
     if (firstModalNeverShow) {
       // 다시보지않기 api 전송
+      console.log("다시보지않아 !");
     }
+    console.log("끄기")
     setShowFirstModal(false);
   };
 
