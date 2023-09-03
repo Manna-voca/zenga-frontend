@@ -17,7 +17,7 @@ const Login = () => {
       <div style={{ marginTop: "20px", ...typography.heading1Semibold }}>
         젠가 ^^
       </div>
-      <button css={buttonStyles} onClick={goCreateChannel}>
+      <button css={buttonStyles} onClick={() => navigate('/onboarding')}>
         서비스 온보딩
       </button>
       <button css={buttonStyles} onClick={goCreateChannel}>
