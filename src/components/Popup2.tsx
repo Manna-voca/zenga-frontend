@@ -2,13 +2,22 @@ import React from "react";
 
 // 나중에 필요한 요소 추가 예정
 interface Props {
-    func? : any;
+    title : string;
+    text : string;
+    leftBtnText : string;
+    rightBtnText : string;
+    leftFunc? : any;
+    rightFunc? : any;
 };
 
-const Popup2 = ({func}: Props) => {
+const Popup2 = ({title, text, leftBtnText, rightBtnText, leftFunc, rightFunc}: Props) => {
 
-    const handleButtonClick = () => {
-        func(0);
+    const handleLeftButtonClick = () => {
+        leftFunc();
+    };
+
+    const handleRightButtonClick = () => {
+        rightFunc();
     };
 
     return(
@@ -38,23 +47,24 @@ const Popup2 = ({func}: Props) => {
                                 justifyContent: 'center', alignItems: 'center'
 
                     }}>
-                        <span>모임 참여를 취소하시나요?</span>
+                        <span>{title}</span>
                     </div>
                     <div
                         style={{ height: '42px', fontSize: '14px',
                         fontStyle: 'normal', fontWeight: '400',
                         lineHeight: '150%', display: 'flex',
                         justifyContent: 'center', textAlign: 'center',
-                        marginBottom: '25px', marginTop: '5px'
+                        marginBottom: '25px', marginTop: '5px',
+                        whiteSpace: 'pre-line'
                     }}>
-                        <span>참여를 취소해도 모임이 모집 중이라면<br></br>재참여를 할 수 있어요</span>
+                        {text}
                     </div>
                     <div
                         style={{ display: 'flex', alignItems: 'center', padding: '0 16px 0 16px',
                                 justifyContent: 'space-around', width: 'calc(100% - 32px)'
                     }}>
                         <div
-                            onClick={handleButtonClick}
+                            onClick={handleLeftButtonClick}
                             style={{ height: '44px', width: '152px', cursor: 'pointer',
                                     borderRadius: '30px', display: 'flex',
                                     alignItems: 'center', justifyContent: 'center',
@@ -63,10 +73,10 @@ const Popup2 = ({func}: Props) => {
                                     fontWeight: '600', lineHeight: '150%',
                                     color: 'var(--on-primary-active, #FCFCFC)'
                         }}>
-                            <span>취소</span>
+                            <span>{leftBtnText}</span>
                         </div>
                         <div
-                            onClick={handleButtonClick}
+                            onClick={handleRightButtonClick}
                             style={{ height: '44px', width: '152px', cursor: 'pointer',
                                     borderRadius: '30px', display: 'flex',
                                     alignItems: 'center', justifyContent: 'center',
@@ -75,7 +85,7 @@ const Popup2 = ({func}: Props) => {
                                     fontWeight: '600', lineHeight: '150%',
                                     color: 'var(--on-primary-active, #FCFCFC)'
                         }}>
-                            <span>확인</span>
+                            <span>{rightBtnText}</span>
                         </div>
                     </div>
                 </div>

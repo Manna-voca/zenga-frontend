@@ -41,9 +41,10 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
         return null;
     }
     if(
-        (type === "card" && func === undefined)
+        (type === "card" && func === undefined) ||
+        (type === "detail" && func === undefined)
     ){
-        console.error("type이 card일 때 onClick 값이 있어야 합니다.");
+        console.error("type이 detail 혹은 card일 때 onClick 값이 있어야 합니다.");
         return null;
     }
 
@@ -57,12 +58,16 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
     };
 
 
-  const handleOutsideClick = () => {
-    setSidebarState(0);
-    document.body.style.overflow = "unset";
-  };
+    const handleOutsideClick = () => {
+        setSidebarState(0);
+        document.body.style.overflow = "unset";
+    };
 
     const handleParticipantImgClick = () =>{
+        func();
+    };
+
+    const handleKebabClick = () => {
         func();
     };
 
@@ -119,7 +124,7 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
                         {isChannelAdmin === true ? (
                             <>
                                 <NoticeImg onClick={()=>navigate('/notification')} style={{ cursor: 'pointer' }}/>
-                                <FrameImg style={{ cursor: 'pointer' }}/>
+                                <FrameImg onClick={() => navigate('/modify-channel-info')} style={{ cursor: 'pointer' }}/>
                             </>
                          ) : (
                             <NoticeImg onClick={()=>navigate('/notification')} style={{ cursor: 'pointer' }}/>
@@ -167,6 +172,7 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
                             style={{ cursor: 'pointer' }}
                         />
                         <KebabImg
+                            onClick={handleKebabClick}
                             style={{ cursor: 'pointer' }}
                         />
                     </div>
