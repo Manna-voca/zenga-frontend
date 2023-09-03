@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import CircularImage from "../components/CircularImage";
@@ -12,17 +13,72 @@ import { ReactComponent as CommentImg } from "../images/comment.svg"
 import BtnProfileThumbnail from "../components/BtnProfileThumbnail";
 import ButtonBasic from "../components/ButtonBasic";
 import { color } from "../styles/color";
+import ButtonMultiple from "../components/ButtonMultiple";
+import PopupComplaint from "../components/PopupComplaint";
+import Popup2 from "../components/Popup2";
+import Popup1 from "../components/Popup1";
 
 const MeetupDetail = () => {
     const navigate = useNavigate();
+
+    const [isMeetupMaker, setIsMeetupMaker] = useState<boolean>(true);
+    const [kebabState, setKebabState] = useState<boolean>(false);
+    const [showComplaint, setShowComplaint] = useState<boolean>(false);
+    const [showDeletePopup, setShowDeletePopup] = useState<boolean>(false);
+    const [showMeetupPopup, setShowMeetupPopup] = useState<boolean>(false);
+    const [showMeetupCancelPopup, setShowMeetupCancelPopup] = useState<boolean>(false);
+    const [showMeetupCompletePopup, setShowMeetupCompletePopup] = useState<boolean>(false);
+
+    // 1 - 모임 참여하기 / 2- 모임 참여 취소하기 / 3 - 모임 진행 중 / 4 - 모임 완료 / 5 - 모집 완료 / 6 - 카드 만들기
+    const [buttonState, setButtonState] = useState<number>(5);
+
+    const handleKebabClick = () => {
+        setKebabState(true);
+    };
 
     const handleMemberButtonClick = () => {
         navigate('/meetup-member/1');
     };
 
+    const handleMeetupDeleteBtnClick = () => {
+        setShowDeletePopup(false);
+    };
+
+    const handleMeetupParticipateBtnClick = () => {
+        setButtonState(2);
+        setShowMeetupPopup(false);
+    };
+
+    const handleMeetupCancelBtnClick = () => {
+        setButtonState(1);
+        setShowMeetupCancelPopup(false);
+    };
+
+    const handleMeetupCompleteBtnClick = () => {
+        setButtonState(6);
+        setShowMeetupCompletePopup(false);
+    };
+
+    const handleButtonClick = () => {
+        if(buttonState === 1){
+            setShowMeetupPopup(true);
+        }
+        else if(buttonState === 2){
+            setShowMeetupCancelPopup(true);
+        }
+        else if(buttonState === 5){
+            setShowMeetupCompletePopup(true);
+        }
+        else if(buttonState === 6){
+            navigate('/create-card/1');
+        }
+    };
+
+    const buttonData = ["", "모임 참여하기", "모임 참여 취소하기", "모임 진행 중", "모임 완료", "모집 완료", "카드 만들기"];
+
     return(
         <>
-            <Header type="detail"></Header>
+            <Header type="detail" func={handleKebabClick}></Header>
             <div style={{ height: '12px' }}></div>
             <div
                 style={{ margin: '0 20px 0 20px', display: 'flex',
@@ -335,12 +391,94 @@ const MeetupDetail = () => {
             >
                 <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
                     <ButtonBasic
-                        innerText="모임 참여하기"
-                        onClick={() => navigate('/create-card/1')}
-                        disable={false}
+                        innerText={buttonData[buttonState]}
+                        onClick={handleButtonClick}
+                        disable= {buttonState === 3 || buttonState === 4 ? true : buttonState === 1 || buttonState === 5 ? false : undefined}
+                        btnColor={buttonState === 2 || buttonState === 6 ? "#FDB639" : undefined}
                     />
                 </div>
             </div>
+
+
+            {/* kebab */}
+            {kebabState && (
+                (isMeetupMaker ? (
+                    <>
+                        <ButtonMultiple
+                            closeHandler={() => setKebabState(false)}
+                            textList={["모임 내용 수정", "모임 삭제", "취소"]}
+                            onClickList={[
+                                () => {
+                                    setKebabState(false);
+                                    navigate('/edit-meetup/1');
+                                },
+                                () => {
+                                    setKebabState(false);
+                                    setShowDeletePopup(true);
+                                },
+                                () => setKebabState(false)
+                            ]}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <ButtonMultiple
+                            closeHandler={() => setKebabState(false)}
+                            textList={["게시물 신고", "취소"]}
+                            onClickList={[
+                                () => {
+                                    setKebabState(false);
+                                    setShowComplaint(true);
+                                },
+                                () => setKebabState(false)
+                            ]}
+                        />
+                    </>
+                ))
+            )}
+
+
+            {/* 모달 창 */}
+            {showComplaint && <PopupComplaint func={() => setShowComplaint(false)} />}
+            {showDeletePopup &&
+                <Popup2
+                    title="모임을 삭제하시나요?"
+                    text={"모임을 삭제한 이후에는\n다시 복구할 수 없어요"}
+                    leftBtnText="취소"
+                    rightBtnText="확인"
+                    leftFunc={() => setShowDeletePopup(false)}
+                    rightFunc={() => handleMeetupDeleteBtnClick()}
+                />
+            }
+            {showMeetupPopup &&
+                <Popup1
+                    title="알림"
+                    text={"모임 신청이 완료되었어요!\n방장이 모집 완료를 하기 전까지\n잠시만 기다려주세요"}
+                    btnText="확인"
+                    func={() => handleMeetupParticipateBtnClick()}
+                />
+                
+            }
+            {showMeetupCancelPopup &&
+                <Popup2
+                    title="모임 참여를 취소하시나요?"
+                    text={"참여를 취소해도 모임이 모집 중이라면\n다시 참여 할 수 있어요"}
+                    leftBtnText="취소"
+                    rightBtnText="확인"
+                    leftFunc={() => setShowMeetupCancelPopup(false)}
+                    rightFunc={() => handleMeetupCancelBtnClick()}
+                />
+            }
+            {showMeetupCompletePopup &&
+                <Popup2
+                    title="모임 모집을 완료하시나요?"
+                    text={"모집을 완료한 이후에는\n추가로 멤버를 모집할 수 없어요"}
+                    leftBtnText="취소"
+                    rightBtnText="확인"
+                    leftFunc={() => setShowMeetupCompletePopup(false)}
+                    rightFunc={() => handleMeetupCompleteBtnClick()}
+                />
+            }
         </>
     );
 }

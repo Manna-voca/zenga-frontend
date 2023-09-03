@@ -76,7 +76,7 @@ const Memberpage = () => {
             </div>
             {textState === "앨범" ? (
                 <>
-                    <ProfileAlbum></ProfileAlbum>
+                    <ProfileAlbum who="member"></ProfileAlbum>
                 </>
             ) : (
                 <>

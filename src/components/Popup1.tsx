@@ -2,13 +2,16 @@ import React from "react";
 
 // 나중에 필요한 요소 추가 예정
 interface Props {
+    title : string;
+    text : string;
+    btnText : string;
     func? : any;
 };
 
-const Popup1 = ({func}: Props) => {
+const Popup1 = ({title, text, btnText, func}: Props) => {
 
     const handleButtonClick = () => {
-        func(0);
+        func();
     };
 
     return(
@@ -37,16 +40,17 @@ const Popup1 = ({func}: Props) => {
                                 justifyContent: 'center', alignItems: 'center'
 
                     }}>
-                        <span>알림</span>
+                        <span>{title}</span>
                     </div>
                     <div
                         style={{ height: '42px', fontSize: '14px',
                         fontStyle: 'normal', fontWeight: '400',
                         lineHeight: '150%', display: 'flex',
                         justifyContent: 'center', textAlign: 'center',
-                        marginBottom: '25px', marginTop: '5px'
+                        marginBottom: '25px', marginTop: '5px',
+                        whiteSpace: 'pre-line'
                     }}>
-                        <span>모임에 참여했어요<br></br>모집 완료 전까지 기다려주세요</span>
+                        {text}
                     </div>
                     <div
                         onClick={handleButtonClick}
@@ -58,7 +62,7 @@ const Popup1 = ({func}: Props) => {
                                 fontWeight: '600', lineHeight: '150%',
                                 color: 'var(--on-primary-active, #FCFCFC)'
                     }}>
-                        <span>확인</span>
+                        <span>{btnText}</span>
                     </div>
                 </div>
             </div>

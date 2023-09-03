@@ -114,7 +114,7 @@ const Mypage = () => {
             </div>
             {textState === "앨범" ? (
                 <>
-                    <ProfileAlbum></ProfileAlbum>
+                    <ProfileAlbum who="my"></ProfileAlbum>
                 </>
             ) : (
                 textState === "젠가" ? (

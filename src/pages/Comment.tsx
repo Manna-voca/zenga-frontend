@@ -338,7 +338,16 @@ const Comment = () => {
         />
       )}
       {showReport && <PopupComplaint func={() => setShowReport(false)} />}
-      {showDeletePopup && <Popup2 func={() => setShowDeletePopup(false)} />}
+      {showDeletePopup &&
+        <Popup2
+          title="알림"
+          text="댓글을 삭제하시나요?"
+          leftBtnText="취소"
+          rightBtnText="삭제"
+          leftFunc={() => setShowDeletePopup(false)}
+          rightFunc={() => setShowDeletePopup(false)}
+        />
+      }
     </>
   );
 };
