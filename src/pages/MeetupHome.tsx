@@ -170,6 +170,7 @@ const MeetupHome = () => {
                         <div style={{ height: '57px' }}></div>
                     </div>
                     <div
+                        onClick={() => navigate('/create-meetup')}
                         style={{ height: '60px', width: '60px', borderRadius: '30px',
                                 background: 'var(--primary-primary-500, #1F94FF)',
                                 display: 'flex', justifyContent: 'center', alignItems: 'center',
@@ -177,7 +178,7 @@ const MeetupHome = () => {
                                 bottom: '65px', cursor: 'pointer',
                                 right: width >= 500 ? 'calc(50% - 230px)' : '20px'
                     }}>
-                        <WhiteplusImg onClick={() => navigate('/create-meetup')} />
+                        <WhiteplusImg />
                     </div>
                 </>
             )}

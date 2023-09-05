@@ -15,9 +15,11 @@ const ChannelList = ({type = 'channel', name}: Props) => {
 
     const handleClick = () => {
         if(type === 'new'){
+            document.body.style.overflow = "unset";
             navigate('/create-channel');
         }
         else if(type === 'channel'){
+            document.body.style.overflow = "unset";
             navigate('/praise')
         }
     };

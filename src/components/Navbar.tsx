@@ -34,6 +34,7 @@ const Navbar = ({state = 1}: Props) => {
 
     const handleMyImgClick = () => {
         setCheck(4);
+        localStorage.removeItem("mypage");
         navigate('/mypage', {replace: true});
     };
 
