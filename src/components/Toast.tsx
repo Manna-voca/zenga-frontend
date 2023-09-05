@@ -36,7 +36,7 @@ const Toast = ({type, func}: Props) => {
                     width={30}
                     height={30}
                 />
-                <div>{type === "X" ? "복사에 실패했어요ㅠㅠ" : "복사에 성공했습니다!!!"}</div>
+                <div>{type === "X" ? "복사에 실패했어요ㅠㅠ" : "복사에 성공했어요!!!"}</div>
             </ToastContainer>
         </>
     );
