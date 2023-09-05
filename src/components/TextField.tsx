@@ -9,6 +9,7 @@ interface TextFieldProps {
   placeholder: string;
   maxLength?: number;
   value: string;
+  isNecessary?: boolean;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
@@ -18,6 +19,7 @@ const TextField: FC<TextFieldProps> = ({
   maxLength,
   value,
   onChange,
+  isNecessary,
 }: TextFieldProps) => {
   return (
     <div
@@ -35,9 +37,22 @@ const TextField: FC<TextFieldProps> = ({
           display: "flex",
           alignItems: "center",
           height: "21px",
+          gap: "2px",
         }}
       >
         <div>{label}</div>
+        <div
+          style={{
+            display: isNecessary ? "" : "none",
+            color: `${color.primary500}`,
+            height: "16px",
+            fontSize: "12px",
+            fontWeight: "500",
+            lineHeight: "100%",
+          }}
+        >
+          *
+        </div>
       </div>
       <textarea
         css={TextFieldStyle}

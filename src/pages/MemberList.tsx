@@ -48,6 +48,7 @@ export default function MemberList() {
       <div style={{ padding: "0 20px", margin: "8px 0 4px 0" }}>
         <SearchWrapper>
           <img
+            width="18px"
             onClick={() => callSearchApi(searchWord)}
             src={searchIcon}
             alt="검색"
@@ -56,7 +57,7 @@ export default function MemberList() {
           <SearchInput
             placeholder="멤버를 검색해 보세요"
             name="member-search"
-            style={{ ...typography.body3Regular }}
+            style={{ ...typography.body3Regular, marginLeft: "8px", padding: "0" }}
             value={searchWord}
             onChange={handleSearchChange}
             onKeyDown={handleKeyDown}
@@ -102,7 +103,6 @@ const SearchWrapper = styled.div`
   padding: 0 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
   background-color: ${color.outline};
   border-radius: 8px;
   margin-bottom: 12px;

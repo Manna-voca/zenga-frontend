@@ -28,7 +28,7 @@ const PraiseWrapper = ({
 
   return (
     <PraiseWrapperDiv>
-      <img height="21px" src={blockImagePath} alt="" />
+      <img width="21px" height="21px" src={blockImagePath} alt="" />
       <PraiseContentDiv>
         <B>{content}</B>질문에 나를 선택한 사람은
       </PraiseContentDiv>
