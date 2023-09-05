@@ -14,6 +14,7 @@ import downArrowActiveIcon from "../assets/icons/ic-downArrowActive.svg";
 import downArrowMutedIcon from "../assets/icons/ic-downArrowMuted.svg";
 import MeetupImageEditor from "../components/MeetupImageEditor";
 import ButtonBasic from "../components/ButtonBasic";
+import { typography } from "../styles/typography";
 
 interface MeetupInfoProps {
   title: string;
@@ -79,7 +80,7 @@ const CreateMeetup = () => {
         <div style={{ height: "28px" }} />
         {/* 모임 제목 ----------------------------------- start */}
         <InputText
-          isNecessary={false}
+          isNecessary={true}
           label="모임 제목"
           placeholder="모임 제목을 입력해 주세요"
           onChange={(event) =>
@@ -103,6 +104,18 @@ const CreateMeetup = () => {
             src={meetupInfo.date ? downArrowActiveIcon : downArrowMutedIcon}
             alt=""
           />
+          <div
+            style={{
+              position: "absolute",
+              top: "0px",
+              left: "54px",
+              fontSize: "12px",
+              color: `${color.primary500}`,
+              lineHeight: "16px",
+            }}
+          >
+            *
+          </div>
         </Label>
         <MyDatePicker
           locale={ko}
@@ -140,7 +153,7 @@ const CreateMeetup = () => {
         {/* 모임 장소 ----------------------------------- start */}
         <div style={{ height: "28px" }} />
         <InputText
-          isNecessary={false}
+          isNecessary={true}
           label="모임 장소"
           placeholder="모임 장소를 입력해 주세요"
           onChange={(event) =>
@@ -170,6 +183,7 @@ const CreateMeetup = () => {
         {/* 모임 내용 ----------------------------------- start */}
         <div style={{ height: "28px" }} />
         <TextField
+          isNecessary={true}
           label="모임 내용"
           placeholder="내용을 입력해 주세요"
           onChange={(event) =>
@@ -183,7 +197,7 @@ const CreateMeetup = () => {
         <div style={{ height: "28px" }} />
         <InputNumber
           label="참여 인원"
-          isNecessary={false}
+          isNecessary={true}
           placeholder="참여 인원을 입력해주세요 (최대 20명)"
           value={meetupInfo.personNum}
           onChange={(event) =>

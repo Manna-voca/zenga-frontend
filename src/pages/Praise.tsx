@@ -127,6 +127,15 @@ interface ChannelCodeProps {
 }
 
 const ChannelCode = ({ channelCode }: ChannelCodeProps) => {
+  const handleDuplicateImgClick = async () => {
+    try {
+      await navigator.clipboard.writeText(channelCode);
+      alert("채널 코드 복사 완료");
+    } catch (e) {
+      alert("클립보드 복사 실패");
+    }
+  };
+
   return (
     <div
       style={{
@@ -152,7 +161,12 @@ const ChannelCode = ({ channelCode }: ChannelCodeProps) => {
         <span style={{ ...typography.body1Semibold }}>채널 코드</span>
         <span style={{ ...typography.body1Regular }}>{channelCode}</span>
       </div>
-      <img src={duplicateIcon} alt="복사하기" style={{ cursor: "pointer" }} />
+      <img
+        onClick={handleDuplicateImgClick}
+        src={duplicateIcon}
+        alt="복사하기"
+        style={{ cursor: "pointer" }}
+      />
     </div>
   );
 };
