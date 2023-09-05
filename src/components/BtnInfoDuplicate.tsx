@@ -11,14 +11,28 @@ interface Props {
 const BtnInfoDuplicate = ({label, text, message}: Props) => {
 
     const [toastState, setToastState] = useState<boolean>(false);
+    const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
+
+    const userAgent = navigator.userAgent;
 
     const handleDuplicateImgClick = async () => {
         try{
             await navigator.clipboard.writeText(text);
-            setToastState(true);
+            if(userAgent.match(/Android/i)){
+
+            }
+            else{
+                setIsDuplicateSuccess(true);
+                setToastState(true);
+            }
         } catch(e) {
-            alert('클립보드 복사 실패');
-            setToastState(true);
+            if(userAgent.match(/Android/i)){
+
+            }
+            else{
+                setIsDuplicateSuccess(false);
+                setToastState(true);
+            }
         }
     };
 
@@ -67,7 +81,7 @@ const BtnInfoDuplicate = ({label, text, message}: Props) => {
                 </div>
             </div>
             {toastState &&
-                <Toast type={toastState ? "O" : "X"} func={() => setToastState(false)}></Toast>
+                <Toast type={isDuplicateSuccess ? "O" : "X"} func={() => setToastState(false)}></Toast>
             }
         </>
     );
