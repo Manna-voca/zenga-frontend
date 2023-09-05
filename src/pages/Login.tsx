@@ -6,6 +6,7 @@ import { color } from "../styles/color";
 import { typography } from "../styles/typography";
 
 const Login = () => {
+  let isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   const navigate = useNavigate();
 
   const goCreateChannel = () => {
@@ -17,12 +18,15 @@ const Login = () => {
       <div style={{ marginTop: "20px", ...typography.heading1Semibold }}>
         젠가 ^^
       </div>
-      <button css={buttonStyles} onClick={() => navigate('/onboarding')}>
+      <button css={buttonStyles} onClick={() => navigate("/onboarding")}>
         서비스 온보딩
       </button>
-      <button css={buttonStyles} onClick={() => navigate('/channel-home')}>
+      <button css={buttonStyles} onClick={() => navigate("/channel-home")}>
         채널 홈으로
       </button>
+      <div style={{ marginTop: "20px", ...typography.heading1Semibold }}>
+        {isIOS ? "아아폰" : "갤룩시"}
+      </div>
     </>
   );
 };
