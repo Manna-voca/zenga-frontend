@@ -5,6 +5,7 @@ import InputText from "../components/InputText";
 import BtnInfoDuplicate from "../components/BtnInfoDuplicate";
 import ButtonBasic from "../components/ButtonBasic";
 import InputProfile from "../components/InputProfile";
+import Popup2 from "../components/Popup2";
 
 const ModifyChannelInfo = () => {
 
@@ -13,7 +14,14 @@ const ModifyChannelInfo = () => {
         setClubname(event.target.value);
     };
 
+    const [showChannelDeletePopup, setShowChannelDeletePopup] = useState<boolean>(false);
+
     const handleChannelDeleteBtnClick = () => {
+        setShowChannelDeletePopup(true);
+    };
+
+    const handleChannelDeletePopupClick = () => {
+        setShowChannelDeletePopup(false);
         alert("채널 삭제!!!");
     };
 
@@ -86,6 +94,16 @@ const ModifyChannelInfo = () => {
                     disable={clubname === ""}
                 ></ButtonBasic>
             </div>
+            {showChannelDeletePopup &&
+                <Popup2
+                    title="채널 삭제"
+                    text={"채널을 정말 삭제하시겠어요?"}
+                    leftBtnText="취소"
+                    rightBtnText="확인"
+                    leftFunc={() => setShowChannelDeletePopup(false)}
+                    rightFunc={handleChannelDeletePopupClick}
+                />
+            }
         </>
     );
 }

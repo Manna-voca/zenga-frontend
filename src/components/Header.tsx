@@ -50,6 +50,7 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
     }
 
     const handleBackButtonClick = () => {
+        document.body.style.overflow = "unset";
         navigate(-1);
     };
 
@@ -249,18 +250,6 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
                         style={{cursor: 'pointer'}}
                     />
                 </div>
-                {sidebarState === 1 && (
-                    <>
-                        <div
-                            onClick={handleOutsideClick}
-                            style={{ position: 'fixed', top: 0, left: 0,
-                                    right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.50)',
-                                    zIndex: '2'
-                        }}>
-                        </div>
-                        <Sidebar></Sidebar>
-                    </>
-                )}
             </>
         );
     }

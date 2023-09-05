@@ -1,13 +1,16 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { ReactComponent as OutImg } from "../images/out.svg";
 import { ReactComponent as DuplicateImg } from "../images/duplicate.svg";
+import Toast from "./Toast";
 
 interface Props {
     func? : any;
 };
 
 const PopupComplaint = ({func}: Props) => {
+
+    const [toastState, setToastState] = useState<boolean>(false);
 
     const handleOutImgClick = () => {
         func(0);
@@ -16,8 +19,10 @@ const PopupComplaint = ({func}: Props) => {
     const handleDuplicateImgClick = async () => {
         try{
             await navigator.clipboard.writeText('www.instagram.com/moa_zzi/');
+            setToastState(true);
         } catch(e) {
             alert('클립보드 복사 실패');
+            setToastState(true);
         }
     };
 
@@ -94,6 +99,9 @@ const PopupComplaint = ({func}: Props) => {
                     />
                 </div>
             </div>
+            {toastState &&
+                <Toast type={toastState ? "O" : "X"} func={() => setToastState(false)}></Toast>
+            }
         </>
     );
 }
