@@ -13,6 +13,7 @@ import { typography } from "../styles/typography";
 import duplicateIcon from "../assets/icons/ic-duplicate.svg";
 import SendPraise from "../components/SendPraise";
 import PraiseContainer from "../components/PraiseContainer";
+import Toast from "../components/Toast";
 
 interface CategoryProps {
   categoryName: string;
@@ -124,15 +125,25 @@ const MemberCountProgressBar = ({
 
 interface ChannelCodeProps {
   channelCode: string;
+  setIsDuplicateSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setToastState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ChannelCode = ({ channelCode }: ChannelCodeProps) => {
+const ChannelCode = ({ channelCode, setIsDuplicateSuccess, setToastState }: ChannelCodeProps) => {
+  const userAgent = navigator.userAgent;
+
   const handleDuplicateImgClick = async () => {
     try {
       await navigator.clipboard.writeText(channelCode);
-      alert("채널 코드 복사 완료");
+      if(userAgent.match(/Android/i)){
+
+      }else{
+        setIsDuplicateSuccess(true);
+        setToastState(true);
+      }
     } catch (e) {
-      alert("클립보드 복사 실패");
+      setIsDuplicateSuccess(false);
+      setToastState(true);
     }
   };
 
@@ -174,6 +185,9 @@ const ChannelCode = ({ channelCode }: ChannelCodeProps) => {
 const Praise = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
   const [isChannelActive, setIsChannelActive] = useState<boolean>(true);
+
+  const [toastState, setToastState] = useState<boolean>(false);
+  const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
 
   const handleCategory1Click = async () => {
     setSelectedCategory(1);
@@ -225,7 +239,10 @@ const Praise = () => {
               </span>
               <MemberCountProgressBar memberCount={4} />
             </div>
-            <ChannelCode channelCode="ab2ef@d" />
+            <ChannelCode channelCode="ab2ef@d" setIsDuplicateSuccess={setIsDuplicateSuccess} setToastState={setToastState}/>
+            {toastState &&
+              <Toast type={isDuplicateSuccess ? "O" : "X"} func={() => setToastState(false)}></Toast>
+            }
           </>
         )
       ) : null}
