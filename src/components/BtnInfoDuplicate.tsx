@@ -26,13 +26,8 @@ const BtnInfoDuplicate = ({label, text, message}: Props) => {
                 setToastState(true);
             }
         } catch(e) {
-            if(userAgent.match(/Android/i)){
-
-            }
-            else{
-                setIsDuplicateSuccess(false);
-                setToastState(true);
-            }
+            setIsDuplicateSuccess(false);
+            setToastState(true);
         }
     };
 
