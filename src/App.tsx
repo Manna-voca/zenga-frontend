@@ -23,6 +23,7 @@ import ModifyProfileInfo from "./pages/ModifyProfileInfo";
 import PointDetail from "./pages/PointDetail";
 import Comment from "./pages/Comment";
 import "./styles/font.css"
+import Album from "./pages/Album";
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
       <Route path="/my-meetup" element={<MyMeetup />}></Route>
       <Route path="/modify-profile-info" element={<ModifyProfileInfo />}></Route>
       <Route path="/point" element={<PointDetail />}></Route>
+      <Route path="/album/:userId" element={<Album />}></Route>
     </Routes>
   );
 }

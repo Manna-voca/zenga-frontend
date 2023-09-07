@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import { ReactComponent as CameraImg } from "../images/camera.svg";
 import ButtonBasic from "../components/ButtonBasic";
 import MeetupMember from "./MeetupMember";
+import Card from "../components/Card";
 
 const CreateCard = () => {
     const navigate = useNavigate();
@@ -67,50 +68,13 @@ const CreateCard = () => {
                     <div style={{ margin: '0 20px 0 20px' }}>
                         {cardState ? (
                             <>
-                                <div
-                                    style={{ height: '535px', width: '100%',
-                                            borderRadius: '10px', backgroundImage: `url(${cardImage})`,
-                                            backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                                            position: 'relative'
-                                }}>
-                                    <div
-                                        style={{ position: 'absolute', top: '20px', left: '20px',
-                                                height: '17px', lineHeight: '150%',
-                                                color: 'var(--on-primary-active, #FCFCFC)',
-                                                textShadow: '0px 0px 2px rgba(0, 0, 0, 0.10)',
-                                                fontSize: '14px', fontStyle: 'normal',
-                                                fontWeight: '400'
-                                    }}>
-                                        2023.02.26
-                                    </div>
-                                    <div
-                                        style={{ position: 'absolute', bottom: '20px',
-                                                margin: '0 20px 0 20px', display: 'flex',
-                                                flexDirection: 'column', justifyContent: 'flex-end',
-                                                gap: '4px',
-                                                color: 'var(--on-primary-active, #FCFCFC)',
-                                                textShadow: '0px 0px 2px rgba(0, 0, 0, 0.10)',
-                                    }}>
-                                        <div
-                                            style={{ display: 'block', overflow: 'hidden',
-                                                    textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                                                    fontSize: '21px', fontStyle: 'normal',
-                                                    fontWeight: '600', lineHeight: '150%'
-                                        }}>
-                                            맞짱 뜰 사람~!
-                                        </div>
-                                        <div
-                                            style={{ fontSize: '14px', fontStyle: 'normal',
-                                                    fontWeight: '400', lineHeight: '150%',
-                                                    flexBasis: '40px', width: '100%',
-                                                    whiteSpace: 'pre-wrap'
-                                        }}>
-                                            우리 2월에 만났는데 벌써 7월이야..ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ...  더보기
-                                        </div>
-                                    </div>
-                                </div>
+                                <Card
+                                    date="2023.02.26"
+                                    title="맞짱 뜰 사람~!"
+                                    text={"일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십"}
+                                    image={cardImage}
+                                />
                                 <div style={{ height: '39px' }}></div>
-
                                 <ButtonBasic
                                     innerText="확인"
                                     onClick={handleConfirmBtnClick}

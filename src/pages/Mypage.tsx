@@ -2,9 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import CircularImage from "../components/CircularImage";
 import defaultChannelProfile from '../images/defaultchannelprofile.png';
-import ButtonBasic from "../components/ButtonBasic";
 import ProfileUpper from "../components/ProfileUpper";
 import Navbar from "../components/Navbar";
 import ProfileAlbum from "../components/ProfileAlbum";
@@ -50,11 +48,21 @@ const Mypage = () => {
                     text="자기소개 내용이 들어갈 부분입니다 자기소개 내용이 들어갈 부분입니다 자기소개 내용이 들어갈"
                 ></ProfileUpper>
                 <div style={{ height: '20px' }}></div>
-                <ButtonBasic
-                    innerText="프로필 수정"
+                <button
                     onClick={() => navigate('/modify-profile-info')}
-                    btnColor='FAFAFA'
-                />
+                    style={{ width: '100%', height: '36px', display: 'flex',
+                            padding: '12px 117px 11px 117px', justifyContent: 'center',
+                            alignItems: 'center', borderRadius: '8px',
+                            border: 'none', boxSizing: 'border-box',
+                            background: 'var(--surface-surface, #FAFAFA)',
+                            color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))',
+                            fontSize: '14px', fontStyle: 'normal',
+                            fontWeight: '500', lineHeight: '150%',
+                            fontFamily: 'Pretendard'
+                    }}
+                >
+                    프로필 수정
+                </button>
             </div>
             <div style={{ height: '28px' }}></div>
             <div

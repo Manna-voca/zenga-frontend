@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "@emotion/styled";
 import testImg from '../images/jun.png';
 import whaleImg from '../images/whalealbum.png';
 
@@ -8,6 +10,21 @@ interface Props{
 };
 
 const ProfileAlbum = ({who}: Props) => {
+    const cardDummy: Array<string> = [
+        testImg,
+        testImg,
+        testImg,
+        testImg,
+        testImg,
+        testImg,
+        testImg,
+        testImg,
+        testImg,
+        testImg,
+        testImg,
+    ];
+
+    const navigate = useNavigate();
 
     const [isAlbum0, setIsAlbum0] = useState<boolean>(false);
 
@@ -63,66 +80,12 @@ const ProfileAlbum = ({who}: Props) => {
                     <div
                         style={{ display: 'flex', flexWrap: 'wrap'
                     }}>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
-                        <div
-                            style={{ width: '33.33333333333333333333333333333333333%',
-                                    aspectRatio: '67 / 107', background: 'gray',
-                                    backgroundImage: `url(${testImg})`,
-                                    backgroundPosition: '50% 50%', backgroundSize: 'cover',
-                        }}></div>
+                        {cardDummy.map((item, index) => {
+                            return <CardContainer
+                                        onClick={() => navigate('/album/1', {state: {who: who, initialNum: index}})}
+                                        style={{ backgroundImage: `url(${item})`}}
+                                    />
+                        })}
                     </div>
                 </>
             )}
@@ -131,3 +94,11 @@ const ProfileAlbum = ({who}: Props) => {
 }
 
 export default ProfileAlbum;
+
+const CardContainer = styled.div`
+    width: 33.333333333333333333333333333333%;
+    aspect-ratio: 67 / 107;
+    background: gray;
+    background-position: 50% 50%;
+    background-size: cover;
+`;

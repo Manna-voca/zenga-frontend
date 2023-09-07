@@ -11,6 +11,41 @@ import pinkblockImg from "../images/pinkblock.png";
 import defaultblockImg from "../images/defaultblock.png";
 import ZengaBigBlock from "./ZengaBigBlock";
 import whaleImg from "../assets/images/whale_character7.png";
+import { ReactComponent as DeleteImg } from "../images/delete.svg"
+
+interface ExplainProps{
+    type: "Blue" | "Yellow" | "Green" | "Purple" | "Orange" | "Pink" | "Default";
+    title: string;
+    text: string;
+}
+
+const ExplainWrapper = ({type, title, text}: ExplainProps) => {
+    return(
+        <div style={{ height: '36px' }}>
+            <div
+                style={{display: 'flex', alignItems:'flex-start', gap: '6px'
+            }}>
+                <img height={18} width={18} src={`/assets/ic-block${type}.svg`}></img>
+                <div
+                    style={{ height: '18px', fontSize: '12px',
+                            fontStyle: 'normal', fontWeight: '600',
+                            lineHeight: '160%',
+                            color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
+                }}>
+                    {title}
+                </div>
+            </div>
+            <div
+                style={{ marginLeft: '24px', height: '18px',
+                        fontSize: '10px', fontStyle: 'normal',
+                        fontWeight: '400', lineHeight: '150%',
+                        color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
+            }}>
+                {text}
+            </div>
+        </div>
+    );
+}
 
 const ProfileZenga = () => {
 
@@ -89,6 +124,46 @@ const ProfileZenga = () => {
                     </div>
                 </>
             )}
+            {helpboxState &&
+                <>
+                    <div
+                        style={{ position: 'fixed', top: '0', left: '0',
+                                right: '0', bottom: '0', zIndex: '2',
+                                backgroundColor: 'rgba(0, 0, 0, 0.50)'
+                    }}>
+                    </div>
+                    <div
+                        style={{ position: 'fixed', top: '50%',
+                                left: '50%', width: '290px',
+                                height: '360px', transform: "translate(-50%, -50%)",
+                                background: 'var(--surface-background, #FFF)',
+                                borderRadius: '16px', display: 'flex',
+                                justifyContent: 'center', zIndex: '3',
+                                alignItems: 'center',
+                                maxWidth: 'calc(500px - 85px)'
+                    }}>
+                        <DeleteImg
+                            onClick={() => setHelpboxState(false)}
+                            style={{ position: 'absolute', top: '12px',
+                                    right: '12px', cursor: 'pointer'
+                            }}
+                        />
+                        <div
+                            style={{ display: 'flex', width: '228px',
+                                    flexDirection: 'column', alignItems: 'flex-start',
+                                    gap: '10px'
+                        }}>
+                            <ExplainWrapper type="Default" title="내가 한 칭찬" text="칭찬을 보낸 횟수에 따라 블록을 획득할 수 있어요"/>
+                            <ExplainWrapper type="Pink" title="외적 칭찬" text="ex. 눈이 가장 매력적인 사람은?"/>
+                            <ExplainWrapper type="Orange" title="성격 칭찬" text="ex. 고민을 제일 잘 들어줄 것 같은 사람은?"/>
+                            <ExplainWrapper type="Yellow" title="도전・열정 칭찬" text="ex. 가장 자기계발에 힘쓰는 사람은?"/>
+                            <ExplainWrapper type="Green" title="능력 칭찬" text="ex. 가장 말을 잘하는 사람은?"/>
+                            <ExplainWrapper type="Blue" title="그 외 칭찬" text="ex. 하루만 이 사람으로 살아보고 싶은 사람은?"/>
+                            <ExplainWrapper type="Purple" title="모임" text="모임 참여 횟수에 따라 블록을 획득할 수 있어요"/>
+                        </div>
+                    </div>
+                </>
+            }
         </>
     );
 }
