@@ -76,9 +76,52 @@ const MeetupDetail = () => {
 
     const buttonData = ["", "모임 참여하기", "모임 참여 취소하기", "모임 진행 중", "모임 완료", "모집 완료", "카드 만들기"];
 
+    const handleShareButtonClick = () => {
+        navigator.share({
+            title: `모임명: 어쩌구저쩌구\n`,
+            text: "링크를 타고 들어와 공유된 모임을 확인해보세요\n",
+            url: `https://naver.com`,
+        }).catch((error) => {
+            if(navigator.clipboard){
+                navigator.clipboard.writeText(`https://naver.com`).then(() => {
+                    alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
+                }).catch((error) => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = `https://naver.com`;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    textArea.setSelectionRange(0, 99999);
+                    try{
+                        document.execCommand('copy');
+                    } catch (err) {
+                        alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`);
+                    }
+                    textArea.setSelectionRange(0, 0);
+                    document.body.removeChild(textArea);
+                    alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
+                })
+            }
+            else{
+                const textArea = document.createElement('textarea');
+                textArea.value = `https://naver.com`;
+                document.body.appendChild(textArea);
+                textArea.select();
+                textArea.setSelectionRange(0, 99999);
+                try{
+                    document.execCommand('copy');
+                } catch (err) {
+                    alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`);
+                }
+                textArea.setSelectionRange(0, 0);
+                document.body.removeChild(textArea);
+                alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
+            }
+        });
+    };
+
     return(
         <>
-            <Header type="detail" func={handleKebabClick}></Header>
+            <Header type="detail" func={handleKebabClick} shareFunc={handleShareButtonClick}></Header>
             <div style={{ height: '12px' }}></div>
             <div
                 style={{ margin: '0 20px 0 20px', display: 'flex',
@@ -116,7 +159,7 @@ const MeetupDetail = () => {
                         textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         color: 'var(--text-text-active, var(--light-text-text-active, #0D0D0D))',
                         fontSize: '21px', fontStyle: 'normal',
-                        fontWeight: '600'
+                        fontWeight: '600', wordBreak: 'break-all'
             }}>
                 비오니까 파전에 막걸리
             </div>
@@ -129,7 +172,8 @@ const MeetupDetail = () => {
                     style={{ color: '#0A0A0A', fontSize: '16px',
                             fontStyle: 'normal', fontWeight: '400',
                             lineHeight: '150%', flexBasis: '24px',
-                            width: '100%', whiteSpace: 'pre-wrap'
+                            width: '100%', whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-all'
                 }}>
                     아 지금 시간이 새벽 1시 25분인데 이걸 하고 있다니 진짜 말도안돼 이것만 쓰고 바로 유튜브 보러 간다 파전에 막걸리 맛있겠다 계곡가서 백숙도 먹고싶다 근데 사실 집에서 부추전도 먹고 김치볶음밥도 먹고 닭발도 먹고 코다리도 먹고 빵도 먹었음 아무래도 내일부터는 아니 다음 주에는 진짜 다이어트 해야징~
                 </p>
@@ -359,7 +403,7 @@ const MeetupDetail = () => {
                         style={{ fontWeight: '500', width: '45px',
                                 display: 'block', alignItems: 'center',
                                 overflow: 'hidden', textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap'
+                                whiteSpace: 'nowrap', wordBreak: 'break-all'
                     }}>
                         모아이
                     </div>
@@ -367,7 +411,7 @@ const MeetupDetail = () => {
                         style={{ fontWeight: '400', minWidth: '0', flex: '1',
                                 display: 'block', alignItems: 'center',
                                 overflow: 'hidden', textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap'
+                                whiteSpace: 'nowrap', wordBreak: 'break-all'
                     }}>
                         진짜 지금 역대급 배고파서 어지러워
                     </div>

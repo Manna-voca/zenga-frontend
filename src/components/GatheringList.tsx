@@ -53,7 +53,7 @@ const GatheringList = ({meetupId = 1, title, image, date = null,
                                 color: isEnd ? 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))' : 'var(--text-text-active, var(--light-text-text-active, #0D0D0D))',
                                 textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                                 fontSize: '14px', fontStyle: 'normal',
-                                fontWeight: '600'
+                                fontWeight: '600', wordBreak: 'break-all'
                     }}>
                         {title}
                     </div>

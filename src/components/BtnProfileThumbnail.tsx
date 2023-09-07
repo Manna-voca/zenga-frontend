@@ -33,7 +33,8 @@ const BtnProfileThumbnail = ({userImg, userName, isChannelAdmin}: Props) => {
                             textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                             color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))',
                             textAlign: 'center', fontSize: '12px',
-                            fontStyle: 'normal', fontWeight: '500'
+                            fontStyle: 'normal', fontWeight: '500',
+                            wordBreak: 'break-all'
                 }}>
                     {userName}
                 </div>

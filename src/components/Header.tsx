@@ -21,11 +21,12 @@ interface Props {
     type : "back" | "common" | "out" | "detail" | "card" | "my";
     text? : string;
     isChannelAdmin? : boolean;
-    isMeetupAdmin? : boolean;
+    download? : false;
     func?: any;
+    shareFunc?: any;
 };
 
-const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props) => {
+const Header = ({type, text, isChannelAdmin, download, func, shareFunc}: Props) => {
     const navigate = useNavigate();
 
     const [sidebarState, setSidebarState] = useState<number>(0);
@@ -174,6 +175,7 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
                                 gap: '20px'
                     }}>
                         <ShareImg
+                            onClick={() => shareFunc()}
                             style={{ cursor: 'pointer' }}
                         />
                         <KebabImg
@@ -213,12 +215,14 @@ const Header = ({type, text, isChannelAdmin, isMeetupAdmin = false, func}: Props
                         <span>{text}</span>
                     </div>
                     <div
-                        style={{ display: 'flex', alignItems: 'flex-start',
+                        style={{ display: 'flex', alignItems: 'flex-end',
                                 gap: '20px'
                     }}>
-                        <DownloadImg
-                            style={{ cursor: 'pointer' }}
-                        />
+                        {download !== false &&
+                            <DownloadImg
+                                style={{ cursor: 'pointer' }}
+                            />
+                        }
                         <ParticipantImg
                             onClick={handleParticipantImgClick}
                             style={{ cursor: 'pointer' }}
