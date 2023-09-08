@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import styled from "@emotion/styled";
@@ -14,6 +14,8 @@ import duplicateIcon from "../assets/icons/ic-duplicate.svg";
 import SendPraise from "../components/SendPraise";
 import PraiseContainer from "../components/PraiseContainer";
 import Toast from "../components/Toast";
+import { useParams } from "react-router";
+import axios from "axios";
 
 interface CategoryProps {
   categoryName: string;
@@ -129,15 +131,18 @@ interface ChannelCodeProps {
   setToastState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ChannelCode = ({ channelCode, setIsDuplicateSuccess, setToastState }: ChannelCodeProps) => {
+const ChannelCode = ({
+  channelCode,
+  setIsDuplicateSuccess,
+  setToastState,
+}: ChannelCodeProps) => {
   const userAgent = navigator.userAgent;
 
   const handleDuplicateImgClick = async () => {
     try {
       await navigator.clipboard.writeText(channelCode);
-      if(userAgent.match(/Android/i)){
-
-      }else{
+      if (userAgent.match(/Android/i)) {
+      } else {
         setIsDuplicateSuccess(true);
         setToastState(true);
       }
@@ -184,10 +189,18 @@ const ChannelCode = ({ channelCode, setIsDuplicateSuccess, setToastState }: Chan
 
 const Praise = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
-  const [isChannelActive, setIsChannelActive] = useState<boolean>(true);
-
+  const [isChannelActive, setIsChannelActive] = useState<boolean>(false);
   const [toastState, setToastState] = useState<boolean>(false);
   const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
+  const [memberCount, setMemberCount] = useState<number>(0);
+  const { channelCode } = useParams();
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const CONFIG = {
+    headers: {
+      // Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
+    },
+  };
 
   const handleCategory1Click = async () => {
     setSelectedCategory(1);
@@ -198,6 +211,39 @@ const Praise = () => {
   const handleCategory3Click = async () => {
     setSelectedCategory(3);
   };
+
+  const fetchChannelIdAndValidity = async () => {
+    let channelId;
+    try {
+      const infoResponse = await axios.get(
+        `${SERVER_URL}/channels/info?code=${channelCode}`,
+        CONFIG
+      );
+      if (infoResponse.data && infoResponse.data.data) {
+        channelId = infoResponse.data.data.id;
+        localStorage.setItem("channelId", channelId);
+        const validityResponse = await axios.get(
+          `${SERVER_URL}/channels/${channelId}/validity`,
+          CONFIG
+        );
+        if (validityResponse.data) {
+          console.log(validityResponse.data.data)
+          if (validityResponse.data.data.isValid === true) {
+            setIsChannelActive(true);
+          } else {
+            setMemberCount(validityResponse.data.data.memberCount);
+            setIsChannelActive(false);
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchChannelIdAndValidity();
+  }, []);
 
   return (
     <>
@@ -237,12 +283,19 @@ const Praise = () => {
                 <br />
                 <b>최소 10명</b>이 모여야 해요
               </span>
-              <MemberCountProgressBar memberCount={4} />
+              <MemberCountProgressBar memberCount={memberCount} />
             </div>
-            <ChannelCode channelCode="ab2ef@d" setIsDuplicateSuccess={setIsDuplicateSuccess} setToastState={setToastState}/>
-            {toastState &&
-              <Toast type={isDuplicateSuccess ? "O" : "X"} func={() => setToastState(false)}></Toast>
-            }
+            <ChannelCode
+              channelCode={channelCode ? channelCode : ""}
+              setIsDuplicateSuccess={setIsDuplicateSuccess}
+              setToastState={setToastState}
+            />
+            {toastState && (
+              <Toast
+                type={isDuplicateSuccess ? "O" : "X"}
+                func={() => setToastState(false)}
+              ></Toast>
+            )}
           </>
         )
       ) : null}

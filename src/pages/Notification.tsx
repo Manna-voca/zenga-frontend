@@ -1,6 +1,8 @@
+import { useState } from "react";
 import Header from "../components/Header";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
+import axios from "axios";
 
 interface OwnProps {
   title: string;
@@ -42,6 +44,18 @@ const NotificationWrapper = ({ title, content, date, isRead }: OwnProps) => {
 };
 
 export default function Notification() {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const CONFIG = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  };
+  // const [notifications, setNotifications] = useState([]);
+
+  // const fetchNotifications = async () => {
+  //   const notificationResponse = await axios.get(`${SERVER_URL}/api/notifications`, CONFIG);
+  // };
+
   return (
     <>
       <Header type="back" />

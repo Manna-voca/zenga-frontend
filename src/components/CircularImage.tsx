@@ -36,6 +36,7 @@ const CircularImage: FC<CircularImageProps> = ({
         style={{
           borderRadius: "500px",
           display: "block",
+          objectFit: "cover"
         }}
       ></img>
       {isChannelAdmin && (

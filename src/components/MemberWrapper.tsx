@@ -8,14 +8,15 @@ import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
   name: string;
+  id: number;
   image: string;
   isChannelAdmin: boolean;
 }
 
-const MemberWrapper = ({ name, image, isChannelAdmin }: OwnProps) => {
+const MemberWrapper = ({ name, image, id, isChannelAdmin }: OwnProps) => {
   const navigate = useNavigate();
   return (
-    <Container onClick={() => navigate('/memberpage/1')}>
+    <Container onClick={() => navigate("/memberpage/1")}>
       <CircularImage
         image={image}
         size="36"

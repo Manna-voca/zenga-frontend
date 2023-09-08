@@ -108,9 +108,10 @@ const DropDown: FC<DropDownProps> = ({
           }}
         >
           {isSelecting &&
-            dropdownMenu.map((item) => {
+            dropdownMenu.map((item, index) => {
               return (
                 <div
+                  key={index}
                   onClick={() => {
                     onChange(item);
                     setIsSelecting((prev) => !prev);

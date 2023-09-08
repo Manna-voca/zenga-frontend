@@ -36,7 +36,7 @@ function App() {
       <Route path="/create-channel" element={<CreateChannel />}></Route>
       <Route path="/create-channel/new-onboarding" element={<NewChannelOnboarding />}></Route>
       <Route path="/create-channel/old-onboarding" element={<OldChannelOnboarding />}></Route>
-      <Route path="/praise" element={<Praise />}></Route>
+      <Route path="/:channelCode/praise" element={<Praise />}></Route>
       <Route path="/member-list" element={<MemberList />}></Route>
       <Route path="/notification" element={<Notification />}></Route>
       <Route path="/create-meetup" element={<CreateMeetup />}></Route>

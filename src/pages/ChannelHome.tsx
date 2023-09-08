@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Player, Controls } from "@lottiefiles/react-lottie-player";
 import { typography } from "../styles/typography";
 import { color } from "../styles/color";
@@ -11,21 +12,58 @@ import exChannel_2 from "../assets/images/ex-channel-2.png";
 import exChannel_3 from "../assets/images/ex-channel-3.png";
 
 import CircularImage from "../components/CircularImage";
-import { useNavigate } from "react-router-dom";
+import { get } from "../api/api";
+import axios, { AxiosResponse } from "axios";
+
+interface ChannelProps {
+  code: string;
+  id: number;
+  logoImageUrl: string;
+  name: string;
+}
 
 export default function ChannelHome() {
-  const channelDummy = [
-    {
-      image: exChannel_1,
-      name: "모아모아 모아모아 2기",
-    },
-    { image: exChannel_2, name: "롤칼바람나락 good 동아리 3기 good" },
-    { image: exChannel_3, name: "멋쟁이 사자처럼 sdfasfsdfasdfadf fdssadfsafd" },
-    { image: exChannel_1, name: "곰돌이  곰돌이이 adfasdfsfdasfasdfadsfasdd" },
-    { image: exChannel_3, name: "멋쟁이 사자처럼sdfasfsdfasdfadf fdssadfsafd" },
-    { image: exChannel_2, name: "모아모아aasdfasdfasfdsafsafadfafsafadfsaf" },
-  ];
+  // const channelDummy = [
+  //   {
+  //     image: exChannel_1,
+  //     name: "모아모아 모아모아 2기",
+  //   },
+  //   { image: exChannel_2, name: "롤 칼바람 나락 good 동아리 3기 good" },
+  //   {
+  //     image: exChannel_3,
+  //     name: "멋쟁이 사자처럼 12기",
+  //   },
+  //   { image: exChannel_1, name: "곰돌이  곰돌이이 adfasdfsfdasfasdfadsfasdd" },
+  //   // { image: exChannel_3, name: "멋쟁이 사자처럼sdfasfsdfasdfadf fdssadfsafd" },
+  //   // { image: exChannel_2, name: "모아모아aasdfasdfasfdsafsafadfafsafadfsaf" },
+  // ];
+
+  const [channelList, setChannelList] = useState<Array<ChannelProps>>();
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/channels`,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI`,
+          },
+        }
+      );
+      if (res.data && res.data.data) {
+        setChannelList(res.data.data as Array<ChannelProps>);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const navigate = useNavigate();
+
   return (
     <div>
       <div
@@ -62,18 +100,21 @@ export default function ChannelHome() {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "30px 5px",
-          justifyContent: "space-between",
+          gap: "30px 2%",
           padding: "0 20px",
         }}
       >
         <div onClick={() => navigate("/create-channel")} css={ChannelDivStyle}>
           <CircularImage image={btnChannelAdd} size="98" />
         </div>
-        {channelDummy.map((item) => {
+        {channelList?.map((item, index) => {
           return (
-            <div onClick={() => navigate("/praise")} css={ChannelDivStyle}>
-              <CircularImage image={item.image} size="98" />
+            <div
+              key={index}
+              onClick={() => navigate(`/${item.code}/praise`)}
+              css={ChannelDivStyle}
+            >
+              <CircularImage image={item.logoImageUrl} size="98" />
               <div
                 css={css`
                   display: -webkit-box;
@@ -102,10 +143,9 @@ export default function ChannelHome() {
 
 const ChannelDivStyle = css`
   display: flex;
-  flex: calc(33% - 20px);
+  flex: 32%;
   flex-grow: 0;
   flex-direction: column;
-  width: 98px;
   color: ${color.onSurfaceDefault};
   font-size: 14px;
   font-weight: 500;

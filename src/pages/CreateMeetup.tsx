@@ -15,6 +15,7 @@ import downArrowMutedIcon from "../assets/icons/ic-downArrowMuted.svg";
 import MeetupImageEditor from "../components/MeetupImageEditor";
 import ButtonBasic from "../components/ButtonBasic";
 import { typography } from "../styles/typography";
+import axios from "axios";
 
 interface MeetupInfoProps {
   title: string;
@@ -37,6 +38,15 @@ const initialMeetupInfo: MeetupInfoProps = {
 };
 
 const CreateMeetup = () => {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const CONFIG = {
+    headers: {
+      // Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
+    },
+  };
+  const CHANNEL_ID = localStorage.getItem("channelId");
+
   const [meetupInfo, setMeetupInfo] =
     useState<MeetupInfoProps>(initialMeetupInfo);
 
@@ -72,6 +82,40 @@ const CreateMeetup = () => {
   const handleImageDelete = useCallback(() => {
     setAttachment(null);
   }, []);
+
+  let isPostValid =
+    meetupInfo.title.length > 0 &&
+    meetupInfo.date !== null &&
+    meetupInfo.place !== "" &&
+    meetupInfo.content.length > 0 &&
+    meetupInfo.personNum.length > 0;
+
+  const postNewMeetup = async () => {
+    const partyInfo = {
+      channelId: CHANNEL_ID,
+      title: meetupInfo.title,
+      content: meetupInfo.content,
+      maxCapacity: meetupInfo.personNum,
+      location: meetupInfo.place === undefined? "" : meetupInfo.place,
+      partyDate: meetupInfo.date === undefined ? "" : meetupInfo.date,
+      partyImageUrl: "",
+    };
+    const postResponse = await axios.post(
+      `${SERVER_URL}/party/create`,
+      partyInfo,
+      CONFIG
+    );
+    if (postResponse.status === 200) {
+      console.log(postResponse.data);
+      const res = await axios.get(
+        `${SERVER_URL}/party/list?channelId=${CHANNEL_ID}`,
+        CONFIG
+      );
+      if (res.data) {
+        console.log(res.data);
+      }
+    }
+  };
 
   return (
     <>
@@ -240,8 +284,11 @@ const CreateMeetup = () => {
         <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
           <ButtonBasic
             innerText="완료"
-            onClick={() => alert("good")}
-            disable={false}
+            onClick={() => {
+              alert("good");
+              postNewMeetup();
+            }}
+            disable={!isPostValid}
           />
         </div>
       </div>
@@ -285,6 +332,7 @@ const undefinedButtonStyle = css`
   width: 82px;
   height: 30px;
   font-family: Pretendard;
+  cursor: pointer;
   font-style: normal;
   font-size: 14px;
   font-weight: 500;

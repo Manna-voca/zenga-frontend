@@ -18,6 +18,8 @@ interface DatePickerProps {
   isNecessary: boolean;
   placeholder: string;
   value: string;
+  birthDate: string;
+  setBirthDate: react.Dispatch<react.SetStateAction<string>>
 }
 
 const DatePicker: FC<DatePickerProps> = ({
@@ -25,16 +27,17 @@ const DatePicker: FC<DatePickerProps> = ({
   isNecessary,
   placeholder,
   value,
+  birthDate,
+  setBirthDate,
 }) => {
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
-  const [birthDate, setBirthDate] = useState<string>();
 
   const handleDateChange = (date: Date) => {
     const formatDatetoString = (birthDate: Date) => {
       const year = birthDate.getFullYear();
       const month = (birthDate.getMonth() + 1).toString().padStart(2, "0");
       const date = birthDate.getDate().toString().padStart(2, "0");
-      return `${year}/${month}/${date}`;
+      return `${year}.${month}.${date}`;
     };
     setBirthDate(formatDatetoString(date));
   };
@@ -93,7 +96,6 @@ const DatePicker: FC<DatePickerProps> = ({
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
-          dateFormat="yyyy.MM.dd"
         />
         <img
           style={{
