@@ -87,6 +87,7 @@ const MeetupHome = () => {
                                 meetingAt.format('M월 D일(ddd) HH:mm');
                             }
                             return (
+                              <>
                                 <GatheringList
                                     key={item.partyId}
                                     title={item.title}
@@ -99,6 +100,8 @@ const MeetupHome = () => {
                                     maxNum={item.maxCapacity}
                                     meetupId={item.partyId}
                                 />
+                                <div style={{height: "8px"}}></div>
+                                </>
                             )
                         })}
                         <div style={{ height: '57px' }}></div>

@@ -55,15 +55,17 @@ const OldChannelOnboarding = () => {
   const [errorState, setErrorState] = useState<boolean>(false);
   const [channelId, setChannelId] = useState<any>();
 
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const CONFIG = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      'Content-Type':'application/json'
+    },
+  };
+
   const handleButtonClick = async () => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`
-      }
-    };
     if(step === 1){
-      axios.get(`${process.env.REACT_APP_SERVER_URL}/channels/info?code=${code}`, config).then((res) => {
+      axios.get(`${SERVER_URL}/channels/info?code=${code}`, CONFIG).then((res) => {
         console.log(res);
         setChannelId(res.data.data.id);
         setStep((current) => current + 1);
@@ -80,9 +82,9 @@ const OldChannelOnboarding = () => {
       if(userImageFile !== null){
         const userImgFormData = new FormData();
         userImgFormData.append('image', userImageFile);
-        const uploadUserImgResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/image/upload`, userImgFormData, {
+        const uploadUserImgResponse = await axios.post(`${SERVER_URL}/image/upload`, userImgFormData, {
           headers: {
-            'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+            'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
             'Content-Type': 'multipart/form-data'
           }
         });
@@ -94,7 +96,7 @@ const OldChannelOnboarding = () => {
           userFormData.append('nickname', nickname);
           userFormData.append('introduction', intro);
           userFormData.append('level', "NORMAL");
-          axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, userFormData, config).then((res) => {
+          axios.post(`${SERVER_URL}/members`, userFormData, CONFIG).then((res) => {
             console.log(res);
             setStep((current) => current + 1);
           }).catch((err) => console.log(err));
@@ -108,7 +110,7 @@ const OldChannelOnboarding = () => {
         userFormData.append('nickname', nickname);
         userFormData.append('introduction', intro);
         userFormData.append('level', "NORMAL");
-        axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, userFormData, config).then((res) => {
+        axios.post(`${SERVER_URL}/members`, userFormData, CONFIG).then((res) => {
           console.log(res);
           setStep((current) => current + 1);
         }).catch((err) => console.log(err));
