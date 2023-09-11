@@ -34,7 +34,7 @@ const Login = () => {
   return (
     <>
       <div style={{ marginTop: "20px", ...typography.heading1Semibold }}>
-        젠가 ^^
+        젠가
       </div>
       <button css={buttonStyles} onClick={() => navigate("/onboarding")}>
         서비스 온보딩
