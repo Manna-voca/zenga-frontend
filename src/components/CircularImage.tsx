@@ -1,5 +1,6 @@
 import { FC } from "react";
 import channelAdminIcon from "../assets/icons/ic-channelAdmin.svg";
+import { color } from "../styles/color";
 
 interface CircularImageProps {
   size: string;
@@ -34,6 +35,7 @@ const CircularImage: FC<CircularImageProps> = ({
         src={image}
         alt={alt}
         style={{
+          border: size === "36"? `0.367px solid ${color.outline};` : "",
           borderRadius: "500px",
           display: "block",
           objectFit: "cover"
