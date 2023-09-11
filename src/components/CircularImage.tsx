@@ -35,7 +35,7 @@ const CircularImage: FC<CircularImageProps> = ({
         src={image}
         alt={alt}
         style={{
-          border: size === "36"? `0.367px solid ${color.outline};` : "",
+          border: size === "36"? `0.367px solid ${color.outline}` : "",
           borderRadius: "500px",
           display: "block",
           objectFit: "cover"

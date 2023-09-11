@@ -16,7 +16,7 @@ interface OwnProps {
 const MemberWrapper = ({ name, image, id, isChannelAdmin }: OwnProps) => {
   const navigate = useNavigate();
   return (
-    <Container onClick={() => navigate("/memberpage/1")}>
+  <Container onClick={() => navigate(`/memberpage/${id}`)}>
       <CircularImage
         image={image}
         size="36"

@@ -80,7 +80,7 @@ const PraiseWrapper = ({
         <Popup2
           leftBtnText="취소"
           rightBtnText="확인"
-          title="포인트를 차감하시겠어요?"
+          title="300 포인트를 차감하시겠어요?"
           text="포인트 차감 시, 보낸 멤버가 누구인지 알 수 있어요"
           leftFunc={() => setShowPopup(false)}
           rightFunc={() => getSenderOfPraise()}
@@ -96,7 +96,9 @@ const PraiseWrapper = ({
           onClick={
             isGetNotPost === true && isOpened === false
               ? () => setShowPopup(true)
-              : () => {}
+              : () => {
+                  /* 멤버 페이지로 이동 */
+                }
           }
           css={imageNameStyle}
         >
@@ -161,4 +163,5 @@ const postImageNameStyle = css`
   line-height: 1.5;
   gap: 6px;
   color: ${color.onSurfaceDefault};
+  cursor: pointer;
 `;
