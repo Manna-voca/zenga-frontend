@@ -184,7 +184,7 @@ const ModifyProfileInfo = () => {
                         width: '100%', display: 'flex', justifyContent: 'center',
                         height: '47px', padding: '8px 0', zIndex: '2'
             }}>
-                <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
+                <div style={{ width: "calc(100% - 40px)", maxWidth: "460px",  }}>
                     <ButtonBasic
                         innerText='수정'
                         onClick={handleModifyBtnClick}
