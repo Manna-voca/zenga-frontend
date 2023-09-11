@@ -32,11 +32,10 @@ const PraiseWrapper = ({
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {
-      // Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   };
+
   const CHANNEL_ID = localStorage.getItem("channelId");
   const blockType = `block${type}`;
   const blockImagePath = `/assets/ic-${blockType}.svg`;
@@ -93,7 +92,14 @@ const PraiseWrapper = ({
           <B>{content}</B>
           {defaultMessage}
         </PraiseContentDiv>
-        <div onClick={() => setShowPopup(true)} css={imageNameStyle}>
+        <div
+          onClick={
+            isGetNotPost === true && isOpened === false
+              ? () => setShowPopup(true)
+              : () => {}
+          }
+          css={imageNameStyle}
+        >
           <CircularImage size="24" image={profileImagePath} />
           {name}
         </div>
