@@ -72,6 +72,12 @@ export default function ChannelHome() {
     fetchChannelData();
   }, []);
 
+  // 사이드바 열린 채로 뒤로가기를 하여 channel-home으로 이동 시
+  // 스크롤 막히는거 방지
+  if(document.body.style.overflow === "hidden"){
+    document.body.style.overflow = "unset";
+  }
+
   return (
     <div>
       <div
