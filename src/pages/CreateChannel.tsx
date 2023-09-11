@@ -12,8 +12,6 @@ const CreateChannel = () => {
     // 채널 유형에 따른 상태
     const [isNew, setIsNew] = useState<boolean>();
 
-    let checkBtnDisable = true;
-
     const handleCreateNewChannel = () => {
         if(isNew !== true){
             setIsNew(true);

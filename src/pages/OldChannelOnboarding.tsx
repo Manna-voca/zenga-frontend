@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Player, Controls } from "@lottiefiles/react-lottie-player";
 import CheckLottie from "../lotties/channelCreateCompleteLottie.json";
@@ -9,8 +9,8 @@ import ButtonBasic from "../components/ButtonBasic";
 import TextField from "../components/TextField";
 import { color } from "../styles/color";
 import InputProfile from "../components/InputProfile";
+import axios from "axios";
 
-// 기존 뒤로가기 기능과 상단의 버튼을 통해 뒤로가기에 대해 이전 단계로 돌아가도록 추후 구현
 
 const OldChannelOnboarding = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const OldChannelOnboarding = () => {
   const [userProfileImage, setUserProfileImage] = useState<
     string | ArrayBuffer | null
   >();
-  const [userImageFile, setUserImageFile] = useState<File | null>();
+  const [userImageFile, setUserImageFile] = useState<File | null>(null);
 
   const handleUserProfileImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -52,13 +52,81 @@ const OldChannelOnboarding = () => {
     event.target.value = "";
   };
 
-  const handleButtonClick = () => {
-    console.log(step);
-    setStep((current) => current + 1);
-    if (step === 3) {
-      navigate("/praise", { replace: true });
+  const [errorState, setErrorState] = useState<boolean>(false);
+  const [channelId, setChannelId] = useState<any>();
+
+  const handleButtonClick = async () => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`
+      }
+    };
+    if(step === 1){
+      axios.get(`${process.env.REACT_APP_SERVER_URL}/channels/info?code=${code}`, config).then((res) => {
+        console.log(res);
+        setChannelId(res.data.data.id);
+        setStep((current) => current + 1);
+        setPreventPopstate(true);
+      }).catch((err) => {
+        console.log(err);
+        if(err.code === 1500){
+          setErrorState(true);
+        }
+      });
+    }
+    if(step === 2){
+      // 이미지 저장하는 부분
+      if(userImageFile !== null){
+        const userImgFormData = new FormData();
+        userImgFormData.append('image', userImageFile);
+        const uploadUserImgResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/image/upload`, userImgFormData, {
+          headers: {
+            'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        if(uploadUserImgResponse.status === 200){
+          console.log(uploadUserImgResponse.data.data);
+          const userFormData = new FormData();
+          userFormData.append('channelId', channelId);
+          userFormData.append('profileImageUrl', uploadUserImgResponse.data.data.url);
+          userFormData.append('nickname', nickname);
+          userFormData.append('introduction', intro);
+          userFormData.append('level', "NORMAL");
+          axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, userFormData, config).then((res) => {
+            console.log(res);
+            setStep((current) => current + 1);
+          }).catch((err) => console.log(err));
+        }
+      }
+      else{
+        // 이미지 안 넣었을 때
+        const userFormData = new FormData();
+        userFormData.append('channelId', channelId);
+        userFormData.append('profileImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+        userFormData.append('nickname', nickname);
+        userFormData.append('introduction', intro);
+        userFormData.append('level', "NORMAL");
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, userFormData, config).then((res) => {
+          console.log(res);
+          setStep((current) => current + 1);
+        }).catch((err) => console.log(err));
+      }
     }
   };
+
+
+  const [preventPopState, setPreventPopstate] = useState<boolean>(false);
+  useEffect(() => {
+        if(preventPopState){
+            window.history.pushState(null, "", "");
+            window.onpopstate = () => {
+                setStep((current) => (current - 1));
+                setPreventPopstate((current) => !(current));
+            };
+        }
+  }, [preventPopState]);
 
   return (
     <>
@@ -141,7 +209,7 @@ const OldChannelOnboarding = () => {
               placeholder="8자리 코드를 입력해 주세요"
               value={code}
               onChange={handleCodeChange}
-              errorStatus={code.length > 0 && code !== "good"}
+              errorStatus={errorState}
               onErrorHelpMessage="없는 코드입니다."
             />
             <div style={{ height: "399px" }}></div>
@@ -164,7 +232,7 @@ const OldChannelOnboarding = () => {
               <ButtonBasic
                 innerText="채널 입장하기"
                 onClick={handleButtonClick}
-                disable={code === ""}
+                disable={code.length !== 8}
               ></ButtonBasic>
             </div>
           </div>

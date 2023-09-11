@@ -17,7 +17,7 @@ const InputProfile = ({image, handleProfileImageUpload}: Props) => {
                 <label
                     htmlFor="ex_file"
                     style={{ width: '98px', height: '98px',
-                            display: 'inline-block'
+                            display: 'inline-block', borderRadius: '500px'
                 }}>
                     <div
                         style={{ height: '98px', width: '98px',

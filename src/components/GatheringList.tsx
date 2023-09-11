@@ -3,17 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as ClockImg } from "../images/clock.svg";
 import { ReactComponent as LocationImg } from "../images/location.svg";
 import { ReactComponent as PeopleImg } from "../images/people.svg"
-import dayjs from "dayjs";
-import 'dayjs/locale/ko';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import CircularImage from "./CircularImage";
 
 interface Props {
     meetupId? : number;
     title : string;
     image? : string;
-    date : Date | null;
-    location : string | null;
+    date : string;
+    location : string;
     userImg: string;
     userName: string;
     currentNum: number;
@@ -21,13 +18,10 @@ interface Props {
     isEnd?: boolean;
 };
 
-const GatheringList = ({meetupId = 1, title, image, date = null,
-    location = null, userImg, userName, currentNum, maxNum, isEnd = false}: Props) => {
+const GatheringList = ({meetupId = 1, title, image, date,
+    location, userImg, userName, currentNum, maxNum, isEnd = false}: Props) => {
     
     const navigate = useNavigate();
-    dayjs.extend(relativeTime);
-    dayjs.locale('ko');
-    const meetingAt = dayjs(date);
     
     const handleListClick = () => {
         navigate(`/meetup-detail/${meetupId}`)
@@ -69,14 +63,14 @@ const GatheringList = ({meetupId = 1, title, image, date = null,
                                     gap: '4px'
                         }}>
                             <ClockImg width={12} height={12} fillOpacity={isEnd ? 0.45 : 0.7}/>
-                            <span>{date === null ? '날짜 미정' : meetingAt.format('M월 D일(ddd) HH:mm')}</span>
+                            <span>{date}</span>
                         </div>
                         <div
                             style={{ display: 'flex', alignItems: 'center',
                                     gap: '4px'
                         }}>
                             <LocationImg width={12} height={12} fillOpacity={isEnd ? 0.45 : 0.7}/>
-                            <span>{location === null ? '장소 미정' : location}</span>
+                            <span>{location}</span>
                         </div>
                     </div>
                     <div style={{ height: '3px' }}></div>

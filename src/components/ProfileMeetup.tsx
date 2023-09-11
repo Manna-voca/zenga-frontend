@@ -44,8 +44,8 @@ const ProfileMeetup = () => {
                 <GatheringList
                     title="비오니까 파전에 막걸리"
                     image={testImg}
-                    date={dayjs("2023-07-13 20:00:00").toDate()}
-                    location="우이락"
+                    date={"날짜 미정"}
+                    location={"장소 미정"}
                     userImg={testUserImg}
                     userName="모아이"
                     currentNum={1}
@@ -54,8 +54,8 @@ const ProfileMeetup = () => {
                 <div style={{ height: '8px' }}></div>
                 <GatheringList
                     title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                    date={null}
-                    location={null}
+                    date={"날짜 미정"}
+                    location={"장소 미정"}
                     userImg={testUserImg}
                     userName="모아이"
                     currentNum={1}
@@ -84,8 +84,8 @@ const ProfileMeetup = () => {
                 <GatheringList
                     title="비오니까 파전에 막걸리"
                     image={testImg}
-                    date={dayjs("2023-07-13 20:00:00").toDate()}
-                    location="우이락"
+                    date={"날짜 미정"}
+                    location={"장소 미정"}
                     userImg={testUserImg}
                     userName="모아이"
                     currentNum={1}
@@ -94,8 +94,8 @@ const ProfileMeetup = () => {
                 <div style={{ height: '8px' }}></div>
                 <GatheringList
                     title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                    date={null}
-                    location={null}
+                    date={"날짜 미정"}
+                    location={"장소 미정"}
                     userImg={testUserImg}
                     userName="모아이"
                     currentNum={1}
@@ -125,8 +125,8 @@ const ProfileMeetup = () => {
                 <GatheringList
                     title="비오니까 파전에 막걸리"
                     image={testImg}
-                    date={dayjs("2023-07-13 20:00:00").toDate()}
-                    location="우이락"
+                    date={"날짜 미정"}
+                    location={"장소 미정"}
                     userImg={testUserImg}
                     userName="모아이"
                     currentNum={1}
@@ -136,8 +136,8 @@ const ProfileMeetup = () => {
                 <div style={{ height: '8px' }}></div>
                 <GatheringList
                     title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                    date={null}
-                    location={null}
+                    date={"날짜 미정"}
+                    location={"장소 미정"}
                     userImg={testUserImg}
                     userName="모아이"
                     currentNum={1}
