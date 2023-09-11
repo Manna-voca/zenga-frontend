@@ -15,16 +15,7 @@ const Card = ({date, title, text, image}: Props) => {
     const [isAllText, setIsAllText] = useState<boolean>(false);
     const [moreBtnState, setMoreBtnState] = useState<boolean>(false);
 
-    const useDidMountEffect = (func: Function, deps: any) => {
-        const didMount = useRef(false);
-    
-        useEffect(() => {
-            if (didMount.current) func();
-            else didMount.current = true;
-        }, deps);
-    }
-
-    useDidMountEffect(() => {
+    useEffect(() => {
         if(textRef.current?.scrollHeight !== undefined && textRef.current?.scrollHeight > 40){
             setMoreBtnState(true);
         }

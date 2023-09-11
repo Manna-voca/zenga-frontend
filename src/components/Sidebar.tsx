@@ -1,24 +1,24 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import ChannelList from "./ChannelList";
-
-interface ChannelProps {
-  // channelImage: string;
-  channelName: string;
-  // channelId: number;
-}
+import axios from "axios";
 
 const Sidebar = () => {
-  const channelDummy: Array<ChannelProps> = [
-    {channelName: "가나다"},
-    {channelName: "가나다"},
-    {channelName: "가나다"},
-    {channelName: "가나다"},
-    {channelName: "가나다"},
-    {channelName: "가나다"},
-    {channelName: "가나다"},
-    {channelName: "가나다"},
-    {channelName: "가나다"},
-  ];
+
+  const [channelList, setChannelList] = useState<Array<any>>([]);
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/channels`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      console.log(res.data.data);
+      setChannelList(res.data.data);
+    });
+  }, [])
+
   return (
     <>
       <div
@@ -47,8 +47,8 @@ const Sidebar = () => {
           <span>채널 변경</span>
         </div>
         <ChannelList type="new"></ChannelList>
-        {channelDummy.map((item, index) => {
-          return <ChannelList key={index} name={item.channelName} />;
+        {channelList.map((item, index) => {
+          return <ChannelList key={index} name={item.name} img={item.logoImageUrl} />;
         })}
       </div>
     </>

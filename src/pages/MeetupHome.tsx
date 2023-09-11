@@ -8,9 +8,8 @@ import GatheringList from "../components/GatheringList";
 import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import testUserImg from '../images/channelprofile.png';
-import testImg from '../images/jun.png';
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const MeetupHome = () => {
     const navigate = useNavigate();
@@ -20,7 +19,20 @@ const MeetupHome = () => {
 
     const [isLess10, setIsLess10] = useState<boolean>(false);
 
+    const [meetupList, setMeetupList] = useState<Array<any>>([]);
+
     useEffect(() => {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/party/list?channelId=1`, {
+            headers: {
+                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        }).then((res) => {
+            console.log(res.data.data);
+            setMeetupList(res.data.data.content);
+        });
+
+
         const handleResize = () => setWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
         return () => {
@@ -60,113 +72,27 @@ const MeetupHome = () => {
                         style={{ margin: '0 20px 0 20px'
                     }}>
                         <div style={{ height: '20px' }}></div>
-                        <GatheringList
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={dayjs("2023-07-13 20:00:00").toDate()}
-                            location="우이락"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={4}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                            date={null}
-                            location={null}
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={8}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={null}
-                            location="우리집"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={4}
-                            maxNum={7}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="QA 해주실 분 구합니다!"
-                            date={dayjs("2023-07-13 13:30:00").toDate()}
-                            location="숭실대 정보과학관"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={2}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={dayjs("2023-07-13 20:00:00").toDate()}
-                            location="우이락"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={4}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={dayjs("2023-07-13 20:00:00").toDate()}
-                            location="우이락"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={4}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={dayjs("2023-07-13 20:00:00").toDate()}
-                            location="우이락"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={4}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={dayjs("2023-07-13 20:00:00").toDate()}
-                            location="우이락"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={4}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={dayjs("2023-07-13 20:00:00").toDate()}
-                            location="우이락"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={4}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={dayjs("2023-07-13 20:00:00").toDate()}
-                            location="우이락"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={4}
-                        ></GatheringList>
+                        {meetupList.map((item, index) => {
+                            let meetingAt = item.partyDate;
+                            if(meetingAt !== "날짜 미정"){
+                                meetingAt = dayjs(item.partyDate);
+                                meetingAt.format('M월 D일(ddd) HH:mm');
+                            }
+                            return (
+                                <GatheringList
+                                    key={item.partyId}
+                                    title={item.title}
+                                    image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
+                                    date={meetingAt}
+                                    location={item.location}
+                                    userImg={item.openMemberProfileImageUrl}
+                                    userName={item.openMemberName}
+                                    currentNum={item.joinMemberCount}
+                                    maxNum={item.maxCapacity}
+                                    meetupId={item.partyId}
+                                />
+                            )
+                        })}
                         <div style={{ height: '57px' }}></div>
                     </div>
                     <div

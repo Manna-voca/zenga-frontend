@@ -8,9 +8,10 @@ import channelprofileImg from "../images/channelprofile.png";
 interface Props {
     type? : string; // new || channel
     name? : string;
+    img? : string;
 };
 
-const ChannelList = ({type = 'channel', name}: Props) => {
+const ChannelList = ({type = 'channel', name, img}: Props) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -64,7 +65,7 @@ const ChannelList = ({type = 'channel', name}: Props) => {
                                     color: 'var(--on-surface-active, #0A0A0A)'
 
                         }}>
-                            <img width='36px' height='36px' src={channelprofileImg} alt="channelprofile"></img>
+                            <img width='36px' height='36px' src={img} alt="channelprofile"></img>
                             <span style={{ marginLeft: '12px' }}>{name}</span>
                         </div>
                     </>

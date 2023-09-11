@@ -1,6 +1,6 @@
 import React from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import CircularImage from "../components/CircularImage";
 import testUserImg from '../images/channelprofile.png';
@@ -17,9 +17,16 @@ import ButtonMultiple from "../components/ButtonMultiple";
 import PopupComplaint from "../components/PopupComplaint";
 import Popup2 from "../components/Popup2";
 import Popup1 from "../components/Popup1";
+import axios from "axios";
+import dayjs from "dayjs";
+import 'dayjs/locale/ko';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 const MeetupDetail = () => {
     const navigate = useNavigate();
+    dayjs.extend(relativeTime);
+    dayjs.locale('ko');
+    const { meetupId } = useParams();
 
     const [isMeetupMaker, setIsMeetupMaker] = useState<boolean>(true);
     const [kebabState, setKebabState] = useState<boolean>(false);
@@ -77,47 +84,112 @@ const MeetupDetail = () => {
     const buttonData = ["", "모임 참여하기", "모임 참여 취소하기", "모임 진행 중", "모임 완료", "모집 완료", "카드 만들기"];
 
     const handleShareButtonClick = () => {
-        navigator.share({
-            title: `모임명: 어쩌구저쩌구\n`,
-            text: "링크를 타고 들어와 공유된 모임을 확인해보세요\n",
-            url: `https://naver.com`,
-        }).catch((error) => {
-            if(navigator.clipboard){
-                navigator.clipboard.writeText(`https://naver.com`).then(() => {
-                    alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
-                }).catch((error) => {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = `https://naver.com`;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    textArea.setSelectionRange(0, 99999);
-                    try{
-                        document.execCommand('copy');
-                    } catch (err) {
-                        alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`);
-                    }
-                    textArea.setSelectionRange(0, 0);
-                    document.body.removeChild(textArea);
-                    alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
-                })
-            }
-            else{
-                const textArea = document.createElement('textarea');
-                textArea.value = `https://naver.com`;
-                document.body.appendChild(textArea);
-                textArea.select();
-                textArea.setSelectionRange(0, 99999);
-                try{
-                    document.execCommand('copy');
-                } catch (err) {
+        if(navigator.share !== undefined){
+            navigator.share({
+                title: `모임명: 어쩌구저쩌구\n`,
+                text: "링크를 타고 들어와 공유된 모임을 확인해보세요\n",
+                url: `https://naver.com`,
+            }).catch((error) => {
+                if(!error.toString().includes('Share canceled')){
                     alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`);
                 }
-                textArea.setSelectionRange(0, 0);
-                document.body.removeChild(textArea);
+            });
+        }
+        else if(navigator.clipboard){
+            navigator.clipboard.writeText(`https://naver.com`).then(() => {
                 alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
+            }).catch((error) => alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`));
+        }
+        else{
+            const textArea = document.createElement('textarea');
+            textArea.value = `https://naver.com`;
+            document.body.appendChild(textArea);
+            textArea.select();
+            textArea.setSelectionRange(0, 99999);
+            try{
+                document.execCommand('copy');
+            } catch (err) {
+                alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`);
             }
-        });
+            textArea.setSelectionRange(0, 0);
+            document.body.removeChild(textArea);
+            alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
+        }
     };
+
+    const [meetupTitle, setMeetupTitle] = useState<string>("");
+    const [meetupContent, setMeetupContent] = useState<string>("");
+    const [meetupAdminName, setMeetupAdminName] = useState<string>("");
+    const [meetupAdminImg, setMeetupAdminImg] = useState<string>("");
+    const [meetupPostedBefore, setMeetupPostedBefore] = useState<string>("");
+    const [meetupImg, setMeetupImg] = useState<string>("");
+    const [meetupDate, setMeetupDate] = useState<string>("");
+    const [meetupLocation, setMeetupLocation] = useState<string>("");
+    const [meetupMaxNum, setMeetupMaxNum] = useState<number>();
+    const [meetupCurrentNum, setMeetupCurrentNum] = useState<number>();
+    const [meetupJoinMember, setMeetupJoinMember] = useState<Array<any>>([]);
+
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/party/detail/${meetupId}?channelId=1`, {
+            headers: {
+                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        }).then((res) => {
+            console.log(res.data.data);
+            const meetupData = res.data.data;
+            setMeetupTitle(meetupData.title);
+            setMeetupContent(meetupData.content);
+            setMeetupAdminName(meetupData.openMemberName);
+            setMeetupAdminImg(meetupData.openMemberProfileImageUrl);
+            setMeetupImg(meetupData.partyImageUrl === "" ? undefined : meetupData.partyImageUrl);
+            setMeetupLocation(meetupData.location);
+            setMeetupMaxNum(meetupData.maxCapacity);
+            setMeetupCurrentNum(meetupData.joinMemberInfo.length);
+            setMeetupJoinMember(meetupData.joinMemberInfo);
+            let meetingAt = meetupData.partyDate;
+            if(meetingAt !== "날짜 미정"){
+                meetingAt = dayjs(meetupData.partyDate);
+                meetingAt.format('M월 D일(ddd) HH:mm');
+            }
+            setMeetupDate(meetingAt);
+            const now = dayjs();
+            const duration = now.diff(meetupData.createdAt, 'minute');
+            if (duration > 1440) {
+                setMeetupPostedBefore(`${Math.floor(duration / 1440)}일전`);
+            }
+            else if (duration > 60) {
+                setMeetupPostedBefore(`${Math.floor(duration / 60)}시간전`);
+            }
+            else if (duration > 0) {
+                setMeetupPostedBefore(`${duration}분전`);
+            }
+            else {
+                setMeetupPostedBefore(`1분전`);
+            }
+            if(meetupData.buttonState === "JOIN"){
+                setButtonState(1);
+            }
+            else if(meetupData.buttonState === "JOIN_CANCEL"){
+                setButtonState(2);
+            }
+            else if(meetupData.buttonState === "IN_PROGRESS"){
+                setButtonState(3);
+            }
+            else if(meetupData.buttonState === "END"){
+                setButtonState(4);
+            }
+            else if(meetupData.buttonState === "CLOSE"){
+                setButtonState(5);
+            }
+            else if(meetupData.buttonState === "MAKE_CARD"){
+                setButtonState(6);
+            }
+            else{
+                console.error("잘못된 버튼 상태가 들어왔습니다.");
+            }
+        }).catch((err) => console.log(err));
+    }, [])
 
     return(
         <>
@@ -134,21 +206,21 @@ const MeetupDetail = () => {
                             gap: '6px', cursor: 'pointer'
                 }}>
                     <CircularImage
-                        image={testUserImg}
+                        image={meetupAdminImg}
                         size="24"
                     />
                     <div
                         style={{ fontSize: '14px', fontStyle: 'normal',
                                 fontWeight: '500'
                     }}>
-                        모아이
+                        {meetupAdminName}
                     </div>
                 </div>
                 <div
                     style={{ fontSize: '12px', fontStyle: 'normal',
                             fontWeight: '400'
                 }}>
-                    2시간 전
+                    {meetupPostedBefore}
                 </div>
             </div>
             <div style={{ height: '28px' }}></div>
@@ -161,7 +233,7 @@ const MeetupDetail = () => {
                         fontSize: '21px', fontStyle: 'normal',
                         fontWeight: '600', wordBreak: 'break-all'
             }}>
-                비오니까 파전에 막걸리
+                {meetupTitle}
             </div>
             <div style={{ height: '18px' }}></div>
             <div
@@ -175,20 +247,24 @@ const MeetupDetail = () => {
                             width: '100%', whiteSpace: 'pre-wrap',
                             wordBreak: 'break-all'
                 }}>
-                    아 지금 시간이 새벽 1시 25분인데 이걸 하고 있다니 진짜 말도안돼 이것만 쓰고 바로 유튜브 보러 간다 파전에 막걸리 맛있겠다 계곡가서 백숙도 먹고싶다 근데 사실 집에서 부추전도 먹고 김치볶음밥도 먹고 닭발도 먹고 코다리도 먹고 빵도 먹었음 아무래도 내일부터는 아니 다음 주에는 진짜 다이어트 해야징~
+                    {meetupContent}
                 </p>
             </div>
-            <div style={{ height: '28px' }}></div>
-            <div
-                style={{ margin: '0 20px 0 20px'
-            }}>
-                <div
-                    style={{ width: '100%', paddingBottom: '100%',
-                            backgroundImage: `url(${testImg})`,
-                            borderRadius: '8px', backgroundSize: 'cover',
-                            backgroundPosition: '50% 50%'
-                }}></div>
-            </div>
+            {meetupImg !== undefined && (
+                <>
+                    <div style={{ height: '28px' }}></div>
+                    <div
+                        style={{ margin: '0 20px 0 20px'
+                    }}>
+                        <div
+                            style={{ width: '100%', paddingBottom: '100%',
+                                    backgroundImage: `url(${meetupImg})`,
+                                    borderRadius: '8px', backgroundSize: 'cover',
+                                    backgroundPosition: '50% 50%'
+                        }}></div>
+                    </div>
+                </>
+            )}
             <div style={{ height: '28px' }}></div>
             <div
                 style={{ background: 'var(--surface-surface, #FAFAFA)',
@@ -229,7 +305,7 @@ const MeetupDetail = () => {
                         style={{ fontSize: '14px', fontStyle: 'normal',
                                 fontWeight: '400'
                     }}>
-                        7월 13일(목) 20:00
+                        {meetupDate}
                     </div>
                 </div>
                 <div
@@ -250,7 +326,7 @@ const MeetupDetail = () => {
                         style={{ fontSize: '14px', fontStyle: 'normal',
                                 fontWeight: '400'
                     }}>
-                        우이락
+                        {meetupLocation}
                     </div>
                 </div>
             </div>
@@ -298,38 +374,22 @@ const MeetupDetail = () => {
                         style={{ fontSize: '14px', fontStyle: 'normal',
                                 fontWeight: '400'
                     }}>
-                        1/4
+                        {meetupCurrentNum}/{meetupMaxNum}
                     </div>
                 </div>
                 <div
                     style={{ display: 'flex', alignItems: 'flex-start',
                             gap: '16px'
                 }}>
-                    <BtnProfileThumbnail
-                        userImg={testUserImg}
-                        userName="모아이"
-                        isChannelAdmin={true}
-                    />
-                    <BtnProfileThumbnail
-                        userImg={testUserImg}
-                        userName="모아이모"
-                    />
-                    <BtnProfileThumbnail
-                        userImg={testUserImg}
-                        userName="모아이모아"
-                    />
-                    <BtnProfileThumbnail
-                        userImg={testUserImg}
-                        userName="모아이모아이"
-                    />
-                    <BtnProfileThumbnail
-                        userImg={testUserImg}
-                        userName="모아이"
-                    />
-                    <BtnProfileThumbnail
-                        userImg={testUserImg}
-                        userName="모아이"
-                    />
+                    {meetupJoinMember.map((item, index) => {
+                        return (
+                            <BtnProfileThumbnail
+                                key={item.memberId}
+                                userImg={item.memberProfileImageUrl}
+                                userName={item.memberName}
+                            />
+                        )
+                    })}
                 </div>
             </div>
             <div style={{ height: '26px' }}></div>

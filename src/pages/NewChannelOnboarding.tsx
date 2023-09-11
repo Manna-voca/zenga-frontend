@@ -11,6 +11,7 @@ import BtnInfoDuplicate from '../components/BtnInfoDuplicate';
 import InputProfile from '../components/InputProfile';
 import defaultChannelProfile from '../images/defaultchannelprofile.png';
 import { color } from "../styles/color";
+import axios from 'axios';
 
 // 기존 뒤로가기 기능과 상단의 버튼을 통해 뒤로가기에 대해 이전 단계로 돌아가도록 추후 구현
 
@@ -29,8 +30,13 @@ const NewChannelOnboarding = () => {
             window.history.pushState(null, "", "");
             window.onpopstate = () => {
                 setStep((current) => (current - 1));
-                setPreventPopstate(!preventPopState);
+                setPreventPopstate((current) => !(current));
             };
+        }
+        else{
+            if(step === 3){
+                window.onpopstate = () => {};
+            }
         }
     }, [preventPopState]);
 
@@ -48,7 +54,7 @@ const NewChannelOnboarding = () => {
     };
 
     const [channelProfileImage, setChannelProfileImage] = useState<string | ArrayBuffer | null>();
-    const [channelImageFile, setChannelImageFile] = useState<File | null>();
+    const [channelImageFile, setChannelImageFile] = useState<File | null>(null);
 
     const handleChannelProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files || []);
@@ -64,7 +70,7 @@ const NewChannelOnboarding = () => {
     };
 
     const [adminProfileImage, setAdminProfileImage] = useState<string | ArrayBuffer | null>();
-    const [adminImageFile, setAdminImageFile] = useState<File | null>();
+    const [adminImageFile, setAdminImageFile] = useState<File | null>(null);
 
     const handleAdminProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files || []);
@@ -79,14 +85,151 @@ const NewChannelOnboarding = () => {
         event.target.value = "";
     };
 
-    const handleNextButtonClick = () => {
-        console.log(step);
-        setStep((current) => (current) + 1);
+    const [code, setCode] = useState<string>("");
+
+    const handleNextButtonClick = async () => {
         if(step === 1){
+            setStep((current) => (current) + 1);
             setPreventPopstate(true);
         }
         if(step === 2){
-            setPreventPopstate(false);
+            if(channelImageFile !== null){
+                const channelImgFormData = new FormData();
+                channelImgFormData.append('image', channelImageFile);
+                const uploadChannelImgResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/image/upload`, channelImgFormData, {
+                    headers: {
+                        'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                if(uploadChannelImgResponse.status === 200){
+                    const channelFormData = new FormData();
+                    channelFormData.append('name', clubname);
+                    channelFormData.append('logoImageUrl', uploadChannelImgResponse.data.data.url);
+                    const channelDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/channels`, channelFormData, {
+                        headers: {
+                            'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if(channelDataResponse.status === 200){
+                        if(adminImageFile !== null){
+                            const adminImgFormData = new FormData();
+                            adminImgFormData.append('image', adminImageFile);
+                            const uploadAdminImgResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/image/upload`, adminImgFormData, {
+                                headers: {
+                                    'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            });
+                            if(uploadAdminImgResponse.status === 200){
+                                const adminFormData = new FormData();
+                                adminFormData.append('channelId', channelDataResponse.data.data.id);
+                                adminFormData.append('profileImageUrl', uploadAdminImgResponse.data.data.url);
+                                adminFormData.append('nickname', nickname);
+                                adminFormData.append('introduction', intro);
+                                adminFormData.append('level', 'MAINTAINER');
+                                const adminDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, adminFormData, {
+                                    headers: {
+                                        'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+                                if(adminDataResponse.status === 200){
+                                    setCode(channelDataResponse.data.data.code);
+                                    setStep((current) => (current) + 1);
+                                    setPreventPopstate(false);
+                                }
+                            }
+
+                        }
+                        else{
+                            // 참여자 이미지 없을 때
+                            const adminFormData = new FormData();
+                            adminFormData.append('channelId', channelDataResponse.data.data.id);
+                            adminFormData.append('profileImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+                            adminFormData.append('nickname', nickname);
+                            adminFormData.append('introduction', intro);
+                            adminFormData.append('level', 'MAINTAINER');
+                            const adminDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, adminFormData, {
+                                headers: {
+                                    'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                            if(adminDataResponse.status === 200){
+                                setCode(channelDataResponse.data.data.code);
+                                setStep((current) => (current) + 1);
+                                setPreventPopstate(false);
+                            }
+                        }
+                    }
+                }
+            }
+            else{
+                // 채널 이미지 없을 때
+                const channelFormData = new FormData();
+                channelFormData.append('name', clubname);
+                channelFormData.append('logoImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+                const channelDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/channels`, channelFormData, {
+                    headers: {
+                        'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(channelDataResponse.status === 200){
+                    if(adminImageFile !== null){
+                        const adminImgFormData = new FormData();
+                        adminImgFormData.append('image', adminImageFile);
+                        const uploadAdminImgResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/image/upload`, adminImgFormData, {
+                            headers: {
+                                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        });
+                        if(uploadAdminImgResponse.status === 200){
+                            const adminFormData = new FormData();
+                            adminFormData.append('channelId', channelDataResponse.data.data.id);
+                            adminFormData.append('profileImageUrl', uploadAdminImgResponse.data.data.url);
+                            adminFormData.append('nickname', nickname);
+                            adminFormData.append('introduction', intro);
+                            adminFormData.append('level', 'MAINTAINER');
+                            const adminDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, adminFormData, {
+                                headers: {
+                                    'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                            if(adminDataResponse.status === 200){
+                                setCode(channelDataResponse.data.data.code);
+                                setStep((current) => (current) + 1);
+                                setPreventPopstate(false);
+                            }
+                        }
+
+                    }
+                    else{
+                        // 참여자 이미지 없을 때
+                        const adminFormData = new FormData();
+                        adminFormData.append('channelId', channelDataResponse.data.data.id);
+                        adminFormData.append('profileImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+                        adminFormData.append('nickname', nickname);
+                        adminFormData.append('introduction', intro);
+                        adminFormData.append('level', 'MAINTAINER');
+                        const adminDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, adminFormData, {
+                            headers: {
+                                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        if(adminDataResponse.status === 200){
+                            setCode(channelDataResponse.data.data.code);
+                            setStep((current) => (current) + 1);
+                            setPreventPopstate(false);
+                        }
+                    }
+                }
+            }
         }
         else if(step === 3){
             navigate('/praise', {replace: true});
@@ -184,7 +327,7 @@ const NewChannelOnboarding = () => {
                                 <div style={{ height: '30px' }}></div>
                                 <BtnInfoDuplicate
                                     label='코드'
-                                    text='ad3f78e1'
+                                    text={code}
                                     message='코드를 입력하면 생성한 채널로 들어갈 수 있어요.'
                                 ></BtnInfoDuplicate>
                             </div>
