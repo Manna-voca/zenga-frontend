@@ -23,6 +23,7 @@ interface ChannelProps {
 }
 
 export default function ChannelHome() {
+  const navigate = useNavigate();
   // const channelDummy = [
   //   {
   //     image: exChannel_1,
@@ -40,16 +41,18 @@ export default function ChannelHome() {
 
   const [channelList, setChannelList] = useState<Array<ChannelProps>>();
 
-  const fetchData = async () => {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const CONFIG = {
+    headers: {
+      // Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
+    },
+  };
+
+  const fetchChannelData = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/channels`,
-        {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI`,
-          },
-        }
-      );
+      const res = await axios.get(`${SERVER_URL}/channels`, CONFIG);
       if (res.data && res.data.data) {
         setChannelList(res.data.data as Array<ChannelProps>);
       }
@@ -58,11 +61,18 @@ export default function ChannelHome() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const handleChannelClick = async (item: any) => {
+    try {
+      localStorage.setItem("memberId", item.memberId);
+      navigate(`/${item.code}/praise`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    fetchChannelData();
+  }, []);
 
   return (
     <div>
@@ -111,7 +121,7 @@ export default function ChannelHome() {
           return (
             <div
               key={index}
-              onClick={() => navigate(`/${item.code}/praise`)}
+              onClick={() => handleChannelClick(item)}
               css={ChannelDivStyle}
             >
               <CircularImage image={item.logoImageUrl} size="98" />

@@ -19,7 +19,7 @@ interface DatePickerProps {
   placeholder: string;
   value: string;
   birthDate: string;
-  setBirthDate: react.Dispatch<react.SetStateAction<string>>
+  setBirthDate: react.Dispatch<react.SetStateAction<string>>;
 }
 
 const DatePicker: FC<DatePickerProps> = ({
@@ -81,22 +81,37 @@ const DatePicker: FC<DatePickerProps> = ({
       </div>
 
       <div style={{ position: "relative", width: "100%" }}>
-        <StyledDatePicker
-          onCalendarClose={() => setIsSelecting((prev) => !prev)}
-          onCalendarOpen={() => {
-            setIsSelecting((prev) => !prev);
-          }}
-          title=""
-          locale={ko}
-          onChange={handleDateChange}
-          value={birthDate}
-          placeholderText={placeholder}
-          required
-          onFocus={(e) => e.target.blur()}
-          showMonthDropdown
-          showYearDropdown
-          dropdownMode="select"
-        />
+        {isSelecting && (
+          <div
+            style={{
+              zIndex: "1",
+              position: "fixed",
+              background: "rgba(0,0,0,0.50)",
+              width: "100%",
+              height: "100%",
+              top: "0",
+              left: "0",
+            }}
+          />
+        )}
+        <div style={{ position: "relative", zIndex: "2" }}>
+          <StyledDatePicker
+            onCalendarClose={() => setIsSelecting((prev) => !prev)}
+            onCalendarOpen={() => {
+              setIsSelecting((prev) => !prev);
+            }}
+            title=""
+            locale={ko}
+            onChange={handleDateChange}
+            value={birthDate}
+            placeholderText={placeholder}
+            required
+            onFocus={(e) => e.target.blur()}
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+          />
+        </div>
         <img
           style={{
             cursor: "pointer",
@@ -110,18 +125,6 @@ const DatePicker: FC<DatePickerProps> = ({
           alt=""
         />
       </div>
-      {isSelecting && (
-        <div
-          style={{
-            position: "fixed",
-            background: "rgba(0,0,0,0.50)",
-            width: "100%",
-            height: "100%",
-            top: "0",
-            left: "0",
-          }}
-        />
-      )}
     </div>
   );
 };

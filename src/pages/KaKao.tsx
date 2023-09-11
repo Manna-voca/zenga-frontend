@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import axios from "axios";
 import { color } from "../styles/color";
 import { useNavigate } from "react-router-dom";
-import { get } from "../api/api";
 
 const KaKao = () => {
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ const KaKao = () => {
             },
           }
         );
-        if (userInfoResponse.data.name) {
+        if (userInfoResponse.data.data.name) {
           navigate("/channel-home");
         } else {
           navigate("/onboarding");

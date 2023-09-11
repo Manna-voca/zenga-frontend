@@ -50,11 +50,18 @@ export default function Notification() {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   };
-  // const [notifications, setNotifications] = useState([]);
+  const USER_ID = localStorage.getItem("userId");
 
-  // const fetchNotifications = async () => {
-  //   const notificationResponse = await axios.get(`${SERVER_URL}/api/notifications`, CONFIG);
-  // };
+  const [notifications, setNotifications] = useState();
+
+  const fetchNotifications = async () => {
+    const notificationResponse = await axios.get(
+      `${SERVER_URL}/notification/member/${USER_ID}`,
+      CONFIG
+    );
+    console.log(notificationResponse.data);
+  };
+  fetchNotifications();
 
   return (
     <>

@@ -213,21 +213,19 @@ const Praise = () => {
   };
 
   const fetchChannelIdAndValidity = async () => {
-    let channelId;
     try {
       const infoResponse = await axios.get(
         `${SERVER_URL}/channels/info?code=${channelCode}`,
         CONFIG
       );
       if (infoResponse.data && infoResponse.data.data) {
-        channelId = infoResponse.data.data.id;
+        const channelId = infoResponse.data.data.id;
         localStorage.setItem("channelId", channelId);
         const validityResponse = await axios.get(
           `${SERVER_URL}/channels/${channelId}/validity`,
           CONFIG
         );
         if (validityResponse.data) {
-          console.log(validityResponse.data.data)
           if (validityResponse.data.data.isValid === true) {
             setIsChannelActive(true);
           } else {
@@ -264,12 +262,12 @@ const Praise = () => {
           isSelected={selectedCategory === 3}
           onClick={handleCategory3Click}
         />
-        <CategoryBtn
+        {/* <CategoryBtn
           onClick={() => setIsChannelActive((prev) => !prev)}
           style={{ background: isChannelActive ? `${color.primary500}` : "" }}
         >
           {isChannelActive ? "on" : "off"}
-        </CategoryBtn>
+        </CategoryBtn> */}
       </CategoryContainer>
       {selectedCategory === 1 ? (
         isChannelActive ? (

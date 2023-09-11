@@ -33,7 +33,6 @@ export default function Onboarding() {
         gender: gender === "남자" ? "MAN" : "WOMAN",
         birthDate: formatDate(birthDate),
       };
-      console.log(data);
       const onboardingRes = await put(
         "/users/update",
         data,
@@ -42,7 +41,6 @@ export default function Onboarding() {
       if (onboardingRes instanceof Error) {
         console.error("Error: ", onboardingRes);
       } else {
-        console.log("Data: ", onboardingRes.data);
         navigate("/channel-home");
       }
     } catch (error) {
