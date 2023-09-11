@@ -1,19 +1,33 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import searchIcon from "../assets/icons/ic-search.svg";
 import styled from "@emotion/styled";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
-import profile1 from "../assets/images/profile-1.png";
-import profile2 from "../assets/images/profile-2.png";
-import profile3 from "../assets/images/profile-3.png";
-import profileDefault from "../assets/images/profile-default.png";
 import MemberWrapper from "../components/MemberWrapper";
+import axios from "axios";
+
+interface MemberProps {
+  id: number;
+  name: string;
+  intro: string;
+  level: string;
+  image: string;
+}
 
 export default function MemberList() {
   const [searchWord, setSearchWord] = useState("");
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const CONFIG = {
+    headers: {
+      // Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
+    },
+  };
+  const CHANNEL_ID = localStorage.getItem("channelId");
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWord(event.target.value);
@@ -35,12 +49,32 @@ export default function MemberList() {
     console.log("검색어:", term);
   };
 
-  const memberDummy = [
-    { name: "윤석민", image: profile1, isChannelAdmin: true },
-    { name: "송현섭", image: profile2, isChannelAdmin: false },
-    { name: "박세원", image: profile3, isChannelAdmin: false },
-    { name: "김수한무", image: profileDefault, isChannelAdmin: false },
-  ];
+  const fetchMemberList = async () => {
+    try {
+      const membersResponse = await axios.get(
+        `${SERVER_URL}/channels/${CHANNEL_ID}/members?size=10`,
+        CONFIG
+      );
+      if (membersResponse.data && membersResponse.status === 200) {
+        let members = membersResponse.data.content;
+        const formatMembers = members.map((member: any) => ({
+          id: member.id,
+          name: member.name,
+          intro: member.introduction,
+          level: member.level,
+          image: member.profileImageUrl,
+        }));
+        setMemberList(formatMembers);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [memberList, setMemberList] = useState<MemberProps[]>();
+
+  useEffect(() => {
+    fetchMemberList();
+  }, []);
 
   return (
     <>
@@ -57,7 +91,11 @@ export default function MemberList() {
           <SearchInput
             placeholder="멤버를 검색해 보세요"
             name="member-search"
-            style={{ ...typography.body3Regular, marginLeft: "8px", padding: "0" }}
+            style={{
+              ...typography.body3Regular,
+              marginLeft: "8px",
+              padding: "0",
+            }}
             value={searchWord}
             onChange={handleSearchChange}
             onKeyDown={handleKeyDown}
@@ -70,7 +108,7 @@ export default function MemberList() {
             height: "12px",
           }}
         >
-          멤버 {memberDummy.length}
+          멤버 {memberList?.length}
         </div>
       </div>
       <div
@@ -79,13 +117,14 @@ export default function MemberList() {
           flexDirection: "column",
         }}
       >
-        {memberDummy.map((item, index) => {
+        {memberList?.map((item, index) => {
           return (
             <MemberWrapper
               key={index}
+              id={item.id}
               name={item.name}
               image={item.image}
-              isChannelAdmin={item.isChannelAdmin}
+              isChannelAdmin={item.level === "MAINTAINER"}
             />
           );
         })}

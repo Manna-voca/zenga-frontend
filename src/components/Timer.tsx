@@ -118,7 +118,7 @@ const timerSpanStyle = css`
 `;
 const LoadingDiv = styled.div`
   height: 113px;
-  display: flex:
+  display: flex;
   align-items: center;
 `;
 const spin = keyframes`

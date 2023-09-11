@@ -29,23 +29,29 @@ const Popup2 = ({title, text, leftBtnText, rightBtnText, leftFunc, rightFunc}: P
                 }}>
             </div>
             <div
+                style={{ position: 'fixed', top: '50%', left: "50%", transform: "translate(-50%,-50%)", width: 'calc(100vw - 25px)',
+                        margin: '0', backgroundColor: 'white',
+                        height: '187px', borderRadius: '8px',
+                        display: 'flex', justifyContent: 'center',
+                        zIndex: '3', maxWidth: 'calc(500px - 25px)'
+            }}>
+            {/* <div
                 style={{ position: 'fixed', top: '269px', width: 'calc(100vw - 25px)',
                         margin: '0 12px 0 13px', backgroundColor: 'white',
                         height: '187px', borderRadius: '8px',
                         display: 'flex', justifyContent: 'center',
                         zIndex: '3', maxWidth: 'calc(500px - 25px)'
-            }}>
+            }}> */}
                 <div
                     style={{ margin: '28px 0 16px 0', display: 'flex',
                             flexDirection: 'column', alignItems: 'center',
-                            width: '100%'
+                            width: '100%',
                 }}>
                     <div
                         style={{ height: '27px', fontSize: '16px',
                                 fontStyle: 'normal', fontWeight: '700',
                                 lineHeight: '150%', display: 'flex',
                                 justifyContent: 'center', alignItems: 'center'
-
                     }}>
                         <span>{title}</span>
                     </div>

@@ -1,5 +1,4 @@
 import react, { useState } from "react";
-
 import { typography } from "../styles/typography";
 import { color } from "../styles/color";
 import InputText from "../components/InputText";
@@ -8,6 +7,7 @@ import DatePicker from "../components/DatePicker";
 import ButtonBasic from "../components/ButtonBasic";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import { put } from "../api/api";
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -23,6 +23,30 @@ export default function Onboarding() {
 
   let checkOnboarding = !(name && gender);
 
+  const postOnboarding = async () => {
+    try {
+      const formatDate = (dateString: string) => {
+        return dateString.replace(/\./g, '-');
+      }
+      const data = {
+        name: name,
+        gender: gender === "남자" ? "MAN" : "WOMAN",
+        birthDate: formatDate(birthDate),
+      };
+      const onboardingRes = await put(
+        "/users/update",
+        data,
+        `${localStorage.getItem("accessToken")}`
+      );
+      if (onboardingRes instanceof Error) {
+        console.error("Error: ", onboardingRes);
+      } else {
+        navigate("/channel-home");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <Header type="back" />
@@ -36,7 +60,6 @@ export default function Onboarding() {
             flexDirection: "column",
             flexShrink: "0",
             justifyContent: "center",
-
             marginBottom: "40px",
           }}
         >
@@ -72,12 +95,14 @@ export default function Onboarding() {
             label="생년월일"
             placeholder="생년월일을 선택해 주세요."
             value={birthDate}
+            birthDate={birthDate}
+            setBirthDate={setBirthDate}
           />
         </section>
         <ButtonBasic
           innerText="확인"
           disable={checkOnboarding}
-          onClick={() => navigate("/channel-home")}
+          onClick={postOnboarding}
         />
       </div>
     </>

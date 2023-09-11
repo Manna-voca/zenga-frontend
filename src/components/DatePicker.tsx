@@ -18,6 +18,8 @@ interface DatePickerProps {
   isNecessary: boolean;
   placeholder: string;
   value: string;
+  birthDate: string;
+  setBirthDate: react.Dispatch<react.SetStateAction<string>>;
 }
 
 const DatePicker: FC<DatePickerProps> = ({
@@ -25,16 +27,17 @@ const DatePicker: FC<DatePickerProps> = ({
   isNecessary,
   placeholder,
   value,
+  birthDate,
+  setBirthDate,
 }) => {
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
-  const [birthDate, setBirthDate] = useState<string>();
 
   const handleDateChange = (date: Date) => {
     const formatDatetoString = (birthDate: Date) => {
       const year = birthDate.getFullYear();
       const month = (birthDate.getMonth() + 1).toString().padStart(2, "0");
       const date = birthDate.getDate().toString().padStart(2, "0");
-      return `${year}/${month}/${date}`;
+      return `${year}.${month}.${date}`;
     };
     setBirthDate(formatDatetoString(date));
   };
@@ -78,23 +81,37 @@ const DatePicker: FC<DatePickerProps> = ({
       </div>
 
       <div style={{ position: "relative", width: "100%" }}>
-        <StyledDatePicker
-          onCalendarClose={() => setIsSelecting((prev) => !prev)}
-          onCalendarOpen={() => {
-            setIsSelecting((prev) => !prev);
-          }}
-          title=""
-          locale={ko}
-          onChange={handleDateChange}
-          value={birthDate}
-          placeholderText={placeholder}
-          required
-          onFocus={(e) => e.target.blur()}
-          showMonthDropdown
-          showYearDropdown
-          dropdownMode="select"
-          dateFormat="yyyy.MM.dd"
-        />
+        {isSelecting && (
+          <div
+            style={{
+              zIndex: "1",
+              position: "fixed",
+              background: "rgba(0,0,0,0.50)",
+              width: "100%",
+              height: "100%",
+              top: "0",
+              left: "0",
+            }}
+          />
+        )}
+        <div style={{ position: "relative", zIndex: "2" }}>
+          <StyledDatePicker
+            onCalendarClose={() => setIsSelecting((prev) => !prev)}
+            onCalendarOpen={() => {
+              setIsSelecting((prev) => !prev);
+            }}
+            title=""
+            locale={ko}
+            onChange={handleDateChange}
+            value={birthDate}
+            placeholderText={placeholder}
+            required
+            onFocus={(e) => e.target.blur()}
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+          />
+        </div>
         <img
           style={{
             cursor: "pointer",
@@ -108,18 +125,6 @@ const DatePicker: FC<DatePickerProps> = ({
           alt=""
         />
       </div>
-      {isSelecting && (
-        <div
-          style={{
-            position: "fixed",
-            background: "rgba(0,0,0,0.50)",
-            width: "100%",
-            height: "100%",
-            top: "0",
-            left: "0",
-          }}
-        />
-      )}
     </div>
   );
 };
