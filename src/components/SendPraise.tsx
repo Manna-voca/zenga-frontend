@@ -371,7 +371,7 @@ const SendPraise = () => {
   const [selectedMember, setSelectedMember] = useState<number>(-1);
   const [showPraiseModal, setShowPraiseModal] = useState(false);
   const [showPraiseNotTimer, setShowPraiseNotTimer] = useState(true);
-  const [showFirstModal, setShowFirstModal] = useState(true);
+  const [showFirstModal, setShowFirstModal] = useState(false);
   const [firstModalNeverShow, setFirstModalNeverShow] = useState(false);
 
   const firstModalCloseOnClick = async () => {

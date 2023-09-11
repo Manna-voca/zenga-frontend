@@ -24,7 +24,7 @@ const MeetupHome = () => {
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/party/list?channelId=${localStorage.getItem("channelId")}`, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
                 'Content-Type': 'application/json'
             }
         }).then((res) => {
@@ -33,7 +33,7 @@ const MeetupHome = () => {
         });
         axios.get(`${process.env.REACT_APP_SERVER_URL}/channels/${localStorage.getItem("channelId")}/validity`, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
                 'Content-Type': 'application/json'
             }
         }).then((res) => {
