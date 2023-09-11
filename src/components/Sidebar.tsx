@@ -4,16 +4,18 @@ import ChannelList from "./ChannelList";
 import axios from "axios";
 
 const Sidebar = () => {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const CONFIG = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      'Content-Type':'application/json'
+    },
+  };
 
   const [channelList, setChannelList] = useState<Array<any>>([]);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_SERVER_URL}/channels`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
-        'Content-Type': 'application/json'
-      }
-    }).then((res) => {
+    axios.get(`${SERVER_URL}/channels`, CONFIG).then((res) => {
       console.log(res.data.data);
       setChannelList(res.data.data);
     });

@@ -15,6 +15,15 @@ const MeetupHome = () => {
     const navigate = useNavigate();
     dayjs.extend(relativeTime);
     dayjs.locale('ko');
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
+
+
     const [width, setWidth] = useState(window.innerWidth);
 
     const [isLess10, setIsLess10] = useState<boolean>(false);
@@ -22,24 +31,13 @@ const MeetupHome = () => {
     const [meetupList, setMeetupList] = useState<Array<any>>([]);
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/party/list?channelId=${localStorage.getItem("channelId")}`, {
-            headers: {
-                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
-                'Content-Type': 'application/json'
-            }
-        }).then((res) => {
+        axios.get(`${SERVER_URL}/party/list?channelId=${localStorage.getItem("channelId")}`, CONFIG).then((res) => {
             console.log(res.data.data);
             setMeetupList(res.data.data.content);
         });
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/channels/${localStorage.getItem("channelId")}/validity`, {
-            headers: {
-                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
-                'Content-Type': 'application/json'
-            }
-        }).then((res) => {
+        axios.get(`${SERVER_URL}/channels/${localStorage.getItem("channelId")}/validity`, CONFIG).then((res) => {
             setIsLess10(!res.data.data.isValid);
         })
-
 
         const handleResize = () => setWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);

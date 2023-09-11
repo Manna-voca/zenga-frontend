@@ -27,6 +27,13 @@ const MeetupDetail = () => {
     dayjs.extend(relativeTime);
     dayjs.locale('ko');
     const { channelCode, meetupId } = useParams();
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
 
     const [isMeetupMaker, setIsMeetupMaker] = useState<boolean>(false);
     const [kebabState, setKebabState] = useState<boolean>(false);
@@ -134,12 +141,7 @@ const MeetupDetail = () => {
     const [commentWriterProfileImg, setCommentWriterProfileImg] = useState<string>("");
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, {
-            headers: {
-                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
-                'Content-Type': 'application/json'
-            }
-        }).then((res) => {
+        axios.get(`${SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, CONFIG).then((res) => {
             console.log(res.data.data);
             const meetupData = res.data.data;
             setMeetupTitle(meetupData.title);
