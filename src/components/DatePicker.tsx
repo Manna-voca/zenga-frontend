@@ -84,7 +84,7 @@ const DatePicker: FC<DatePickerProps> = ({
         {isSelecting && (
           <div
             style={{
-              zIndex: "1",
+              zIndex: "3",
               position: "fixed",
               background: "rgba(0,0,0,0.50)",
               width: "100%",
@@ -94,7 +94,7 @@ const DatePicker: FC<DatePickerProps> = ({
             }}
           />
         )}
-        <div style={{ position: "relative", zIndex: "2" }}>
+        {/* <div style={{ position: "relative", zIndex: "2" }}> */}
           <StyledDatePicker
             onCalendarClose={() => setIsSelecting((prev) => !prev)}
             onCalendarOpen={() => {
@@ -111,7 +111,7 @@ const DatePicker: FC<DatePickerProps> = ({
             showYearDropdown
             dropdownMode="select"
           />
-        </div>
+        {/* </div> */}
         <img
           style={{
             cursor: "pointer",

@@ -171,6 +171,8 @@ const ModifyProfileInfo = () => {
                     label="생년월일"
                     placeholder="생년월일을 선택해 주세요."
                     value={birthDate}
+                    birthDate={birthDate}
+                    setBirthDate={setBirthDate}
                 />
             </div>
             <div style={{ height: '100px' }}></div>

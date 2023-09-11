@@ -47,6 +47,7 @@ export default function ChannelHome() {
       // Authorization: "Bearer " + localStorage.getItem("accessToken"),
       Authorization:
         "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
+        // "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM0OTI4MDMsImV4cCI6MTg5MzUyODgwMywic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.5-E7dQeUqr91r2mIRJGOO2latbYbK-MbUuiYRC0rvP0",
     },
   };
 
