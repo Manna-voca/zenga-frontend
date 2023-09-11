@@ -186,7 +186,7 @@ const OldChannelOnboarding = () => {
             onEvent={(event) => {
               if (event === "complete")
                 setTimeout(() => {
-                  navigate("/praise", { replace: true });
+                  navigate(`/${code}/praise`, { replace: true });
                 }, 500);
             }}
             autoplay

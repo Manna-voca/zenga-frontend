@@ -26,9 +26,9 @@ const MeetupDetail = () => {
     const navigate = useNavigate();
     dayjs.extend(relativeTime);
     dayjs.locale('ko');
-    const { meetupId } = useParams();
+    const { channelCode, meetupId } = useParams();
 
-    const [isMeetupMaker, setIsMeetupMaker] = useState<boolean>(true);
+    const [isMeetupMaker, setIsMeetupMaker] = useState<boolean>(false);
     const [kebabState, setKebabState] = useState<boolean>(false);
     const [showComplaint, setShowComplaint] = useState<boolean>(false);
     const [showDeletePopup, setShowDeletePopup] = useState<boolean>(false);
@@ -37,14 +37,14 @@ const MeetupDetail = () => {
     const [showMeetupCompletePopup, setShowMeetupCompletePopup] = useState<boolean>(false);
 
     // 1 - 모임 참여하기 / 2- 모임 참여 취소하기 / 3 - 모임 진행 중 / 4 - 모임 완료 / 5 - 모집 완료 / 6 - 카드 만들기
-    const [buttonState, setButtonState] = useState<number>(5);
+    const [buttonState, setButtonState] = useState<number>(4);
 
     const handleKebabClick = () => {
         setKebabState(true);
     };
 
     const handleMemberButtonClick = () => {
-        navigate('/meetup-member/1');
+        navigate(`/${channelCode}/meetup-member/${meetupId}`);
     };
 
     const handleMeetupDeleteBtnClick = () => {
@@ -86,30 +86,30 @@ const MeetupDetail = () => {
     const handleShareButtonClick = () => {
         if(navigator.share !== undefined){
             navigator.share({
-                title: `모임명: 어쩌구저쩌구\n`,
+                title: `모임명: ${meetupTitle}\n`,
                 text: "링크를 타고 들어와 공유된 모임을 확인해보세요\n",
-                url: `https://naver.com`,
+                url: `${window.location.href}`,
             }).catch((error) => {
                 if(!error.toString().includes('Share canceled')){
-                    alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`);
+                    alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.href}`);
                 }
             });
         }
         else if(navigator.clipboard){
-            navigator.clipboard.writeText(`https://naver.com`).then(() => {
+            navigator.clipboard.writeText(`${window.location.href}`).then(() => {
                 alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
-            }).catch((error) => alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`));
+            }).catch((error) => alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.href}`));
         }
         else{
             const textArea = document.createElement('textarea');
-            textArea.value = `https://naver.com`;
+            textArea.value = `${window.location.href}`;
             document.body.appendChild(textArea);
             textArea.select();
             textArea.setSelectionRange(0, 99999);
             try{
                 document.execCommand('copy');
             } catch (err) {
-                alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\nhttps://naver.com`);
+                alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.href}`);
             }
             textArea.setSelectionRange(0, 0);
             document.body.removeChild(textArea);
@@ -128,9 +128,13 @@ const MeetupDetail = () => {
     const [meetupMaxNum, setMeetupMaxNum] = useState<number>();
     const [meetupCurrentNum, setMeetupCurrentNum] = useState<number>();
     const [meetupJoinMember, setMeetupJoinMember] = useState<Array<any>>([]);
+    const [commentNum, setCommentNum] = useState<number>();
+    const [comment,setComment] = useState<string>("");
+    const [commentWriterName, setCommentWriterName] = useState<string>("");
+    const [commentWriterProfileImg, setCommentWriterProfileImg] = useState<string>("");
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/party/detail/${meetupId}?channelId=1`, {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, {
             headers: {
                 'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
                 'Content-Type': 'application/json'
@@ -147,6 +151,10 @@ const MeetupDetail = () => {
             setMeetupMaxNum(meetupData.maxCapacity);
             setMeetupCurrentNum(meetupData.joinMemberInfo.length);
             setMeetupJoinMember(meetupData.joinMemberInfo);
+            setCommentNum(meetupData.roughCommentInfo.partyCommentCount);
+            setComment(meetupData.roughCommentInfo.commentContent);
+            setCommentWriterName(meetupData.roughCommentInfo.commentWriterName);
+            setCommentWriterProfileImg(meetupData.roughCommentInfo.commentWriterProfileImageUrl);
             let meetingAt = meetupData.partyDate;
             if(meetingAt !== "날짜 미정"){
                 meetingAt = dayjs(meetupData.partyDate);
@@ -187,6 +195,9 @@ const MeetupDetail = () => {
             }
             else{
                 console.error("잘못된 버튼 상태가 들어왔습니다.");
+            }
+            if(`${meetupData.openMemberId}` === localStorage.getItem('memberId')){
+                setIsMeetupMaker(true);
             }
         }).catch((err) => console.log(err));
     }, [])
@@ -379,14 +390,16 @@ const MeetupDetail = () => {
                 </div>
                 <div
                     style={{ display: 'flex', alignItems: 'flex-start',
-                            gap: '16px'
+                            gap: '16px', width: '100%', overflow: 'hidden',
+                            flexWrap: 'wrap'
                 }}>
                     {meetupJoinMember.map((item, index) => {
                         return (
                             <BtnProfileThumbnail
-                                key={item.memberId}
+                                key={index}
                                 userImg={item.memberProfileImageUrl}
                                 userName={item.memberName}
+                                isChannelAdmin={item.isChannelMaker ? true : undefined}
                             />
                         )
                     })}
@@ -437,45 +450,52 @@ const MeetupDetail = () => {
                         style={{ fontSize: '14px', fontStyle: 'normal',
                                 fontWeight: '400'
                     }}>
-                        0
+                        {commentNum}
                     </div>
                 </div>
-                {/* <div
-                    style={{ width: '100%', height: '100%',
-                            color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
-                            fontSize: '14px', fontStyle: 'normal',
-                            fontWeight: '400', textAlign: 'center',
-                            lineHeight: '150%'
-                }}>
-                    아직 댓글이 달리지 않았어요
-                </div> */}
-                <div
-                    style={{ display: 'flex', alignItems: 'center',
-                            gap: '6px', fontSize: '14px', fontStyle: 'normal',
-                            lineHeight: '150%', width: '100%',
-                            color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
-                }}>
-                    <CircularImage
-                        size="24"
-                        image={testUserImg}
-                    />
-                    <div
-                        style={{ fontWeight: '500', width: '45px',
-                                display: 'block', alignItems: 'center',
-                                overflow: 'hidden', textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap', wordBreak: 'break-all'
-                    }}>
-                        모아이
-                    </div>
-                    <div
-                        style={{ fontWeight: '400', minWidth: '0', flex: '1',
-                                display: 'block', alignItems: 'center',
-                                overflow: 'hidden', textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap', wordBreak: 'break-all'
-                    }}>
-                        진짜 지금 역대급 배고파서 어지러워
-                    </div>
-                </div>
+                {commentNum === 0 ? (
+                    <>
+                        <div
+                            style={{ width: '100%', height: '100%',
+                                    color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
+                                    fontSize: '14px', fontStyle: 'normal',
+                                    fontWeight: '400', textAlign: 'center',
+                                    lineHeight: '150%'
+                        }}>
+                            아직 댓글이 달리지 않았어요
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div
+                            style={{ display: 'flex', alignItems: 'center',
+                                    gap: '6px', fontSize: '14px', fontStyle: 'normal',
+                                    lineHeight: '150%', width: '100%',
+                                    color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
+                        }}>
+                            <CircularImage
+                                size="24"
+                                image={commentWriterProfileImg}
+                            />
+                            <div
+                                style={{ fontWeight: '500', width: '45px',
+                                        display: 'block', alignItems: 'center',
+                                        overflow: 'hidden', textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap', wordBreak: 'break-all'
+                            }}>
+                                {commentWriterName}
+                            </div>
+                            <div
+                                style={{ fontWeight: '400', minWidth: '0', flex: '1',
+                                        display: 'block', alignItems: 'center',
+                                        overflow: 'hidden', textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap', wordBreak: 'break-all'
+                            }}>
+                                {comment}
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
             <div style={{ height: '103px' }}></div>
             <div

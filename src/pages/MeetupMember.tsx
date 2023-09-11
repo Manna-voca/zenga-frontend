@@ -1,45 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import MemberWrapper from "../components/MemberWrapper";
-import testUserImg from '../images/channelprofile.png';
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const MeetupMember = () => {
+    const { meetupId } = useParams();
+
+    const [memberList, setMemberList] = useState<Array<any>>([]);
+
+    const fetchMemberList = async () => {
+        const membersResponse = await axios.get(`${process.env.REACT_APP_SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, {
+            headers: {
+                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if(membersResponse.status === 200){
+            setMemberList(membersResponse.data.data.joinMemberInfo);
+        }
+    };
+
+    useEffect(() => {
+        fetchMemberList();
+    }, []);
+
     return(
         <>
             <Header
                 type="back"
                 text="참여한 멤버"
             ></Header>
-            <MemberWrapper
-                name="모아이"
-                id={1}
-                image={testUserImg}
-                isChannelAdmin={true}
-            />
-            <MemberWrapper
-                name="모아이모"
-                id={1}
-                image={testUserImg}
-                isChannelAdmin={false}
-            />
-            <MemberWrapper
-                name="모아이모아"
-                id={1}
-                image={testUserImg}
-                isChannelAdmin={false}
-            />
-            <MemberWrapper
-                name="모아이모아이"
-                id={1}
-                image={testUserImg}
-                isChannelAdmin={false}
-            />
-            <MemberWrapper
-                name="모아이"
-                id={1}
-                image={testUserImg}
-                isChannelAdmin={false}
-            />
+            {memberList.map((item, index) => {
+                return(
+                    <MemberWrapper
+                        key={index}
+                        name={item.memberName}
+                        id={item.memberId}
+                        image={item.memberProfileImageUrl}
+                        isChannelAdmin={item.isChannelMaker ? true : false}
+                    />
+                )
+            })}
         </>
     );
 }

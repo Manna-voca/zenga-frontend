@@ -231,9 +231,6 @@ const NewChannelOnboarding = () => {
                 }
             }
         }
-        else if(step === 3){
-            navigate('/praise', {replace: true});
-        }
     };
 
     return(
@@ -341,7 +338,7 @@ const NewChannelOnboarding = () => {
                                 <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
                                     <ButtonBasic
                                         innerText='확인'
-                                        onClick={() => navigate('/praise', {replace: true})}
+                                        onClick={() => navigate(`/${code}/praise`, {replace: true})}
                                         disable={false}
                                     ></ButtonBasic>
                                 </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as ClockImg } from "../images/clock.svg";
 import { ReactComponent as LocationImg } from "../images/location.svg";
 import { ReactComponent as PeopleImg } from "../images/people.svg"
@@ -22,9 +22,10 @@ const GatheringList = ({meetupId = 1, title, image, date,
     location, userImg, userName, currentNum, maxNum, isEnd = false}: Props) => {
     
     const navigate = useNavigate();
+    const { channelCode } = useParams();
     
     const handleListClick = () => {
-        navigate(`/meetup-detail/${meetupId}`)
+        navigate(`/${channelCode}/meetup-detail/${meetupId}`);
     };
 
     return(
