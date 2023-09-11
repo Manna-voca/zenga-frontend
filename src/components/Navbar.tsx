@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as ComplimentImg } from "../images/compliment.svg";
 import { ReactComponent as GatheringImg } from "../images/gathering.svg";
 import { ReactComponent as MemberImg } from "../images/member.svg";
@@ -13,29 +13,30 @@ interface Props {
 
 const Navbar = ({state = 1}: Props) => {
     const navigate = useNavigate();
+    const { channelCode } = useParams();
 
     // navbar의 순서대로 1, 2, 3, 4라는 숫자 부여
     const [check, setCheck] = useState<number>(state);
 
     const handleComplimentImgClick = () => {
         setCheck(1);
-        navigate('/praise', {replace: true});
+        navigate(`/${channelCode}/praise`, {replace: true});
     };
 
     const handleGatheringImgClick = () => {
         setCheck(2);
-        navigate('/meetup-home', {replace: true});
+        navigate(`/${channelCode}/meetup-home`, {replace: true});
     };
 
     const handleMemberImgClick = () => {
         setCheck(3);
-        navigate('/member-list', {replace: true});
+        navigate(`/${channelCode}/member-list`, {replace: true});
     };
 
     const handleMyImgClick = () => {
         setCheck(4);
         localStorage.removeItem("mypage");
-        navigate('/mypage', {replace: true});
+        navigate(`/${channelCode}/mypage`, {replace: true});
     };
 
     return(

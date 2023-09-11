@@ -38,17 +38,17 @@ function App() {
       <Route path="/create-channel/new-onboarding" element={<NewChannelOnboarding />}></Route>
       <Route path="/create-channel/old-onboarding" element={<OldChannelOnboarding />}></Route>
       <Route path="/:channelCode/praise" element={<Praise />}></Route>
-      <Route path="/member-list" element={<MemberList />}></Route>
+      <Route path="/:channelCode/member-list" element={<MemberList />}></Route>
       <Route path="/notification" element={<Notification />}></Route>
       <Route path="/create-meetup" element={<CreateMeetup />}></Route>
       <Route path="/edit-meetup/:meetupId" element={<EditMeetup />}></Route>
       <Route path="/modify-channel-info" element={<ModifyChannelInfo />}></Route>
-      <Route path="/meetup-home" element={<MeetupHome />}></Route>
-      <Route path="/meetup-detail/:meetupId" element={<MeetupDetail />}></Route>
-      <Route path="/meetup-member/:meetupId" element={<MeetupMember />}></Route>
+      <Route path="/:channelCode/meetup-home" element={<MeetupHome />}></Route>
+      <Route path="/:channelCode/meetup-detail/:meetupId" element={<MeetupDetail />}></Route>
+      <Route path="/:channelCode/meetup-member/:meetupId" element={<MeetupMember />}></Route>
       <Route path="/create-card/:meetupId" element={<CreateCard />}></Route>
       <Route path="/comment/:meetupId" element={<Comment />}></Route>
-      <Route path="/mypage" element={<Mypage />}></Route>
+      <Route path="/:channelCode/mypage" element={<Mypage />}></Route>
       <Route path="/memberpage/:userId" element={<Memberpage />}></Route>
       <Route path="/my-meetup" element={<MyMeetup />}></Route>
       <Route path="/modify-profile-info" element={<ModifyProfileInfo />}></Route>

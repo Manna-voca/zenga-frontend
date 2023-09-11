@@ -8,7 +8,7 @@ import GatheringList from "../components/GatheringList";
 import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const MeetupHome = () => {
@@ -22,7 +22,7 @@ const MeetupHome = () => {
     const [meetupList, setMeetupList] = useState<Array<any>>([]);
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/party/list?channelId=1`, {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/party/list?channelId=${localStorage.getItem("channelId")}`, {
             headers: {
                 'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
                 'Content-Type': 'application/json'
@@ -31,6 +31,14 @@ const MeetupHome = () => {
             console.log(res.data.data);
             setMeetupList(res.data.data.content);
         });
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/channels/${localStorage.getItem("channelId")}/validity`, {
+            headers: {
+                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        }).then((res) => {
+            setIsLess10(!res.data.data.isValid);
+        })
 
 
         const handleResize = () => setWidth(window.innerWidth);

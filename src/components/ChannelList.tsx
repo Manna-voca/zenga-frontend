@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as PlusImg } from "../images/plus.svg";
 import channelprofileImg from "../images/channelprofile.png";
 
@@ -9,9 +9,10 @@ interface Props {
     type? : string; // new || channel
     name? : string;
     img? : string;
+    channelCode?: string;
 };
 
-const ChannelList = ({type = 'channel', name, img}: Props) => {
+const ChannelList = ({type = 'channel', name, img, channelCode}: Props) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -21,7 +22,7 @@ const ChannelList = ({type = 'channel', name, img}: Props) => {
         }
         else if(type === 'channel'){
             document.body.style.overflow = "unset";
-            navigate('/praise')
+            window.location.replace(`/${channelCode}/praise`);
         }
     };
 
