@@ -6,16 +6,18 @@ import { useParams } from "react-router-dom";
 
 const MeetupMember = () => {
     const { meetupId } = useParams();
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
 
     const [memberList, setMemberList] = useState<Array<any>>([]);
 
     const fetchMemberList = async () => {
-        const membersResponse = await axios.get(`${process.env.REACT_APP_SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, {
-            headers: {
-                'Authorization': `Bearer ${process.env.REACT_APP_ACCESSTOKEN}`,
-                'Content-Type': 'application/json'
-            }
-        });
+        const membersResponse = await axios.get(`${SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, CONFIG);
         if(membersResponse.status === 200){
             setMemberList(membersResponse.data.data.joinMemberInfo);
         }
