@@ -8,10 +8,11 @@ import whaleDefault from "../images/whaleDefault.png";
 
 interface Props{
     type: "X" | "O";
+    text: string;
     func: any;
 };
 
-const Toast = ({type, func}: Props) => {
+const Toast = ({type, text, func}: Props) => {
 
     const [animationState, setAnimationState] = useState<boolean>(true);
 
@@ -36,7 +37,7 @@ const Toast = ({type, func}: Props) => {
                     width={30}
                     height={30}
                 />
-                <div>{type === "X" ? "복사에 실패했어요ㅠㅠ" : "복사에 성공했어요!!!"}</div>
+                <div>{type === "X" ? "복사에 실패했어요ㅠㅠ" : text}</div>
             </ToastContainer>
         </>
     );
@@ -45,23 +46,26 @@ const Toast = ({type, func}: Props) => {
 export default Toast;
 
 const ToastContainer = styled.div`
+    color: var(--light-text-text-active, var(--light-text-text-active, #0D0D0D));
     background-color: ${color.primary50};
-    border-radius: 10px;
-    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
-    height: 40px;
-    width: 178px;
-    padding: 5px;
+    border: 1px solid ${color.primary100};
+    border-radius: 15px;
+    height: 36px;
+    width: 298px;
+    padding: 17px 30px;
     text-align: center;
     font-family: Pretendard;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    lien-height: 150%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 5px;
+    gap: 20px;
     position: fixed;
-    top: 10px;
-    left: calc(50% - 89px);
+    top: 3px;
+    left: calc(50% - 179px);
     z-index: 4;
 `;
 

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import backButton from "../images/back.svg";
 import outButton from "../images/out.svg";
 import profileImg from "../images/profile.png";
@@ -13,6 +13,7 @@ import { ReactComponent as ParticipantImg } from "../images/participant.svg";
 import { ReactComponent as PointsImg } from "../images/points.svg";
 import Sidebar from "./Sidebar";
 import CircularImage from "./CircularImage";
+import axios from "axios";
 
 // 타입: 뒤로가기, 기본(동아리명, 알림), 모임 만들기, 모임 상세
 //       알림, 참여한 멤버, 댓글, 모임 수정, 카드 만들기
@@ -26,10 +27,33 @@ interface Props {
     shareFunc?: any;
 };
 
+interface ChannelInfoProps{
+    isOwner: boolean;
+    logoImageUrl: string;
+    code: string;
+    id: number;
+    name: string;  
+};
+
 const Header = ({type, text, isChannelAdmin, download, func, shareFunc}: Props) => {
     const navigate = useNavigate();
+    const { channelCode } = useParams();
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
 
     const [sidebarState, setSidebarState] = useState<number>(0);
+    const [channelInfo, setChannelInfo] = useState<ChannelInfoProps | null>(null);
+
+    useEffect(() => {
+        if(type === "common"){
+            getChannelInfo();
+        }
+    }, []);
 
     if(type === "common") {
       // 알림있는지확인하는api();
@@ -72,6 +96,15 @@ const Header = ({type, text, isChannelAdmin, download, func, shareFunc}: Props) 
 
     const handleKebabClick = () => {
         func();
+    };
+
+    const getChannelInfo  = async () => {
+        await axios.get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG).then((res) => {
+            const CHANNEL_ID = res.data.data.id;
+            axios.get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
+                setChannelInfo(res.data.data);
+            });
+        });
     };
 
     if(type === 'back' || type === 'out'){
@@ -119,18 +152,18 @@ const Header = ({type, text, isChannelAdmin, download, func, shareFunc}: Props) 
                     }}>
                         <CircularImage
                             size="24"
-                            image={profileImg}
+                            image={channelInfo !== null ? channelInfo.logoImageUrl : ''}
                         />
-                        <span style={{ marginLeft: '10px' }}>멋쟁이사자처럼 10기</span>
+                        <span style={{ marginLeft: '10px' }}>{channelInfo !== null ? channelInfo.name : ''}</span>
                     </div>
                     <div
                         style={{ display: 'inline-flex', alignItems: 'flex-start',
                                 gap: '20px'
                     }}>
-                        {isChannelAdmin === true ? (
+                        {channelInfo !== null && channelInfo.isOwner ? (
                             <>
                                 <NoticeImg onClick={()=>navigate('/notification')} style={{ cursor: 'pointer' }}/>
-                                <FrameImg onClick={() => navigate('/modify-channel-info')} style={{ cursor: 'pointer' }}/>
+                                <FrameImg onClick={() => navigate(`/${channelCode}/modify-channel-info`)} style={{ cursor: 'pointer' }}/>
                             </>
                          ) : (
                             <NoticeImg onClick={()=>navigate('/notification')} style={{ cursor: 'pointer' }}/>

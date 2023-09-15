@@ -1,20 +1,22 @@
-.swiper-pagination{
-    width: 100% !important;
-    position: absolute;
-    bottom: 0;
-    left: 50% !important;
-}
-
-.swiper-slide-active{
-    opacity: initial;
-}
-
-.swiper-pagination-bullet{
-    background-color: #D9D9D9;
-    width: 6px;
-    height: 6px;
-}
-
-.swiper-pagination-bullet-active {
-    background-color: #1F94FF;
+.album{
+    .swiper-pagination{
+        width: 100% !important;
+        position: absolute;
+        bottom: 0;
+        left: 50% !important;
+    }
+    
+    .swiper-slide-active{
+        opacity: initial;
+    }
+    
+    .swiper-pagination-bullet{
+        background-color: #D9D9D9;
+        width: 6px;
+        height: 6px;
+    }
+    
+    .swiper-pagination-bullet-active {
+        background-color: #1F94FF;
+    }
 }

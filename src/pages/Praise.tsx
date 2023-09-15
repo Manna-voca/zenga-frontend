@@ -291,6 +291,7 @@ const Praise = () => {
             {toastState && (
               <Toast
                 type={isDuplicateSuccess ? "O" : "X"}
+                text="코드 복사에 성공했어요!"
                 func={() => setToastState(false)}
               ></Toast>
             )}

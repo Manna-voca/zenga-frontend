@@ -23,12 +23,20 @@ const Popup1 = ({title, text, btnText, func}: Props) => {
                 }}>
             </div>
             <div
+                style={{ position: 'fixed', top: '50%', left: '50%',
+                        transform: "translate(-50%,-50%)", width: 'calc(100vw - 43px)',
+                        margin: '0', backgroundColor: 'white',
+                        borderRadius: '8px',
+                        display: 'flex', justifyContent: 'center',
+                        zIndex: '3', maxWidth: 'calc(500px - 43px)'
+            }}>
+            {/* <div
                 style={{ position: 'fixed', top: '269px', width: 'calc(100vw - 43px)',
                         margin: '0 21px 0 22px', backgroundColor: 'white',
                         height: '187px', borderRadius: '8px',
                         display: 'flex', justifyContent: 'center',
                         zIndex: '3', maxWidth: 'calc(500px - 43px)'
-            }}>
+            }}> */}
                 <div
                     style={{ margin: '28px 0 16px 0', display: 'flex',
                             flexDirection: 'column', alignItems: 'center'
@@ -43,7 +51,7 @@ const Popup1 = ({title, text, btnText, func}: Props) => {
                         <span>{title}</span>
                     </div>
                     <div
-                        style={{ height: '42px', fontSize: '14px',
+                        style={{ fontSize: '14px',
                         fontStyle: 'normal', fontWeight: '400',
                         lineHeight: '150%', display: 'flex',
                         justifyContent: 'center', textAlign: 'center',

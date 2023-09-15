@@ -1,36 +1,41 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import testImg from '../images/jun.png';
 import whaleImg from '../images/whalealbum.png';
+import axios from "axios";
 
 interface Props{
     who: "my" | "member";
+    memberId: string | null | undefined;
 };
 
-const ProfileAlbum = ({who}: Props) => {
-    const cardDummy: Array<string> = [
-        testImg,
-        testImg,
-        testImg,
-        testImg,
-        testImg,
-        testImg,
-        testImg,
-        testImg,
-        testImg,
-        testImg,
-        testImg,
-    ];
-
+const ProfileAlbum = ({who, memberId}: Props) => {
     const navigate = useNavigate();
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
 
-    const [isAlbum0, setIsAlbum0] = useState<boolean>(false);
+    const [albumList, setAlbumList] = useState<Array<any>>([]);
+
+    const getAlbumInfo = async () => {
+        await axios.get(`${SERVER_URL}/album/list?memberId=${memberId}`, CONFIG).then((res) => {
+            console.log(res.data.data);
+            setAlbumList(res.data.data.albumList);
+        }).catch((err) => console.error(err));
+    };
+
+    useEffect(() => {
+        getAlbumInfo();
+    }, []);
 
     return(
         <>
-            {isAlbum0 ? (
+            {albumList.length === 0 ? (
                 <>
                     <div style={{ height: '110px' }}></div>
                     <div
@@ -80,10 +85,10 @@ const ProfileAlbum = ({who}: Props) => {
                     <div
                         style={{ display: 'flex', flexWrap: 'wrap'
                     }}>
-                        {cardDummy.map((item, index) => {
+                        {albumList.map((item, index) => {
                             return <CardContainer
                                         onClick={() => navigate('/album/1', {state: {who: who, initialNum: index}})}
-                                        style={{ backgroundImage: `url(${item})`}}
+                                        style={{ backgroundImage: `url(${item.imageUrl})`}}
                                     />
                         })}
                     </div>

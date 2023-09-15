@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Header from "../components/Header";
 import InputProfile from "../components/InputProfile";
@@ -9,9 +9,19 @@ import TextField from "../components/TextField";
 import ButtonBasic from "../components/ButtonBasic";
 import DropDown from "../components/DropDown";
 import DatePicker from "../components/DatePicker";
+import axios from "axios";
 
 const ModifyProfileInfo = () => {
+    const CHANNEL_ID = localStorage.getItem("channelId");
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
 
+    const [memberId, setMemberId] = useState<number>();
     const [nickname, setNickname] = useState<string>("");
     const [intro, setIntro] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -52,6 +62,31 @@ const ModifyProfileInfo = () => {
     const handleModifyBtnClick = () => {
         alert("수정하기 클릭!!");
     };
+
+    const getProfileInfo = async () => {
+        await axios.get(`${SERVER_URL}/members/info?channelId=${CHANNEL_ID}`, CONFIG).then((res) => {
+            console.log(res.data.data);
+            setNickname(res.data.data.name);
+            setIntro(res.data.data.introduction);
+            setProfileImage(res.data.data.profileImageUrl);
+            setMemberId(res.data.data.id);
+        })
+        axios.get(`${SERVER_URL}/users/info`, CONFIG).then((res) => {
+            console.log(res.data.data);
+            setName(res.data.data.name);
+            setBirthDate(res.data.data.birth);
+            if(res.data.data.gender === "MAN"){
+                setGender("남자");
+            }
+            else if(res.data.data.gender === "WOMAN"){
+                setGender("여자");
+            }
+        })
+    };
+
+    useEffect(() => {
+        getProfileInfo();
+    }, []);
 
     return(
         <>
@@ -147,6 +182,7 @@ const ModifyProfileInfo = () => {
                     </div>
                 </div>
             </div>
+            <div style={{ height: '32px' }}></div>
             <div
                 style={{ margin: '0 20px 0 20px', display: 'flex',
                         flexDirection: 'column', gap: '32px'

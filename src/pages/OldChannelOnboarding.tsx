@@ -65,14 +65,21 @@ const OldChannelOnboarding = () => {
 
   const handleButtonClick = async () => {
     if(step === 1){
-      axios.get(`${SERVER_URL}/channels/info?code=${code}`, CONFIG).then((res) => {
-        console.log(res);
-        setChannelId(res.data.data.id);
-        setStep((current) => current + 1);
-        setPreventPopstate(true);
+      await axios.get(`${SERVER_URL}/channels/info?code=${code}`, CONFIG).then((res1) => {
+        axios.get(`${SERVER_URL}/channels`, CONFIG).then((res2) => {
+          for(let i = 0; i < res2.data.data.length; i++){
+            if(res2.data.data[i].id === res1.data.data.id){
+              localStorage.setItem("memberId", res2.data.data[i].memberId);
+              navigate(`/${code}/praise`, { replace: true });
+            }
+          }
+          setChannelId(res1.data.data.id);
+          setStep((current) => current + 1);
+          setPreventPopstate(true);
+        })
       }).catch((err) => {
         console.log(err);
-        if(err.code === 1500){
+        if(err.response.status === 404){
           setErrorState(true);
         }
       });
@@ -98,6 +105,7 @@ const OldChannelOnboarding = () => {
           userFormData.append('level', "NORMAL");
           axios.post(`${SERVER_URL}/members`, userFormData, CONFIG).then((res) => {
             console.log(res);
+            localStorage.setItem("memberId", res.data.data.id);
             setStep((current) => current + 1);
           }).catch((err) => console.log(err));
         }
@@ -112,6 +120,7 @@ const OldChannelOnboarding = () => {
         userFormData.append('level', "NORMAL");
         axios.post(`${SERVER_URL}/members`, userFormData, CONFIG).then((res) => {
           console.log(res);
+          localStorage.setItem("memberId", res.data.data.id);
           setStep((current) => current + 1);
         }).catch((err) => console.log(err));
       }
@@ -206,6 +215,7 @@ const OldChannelOnboarding = () => {
         <>
           <div style={{ margin: "0 20px 0 20px" }}>
             <InputText
+              maxLength={8}
               isNecessary={false}
               label="코드"
               placeholder="8자리 코드를 입력해 주세요"

@@ -11,6 +11,7 @@ interface InputTextProps {
   value: string;
   errorStatus?: boolean;
   onErrorHelpMessage?: string;
+  maxLength? : number;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -21,6 +22,7 @@ const InputText: FC<InputTextProps> = ({
   value,
   errorStatus,
   onErrorHelpMessage,
+  maxLength,
   onChange,
 }: InputTextProps) => {
   return (
@@ -62,6 +64,7 @@ const InputText: FC<InputTextProps> = ({
         </div>
       </div>
       <input
+        maxLength={maxLength}
         type="text"
         placeholder={placeholder}
         css={inputTextStyle}

@@ -42,18 +42,18 @@ function App() {
       <Route path="/notification" element={<Notification />}></Route>
       <Route path="/create-meetup" element={<CreateMeetup />}></Route>
       <Route path="/edit-meetup/:meetupId" element={<EditMeetup />}></Route>
-      <Route path="/modify-channel-info" element={<ModifyChannelInfo />}></Route>
+      <Route path="/:channelCode/modify-channel-info" element={<ModifyChannelInfo />}></Route>
       <Route path="/:channelCode/meetup-home" element={<MeetupHome />}></Route>
       <Route path="/:channelCode/meetup-detail/:meetupId" element={<MeetupDetail />}></Route>
       <Route path="/:channelCode/meetup-member/:meetupId" element={<MeetupMember />}></Route>
       <Route path="/create-card/:meetupId" element={<CreateCard />}></Route>
       <Route path="/comment/:meetupId" element={<Comment />}></Route>
       <Route path="/:channelCode/mypage" element={<Mypage />}></Route>
-      <Route path="/memberpage/:userId" element={<Memberpage />}></Route>
+      <Route path="/:channelCode/memberpage/:memberId" element={<Memberpage />}></Route>
       <Route path="/my-meetup" element={<MyMeetup />}></Route>
       <Route path="/modify-profile-info" element={<ModifyProfileInfo />}></Route>
       <Route path="/point" element={<PointDetail />}></Route>
-      <Route path="/album/:userId" element={<Album />}></Route>
+      <Route path="/album/:memberId" element={<Album />}></Route>
     </Routes>
   );
 }

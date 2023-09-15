@@ -1,15 +1,32 @@
 import React from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import ProfileUpper from "../components/ProfileUpper";
 import defaultChannelProfile from '../images/defaultchannelprofile.png';
 import ProfileAlbum from "../components/ProfileAlbum";
 import ProfileZenga from "../components/ProfileZenga";
 import Navbar from "../components/Navbar";
+import axios from "axios";
+
+interface memberpageInfoProps{
+    intro: string;
+    name: string;
+    img: string;
+};
 
 const Memberpage = () => {
     const navigate = useNavigate();
+    const { memberId } = useParams();
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
+
+    const [memberpageInfo, setMemberpageInfo] = useState<memberpageInfoProps>({intro: '', name: '', img: ''});
 
     const [textState, setTextState] = useState<string | null>("앨범");
 
@@ -21,6 +38,21 @@ const Memberpage = () => {
         setTextState("젠가");
     };
 
+    const getMemberpageInfo = async () => {
+        await axios.get(`${SERVER_URL}/members/${memberId}`, CONFIG).then((res) => {
+            console.log(res.data.data);
+            setMemberpageInfo({
+                intro: res.data.data.introduction,
+                name: res.data.data.name,
+                img: res.data.data.profileImageUrl
+            });
+        })
+    };
+
+    useEffect(() => {
+        getMemberpageInfo();
+    }, []);
+
     return(
         <>
             <Header type="back"></Header>
@@ -29,9 +61,9 @@ const Memberpage = () => {
                 style={{ margin: '0 20px 0 20px'
             }}>
                 <ProfileUpper
-                    image={defaultChannelProfile}
-                    name="박세원"
-                    text="자기소개 내용이 들어갈 부분입니다 자기소개 내용이 들어갈 부분입니다 자기소개 내용이 들어갈"
+                    image={memberpageInfo.img}
+                    name={memberpageInfo.name}
+                    text={memberpageInfo.intro}
                 ></ProfileUpper>
             </div>
             <div style={{ height: '50px' }}></div>
@@ -76,7 +108,7 @@ const Memberpage = () => {
             </div>
             {textState === "앨범" ? (
                 <>
-                    <ProfileAlbum who="member"></ProfileAlbum>
+                    <ProfileAlbum who="member" memberId={memberId}></ProfileAlbum>
                 </>
             ) : (
                 <>

@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import CircularImage from "./CircularImage";
 import { color } from "../styles/color";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface OwnProps {
   name: string;
@@ -15,8 +15,19 @@ interface OwnProps {
 
 const MemberWrapper = ({ name, image, id, isChannelAdmin }: OwnProps) => {
   const navigate = useNavigate();
+  const { channelCode } = useParams();
+
+  const handleWrapperClick = () => {
+    if(`${id}` === localStorage.getItem("memberId")){
+      navigate(`/${channelCode}/mypage`);
+    }
+    else{
+      navigate(`/${channelCode}/memberpage/${id}`);
+    }
+  };
+
   return (
-  <Container onClick={() => navigate(`/memberpage/${id}`)}>
+  <Container onClick={handleWrapperClick}>
       <CircularImage
         image={image}
         size="36"

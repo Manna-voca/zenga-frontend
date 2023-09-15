@@ -74,36 +74,66 @@ const MeetupHome = () => {
                 </>
             ) : (
                 <>
-                    <div
-                        style={{ margin: '0 20px 0 20px'
-                    }}>
-                        <div style={{ height: '20px' }}></div>
-                        {meetupList.map((item, index) => {
-                            let meetingAt = item.partyDate;
-                            if(meetingAt !== "날짜 미정"){
-                                meetingAt = dayjs(item.partyDate);
-                                meetingAt.format('M월 D일(ddd) HH:mm');
-                            }
-                            return (
-                              <>
-                                <GatheringList
-                                    key={item.partyId}
-                                    title={item.title}
-                                    image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
-                                    date={meetingAt}
-                                    location={item.location}
-                                    userImg={item.openMemberProfileImageUrl}
-                                    userName={item.openMemberName}
-                                    currentNum={item.joinMemberCount}
-                                    maxNum={item.maxCapacity}
-                                    meetupId={item.partyId}
-                                />
-                                <div style={{height: "8px"}}></div>
-                                </>
-                            )
-                        })}
-                        <div style={{ height: '57px' }}></div>
-                    </div>
+                    {meetupList.length === 0 ? (
+                        <>
+                            <div style={{ height: '162px' }}></div>
+                            <div
+                                style={{ display: 'flex', height: '140px',
+                                        flexDirection: 'column',
+                                        alignItems: 'center', gap: '20px'
+                            }}>
+                                <TwowhaleImg/>
+                                <div
+                                    style={{ color: 'var(--on-surface-active, #0A0A0A)',
+                                            textAlign: 'center', fontSize: '16px',
+                                            fontStyle: 'normal', lineHeight: '150%'
+                                }}>
+                                    <span style={{ fontWeight: '400' }}>
+                                        아직&nbsp;
+                                    </span>
+                                    <span style={{ fontWeight: '600' }}>
+                                        모임
+                                    </span>
+                                    <span style={{ fontWeight: '400' }}>
+                                        이 없어요
+                                    </span>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div
+                                style={{ margin: '0 20px 0 20px'
+                            }}>
+                                <div style={{ height: '20px' }}></div>
+                                {meetupList.map((item, index) => {
+                                    let meetingAt = item.partyDate;
+                                    if(meetingAt !== "날짜 미정"){
+                                        meetingAt = dayjs(item.partyDate);
+                                        meetingAt.format('M월 D일(ddd) HH:mm');
+                                    }
+                                    return (
+                                    <>
+                                        <GatheringList
+                                            key={item.partyId}
+                                            title={item.title}
+                                            image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
+                                            date={meetingAt}
+                                            location={item.location}
+                                            userImg={item.openMemberProfileImageUrl}
+                                            userName={item.openMemberName}
+                                            currentNum={item.joinMemberCount}
+                                            maxNum={item.maxCapacity}
+                                            meetupId={item.partyId}
+                                        />
+                                        <div style={{height: "8px"}}></div>
+                                        </>
+                                    )
+                                })}
+                                <div style={{ height: '57px' }}></div>
+                            </div>
+                        </>
+                    )}
                     <div
                         onClick={() => navigate('/create-meetup')}
                         style={{ height: '60px', width: '60px', borderRadius: '30px',
