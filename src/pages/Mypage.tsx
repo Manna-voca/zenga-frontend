@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import defaultChannelProfile from '../images/defaultchannelprofile.png';
@@ -8,9 +8,26 @@ import Navbar from "../components/Navbar";
 import ProfileAlbum from "../components/ProfileAlbum";
 import ProfileZenga from "../components/ProfileZenga";
 import ProfileMeetup from "../components/ProfileMeetup";
+import axios from "axios";
+
+interface mypageInfoProps{
+    intro: string;
+    name: string;
+    img: string;
+};
 
 const Mypage = () => {
     const navigate = useNavigate();
+    const CHANNEL_ID = localStorage.getItem("channelId");
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
+
+    const [mypageInfo, setMypageInfo] = useState<mypageInfoProps>({intro: '', name: '', img: ''});
 
     const [textState, setTextState] = useState<string | null>("앨범");
 
@@ -35,6 +52,21 @@ const Mypage = () => {
         localStorage.setItem("mypage", "모임");
     };
 
+    const getMypageInfo = async () => {
+        await axios.get(`${SERVER_URL}/members/info?channelId=${CHANNEL_ID}`, CONFIG).then((res) => {
+            setMypageInfo({
+                intro: res.data.data.introduction,
+                name: res.data.data.name,
+                img: res.data.data.profileImageUrl
+            });
+        })
+    };
+
+    useEffect(() => {
+        getMypageInfo();
+    }, []);
+
+
     return(
         <>
             <Header type="my"></Header>
@@ -43,9 +75,9 @@ const Mypage = () => {
                 style={{ margin: '0 20px 0 20px'
             }}>
                 <ProfileUpper
-                    image={defaultChannelProfile}
-                    name="박세원"
-                    text="자기소개 내용이 들어갈 부분입니다 자기소개 내용이 들어갈 부분입니다 자기소개 내용이 들어갈"
+                    image={mypageInfo.img}
+                    name={mypageInfo.name}
+                    text={mypageInfo.intro}
                 ></ProfileUpper>
                 <div style={{ height: '20px' }}></div>
                 <button
@@ -122,7 +154,7 @@ const Mypage = () => {
             </div>
             {textState === "앨범" ? (
                 <>
-                    <ProfileAlbum who="my"></ProfileAlbum>
+                    <ProfileAlbum who="my" memberId={localStorage.getItem("memberId")}></ProfileAlbum>
                 </>
             ) : (
                 textState === "젠가" ? (

@@ -80,6 +80,7 @@ const MyMeetup = () => {
                 {meetupState === "1" ? (
                     <>
                         <GatheringList
+                            meetupId={1}
                             title="비오니까 파전에 막걸리"
                             image={testImg}
                             date={"날짜 미정"}
@@ -91,6 +92,7 @@ const MyMeetup = () => {
                         ></GatheringList>
                         <div style={{ height: '8px' }}></div>
                         <GatheringList
+                            meetupId={1}
                             title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
                             date={"날짜 미정"}
                             location={"장소 미정"}
@@ -101,6 +103,7 @@ const MyMeetup = () => {
                         ></GatheringList>
                         <div style={{ height: '8px' }}></div>
                         <GatheringList
+                            meetupId={1}
                             title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
                             date={"날짜 미정"}
                             location={"장소 미정"}
@@ -111,6 +114,7 @@ const MyMeetup = () => {
                         ></GatheringList>
                         <div style={{ height: '8px' }}></div>
                         <GatheringList
+                            meetupId={1}
                             title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
                             date={"날짜 미정"}
                             location={"장소 미정"}
@@ -124,6 +128,7 @@ const MyMeetup = () => {
                     meetupState === "2" ? (
                         <>
                             <GatheringList
+                                meetupId={1}
                                 title="비오니까 파전에 막걸리"
                                 image={testImg}
                                 date={"날짜 미정"}
@@ -135,6 +140,7 @@ const MyMeetup = () => {
                             ></GatheringList>
                             <div style={{ height: '8px' }}></div>
                             <GatheringList
+                                meetupId={1}
                                 title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
                                 date={"날짜 미정"}
                                 location={"장소 미정"}
@@ -147,6 +153,7 @@ const MyMeetup = () => {
                     ) : (
                         <>
                             <GatheringList
+                                meetupId={1}
                                 title="비오니까 파전에 막걸리"
                                 image={testImg}
                                 date={"날짜 미정"}
@@ -159,6 +166,7 @@ const MyMeetup = () => {
                             ></GatheringList>
                             <div style={{ height: '8px' }}></div>
                             <GatheringList
+                                meetupId={1}
                                 title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
                                 date={"날짜 미정"}
                                 location={"장소 미정"}

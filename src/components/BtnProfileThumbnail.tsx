@@ -1,21 +1,32 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CircularImage from "./CircularImage";
 import { userInfo } from "os";
 
 interface Props {
     userImg: string;
     userName: string;
+    userId: number;
     isChannelAdmin?: true;
 };
 
-const BtnProfileThumbnail = ({userImg, userName, isChannelAdmin}: Props) => {
+const BtnProfileThumbnail = ({userImg, userName, userId, isChannelAdmin}: Props) => {
     const navigate = useNavigate();
+    const { channelCode } = useParams();
+
+    const handleProfileClick = () => {
+        if(`${userId}` === localStorage.getItem("memberId")){
+            navigate(`/${channelCode}/mypage`);
+        }
+        else{
+            navigate(`/${channelCode}/memberpage/${userId}`);
+        }
+    };
 
     return(
         <>
             <div
-                onClick={() => navigate('/memberpage/1')}
+                onClick={handleProfileClick}
                 title={userName}
                 style={{ width: '36px', height: '56px',
                         display: 'flex', flexDirection: 'column',

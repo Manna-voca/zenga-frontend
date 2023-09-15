@@ -6,7 +6,7 @@ import { ReactComponent as PeopleImg } from "../images/people.svg"
 import CircularImage from "./CircularImage";
 
 interface Props {
-    meetupId? : number;
+    meetupId : number;
     title : string;
     image? : string;
     date : string;
@@ -18,7 +18,7 @@ interface Props {
     isEnd?: boolean;
 };
 
-const GatheringList = ({meetupId = 1, title, image, date,
+const GatheringList = ({meetupId, title, image, date,
     location, userImg, userName, currentNum, maxNum, isEnd = false}: Props) => {
     
     const navigate = useNavigate();
@@ -41,21 +41,21 @@ const GatheringList = ({meetupId = 1, title, image, date,
                             width: 'calc(100%-10px)',
                             paddingRight: image === undefined ? '16px' : '0px'
                 }}>
-                    <div style={{ height: '11px' }}></div>
+                    <div style={{ height: '8px' }}></div>
                     <div
-                        style={{ height: '14px', display: 'block',
+                        style={{ height: '21px', display: 'block',
                                 alignItems: 'center', overflow: 'hidden',
                                 color: isEnd ? 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))' : 'var(--text-text-active, var(--light-text-text-active, #0D0D0D))',
                                 textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                                fontSize: '14px', fontStyle: 'normal',
+                                fontSize: '14px', fontStyle: 'normal', lineHeight: '150%',
                                 fontWeight: '600', wordBreak: 'break-all'
                     }}>
                         {title}
                     </div>
-                    <div style={{ height: '5px' }}></div>
+                    <div style={{ height: '1px' }}></div>
                     <div
                         style={{ height: '15px', display: 'flex',
-                                gap: '6px', fontSize: '10px',
+                                gap: '6px', fontSize: '10px', lineHeight: '150%',
                                 fontStyle: 'normal', fontWeight: '400',
                                 color: isEnd ? 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))' : 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
                     }}>

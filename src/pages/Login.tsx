@@ -39,7 +39,7 @@ const Login = () => {
       <button css={buttonStyles} onClick={() => navigate("/onboarding")}>
         서비스 온보딩
       </button>
-      <button css={buttonStyles} onClick={() => navigate("/channel-home")}>
+      <button css={buttonStyles} onClick={() => {navigate("/channel-home"); localStorage.setItem("accessToken", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI");}}>
         채널 홈으로
       </button>
       <KaKaoLogin href={KAKAO_URL}>

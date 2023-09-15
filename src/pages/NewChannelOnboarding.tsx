@@ -24,9 +24,8 @@ const NewChannelOnboarding = () => {
         'Content-Type':'application/json'
       },
     };
-  // Authorization:
-    // "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
 
+    const [memberId, setMemberId] = useState<number>();
     const [step, setStep] = useState<number>(1);
     const [clubname, setClubname] = useState<string>("");
     const [nickname, setNickname] = useState<string>("");
@@ -105,7 +104,7 @@ const NewChannelOnboarding = () => {
             if(channelImageFile !== null){
                 const channelImgFormData = new FormData();
                 channelImgFormData.append('image', channelImageFile);
-                const uploadChannelImgResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/image/upload`, channelImgFormData, {
+                const uploadChannelImgResponse = await axios.post(`${SERVER_URL}/image/upload`, channelImgFormData, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
                         'Content-Type': 'multipart/form-data'
@@ -115,12 +114,12 @@ const NewChannelOnboarding = () => {
                     const channelFormData = new FormData();
                     channelFormData.append('name', clubname);
                     channelFormData.append('logoImageUrl', uploadChannelImgResponse.data.data.url);
-                    const channelDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/channels`, {name: clubname, logoImageUrl: uploadChannelImgResponse.data.data.url}, CONFIG);
+                    const channelDataResponse = await axios.post(`${SERVER_URL}/channels`, {name: clubname, logoImageUrl: uploadChannelImgResponse.data.data.url}, CONFIG);
                     if(channelDataResponse.status === 200){
                         if(adminImageFile !== null){
                             const adminImgFormData = new FormData();
                             adminImgFormData.append('image', adminImageFile);
-                            const uploadAdminImgResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/image/upload`, adminImgFormData, {
+                            const uploadAdminImgResponse = await axios.post(`${SERVER_URL}/image/upload`, adminImgFormData, {
                                 headers: {
                                     'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
                                     'Content-Type': 'multipart/form-data'
@@ -133,9 +132,10 @@ const NewChannelOnboarding = () => {
                                 adminFormData.append('nickname', nickname);
                                 adminFormData.append('introduction', intro);
                                 adminFormData.append('level', 'MAINTAINER');
-                                const adminDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, adminFormData, CONFIG);
+                                const adminDataResponse = await axios.post(`${SERVER_URL}/members`, adminFormData, CONFIG);
                                 if(adminDataResponse.status === 200){
                                     setCode(channelDataResponse.data.data.code);
+                                    setMemberId(adminDataResponse.data.data.id);
                                     setStep((current) => (current) + 1);
                                     setPreventPopstate(false);
                                 }
@@ -150,9 +150,10 @@ const NewChannelOnboarding = () => {
                             adminFormData.append('nickname', nickname);
                             adminFormData.append('introduction', intro);
                             adminFormData.append('level', 'MAINTAINER');
-                            const adminDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, adminFormData, CONFIG);
+                            const adminDataResponse = await axios.post(`${SERVER_URL}/members`, adminFormData, CONFIG);
                             if(adminDataResponse.status === 200){
                                 setCode(channelDataResponse.data.data.code);
+                                setMemberId(adminDataResponse.data.data.id);
                                 setStep((current) => (current) + 1);
                                 setPreventPopstate(false);
                             }
@@ -165,12 +166,12 @@ const NewChannelOnboarding = () => {
                 const channelFormData = new FormData();
                 channelFormData.append('name', clubname);
                 channelFormData.append('logoImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
-                const channelDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/channels`, channelFormData, CONFIG);
+                const channelDataResponse = await axios.post(`${SERVER_URL}/channels`, channelFormData, CONFIG);
                 if(channelDataResponse.status === 200){
                     if(adminImageFile !== null){
                         const adminImgFormData = new FormData();
                         adminImgFormData.append('image', adminImageFile);
-                        const uploadAdminImgResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/image/upload`, adminImgFormData, {
+                        const uploadAdminImgResponse = await axios.post(`${SERVER_URL}/image/upload`, adminImgFormData, {
                             headers: {
                                 'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
                                 'Content-Type': 'multipart/form-data'
@@ -183,9 +184,10 @@ const NewChannelOnboarding = () => {
                             adminFormData.append('nickname', nickname);
                             adminFormData.append('introduction', intro);
                             adminFormData.append('level', 'MAINTAINER');
-                            const adminDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, adminFormData, CONFIG);
+                            const adminDataResponse = await axios.post(`${SERVER_URL}/members`, adminFormData, CONFIG);
                             if(adminDataResponse.status === 200){
                                 setCode(channelDataResponse.data.data.code);
+                                setMemberId(adminDataResponse.data.data.id);
                                 setStep((current) => (current) + 1);
                                 setPreventPopstate(false);
                             }
@@ -200,9 +202,10 @@ const NewChannelOnboarding = () => {
                         adminFormData.append('nickname', nickname);
                         adminFormData.append('introduction', intro);
                         adminFormData.append('level', 'MAINTAINER');
-                        const adminDataResponse = await axios.post(`${process.env.REACT_APP_SERVER_URL}/members`, adminFormData, CONFIG);
+                        const adminDataResponse = await axios.post(`${SERVER_URL}/members`, adminFormData, CONFIG);
                         if(adminDataResponse.status === 200){
                             setCode(channelDataResponse.data.data.code);
+                            setMemberId(adminDataResponse.data.data.id);
                             setStep((current) => (current) + 1);
                             setPreventPopstate(false);
                         }
@@ -317,7 +320,7 @@ const NewChannelOnboarding = () => {
                                 <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
                                     <ButtonBasic
                                         innerText='확인'
-                                        onClick={() => navigate(`/${code}/praise`, {replace: true})}
+                                        onClick={() => {navigate(`/${code}/praise`, {replace: true}); localStorage.setItem("memberId", `${memberId}`);}}
                                         disable={false}
                                     ></ButtonBasic>
                                 </div>

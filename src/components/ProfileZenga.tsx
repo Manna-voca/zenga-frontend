@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BlockNumber from "./BlockNumber";
 import ZengaBlock from "./ZengaBlock";
 import blueblockImg from "../images/blueblock.png";
@@ -12,6 +12,7 @@ import defaultblockImg from "../images/defaultblock.png";
 import ZengaBigBlock from "./ZengaBigBlock";
 import whaleImg from "../assets/images/whale_character7.png";
 import { ReactComponent as DeleteImg } from "../images/delete.svg"
+import axios from "axios";
 
 interface ExplainProps{
     type: "Blue" | "Yellow" | "Green" | "Purple" | "Orange" | "Pink" | "Default";
@@ -48,6 +49,14 @@ const ExplainWrapper = ({type, title, text}: ExplainProps) => {
 }
 
 const ProfileZenga = () => {
+    const MEMBER_ID = localStorage.getItem("memberId");
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
 
     const [isBlock0, setIsBlock0] = useState<boolean>(false);
 
@@ -56,6 +65,16 @@ const ProfileZenga = () => {
     const handleBlockListClick = () => {
         setHelpboxState(true);
     };
+
+    const getBlockInfo = async () => {
+        await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/blocks`, CONFIG).then((res) => {
+            console.log(res.data.data);
+        });
+    };
+
+    useEffect(() => {
+        getBlockInfo();
+    }, []);
 
     return(
         <>

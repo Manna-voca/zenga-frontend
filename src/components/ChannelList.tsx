@@ -10,19 +10,26 @@ interface Props {
     name? : string;
     img? : string;
     channelCode?: string;
+    memberId?: number;
 };
 
-const ChannelList = ({type = 'channel', name, img, channelCode}: Props) => {
+const ChannelList = ({type = 'channel', name, img, channelCode, memberId}: Props) => {
     const navigate = useNavigate();
 
-    const handleClick = () => {
+    const handleClick = async () => {
         if(type === 'new'){
             document.body.style.overflow = "unset";
             navigate('/create-channel');
         }
         else if(type === 'channel'){
             document.body.style.overflow = "unset";
-            window.location.replace(`/${channelCode}/praise`);
+            try{
+                localStorage.setItem("memberId", `${memberId}`);
+                window.location.replace(`/${channelCode}/praise`);
+            } catch(err){
+                console.error(err);
+            }
+            
         }
     };
 

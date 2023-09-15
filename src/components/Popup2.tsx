@@ -31,7 +31,7 @@ const Popup2 = ({title, text, leftBtnText, rightBtnText, leftFunc, rightFunc}: P
             <div
                 style={{ position: 'fixed', top: '50%', left: "50%", transform: "translate(-50%,-50%)", width: 'calc(100vw - 25px)',
                         margin: '0', backgroundColor: 'white',
-                        height: '187px', borderRadius: '8px',
+                        borderRadius: '8px',
                         display: 'flex', justifyContent: 'center',
                         zIndex: '3', maxWidth: 'calc(500px - 25px)'
             }}>
@@ -56,7 +56,7 @@ const Popup2 = ({title, text, leftBtnText, rightBtnText, leftFunc, rightFunc}: P
                         <span>{title}</span>
                     </div>
                     <div
-                        style={{ height: '42px', fontSize: '14px',
+                        style={{ fontSize: '14px',
                         fontStyle: 'normal', fontWeight: '400',
                         lineHeight: '150%', display: 'flex',
                         justifyContent: 'center', textAlign: 'center',

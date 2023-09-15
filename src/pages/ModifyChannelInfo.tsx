@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Header from "../components/Header";
 import InputText from "../components/InputText";
@@ -6,10 +6,23 @@ import BtnInfoDuplicate from "../components/BtnInfoDuplicate";
 import ButtonBasic from "../components/ButtonBasic";
 import InputProfile from "../components/InputProfile";
 import Popup2 from "../components/Popup2";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const ModifyChannelInfo = () => {
+    const navigate = useNavigate();
+    const { channelCode } = useParams();
+    const CHANNEL_ID = localStorage.getItem("channelId");
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
 
-    const [clubname, setClubname] = useState<string>("큐시즘 28기 모임");
+
+    const [clubname, setClubname] = useState<string>("");
     const handleClubnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setClubname(event.target.value);
     };
@@ -20,17 +33,43 @@ const ModifyChannelInfo = () => {
         setShowChannelDeletePopup(true);
     };
 
-    const handleChannelDeletePopupClick = () => {
+    const handleChannelDeletePopupClick = async () => {
         setShowChannelDeletePopup(false);
-        alert("채널 삭제!!!");
+        await axios.delete(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
+            navigate('/channel-home');
+        });
     };
 
-    const handleChannelModifyBtnClick = () => {
-        alert("채널 수정!!!");
+    const handleChannelModifyBtnClick = async () => {
+        if(channelImageFile !== null){
+            const channelImgFormData = new FormData();
+            channelImgFormData.append('image', channelImageFile);
+            const uploadChannelImgResponse = await axios.post(`${SERVER_URL}/image/upload`, channelImgFormData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            if(uploadChannelImgResponse.status === 200){
+                axios.put(`${SERVER_URL}/channels/${CHANNEL_ID}`, {
+                    "name": clubname,
+                    "logoImageUrl": uploadChannelImgResponse.data.data.url
+                }, CONFIG).then((res) => {
+                    window.location.reload();
+                });
+            }
+        }
+        else{
+            axios.put(`${SERVER_URL}/channels/${CHANNEL_ID}`, {
+                "name": clubname,
+            }, CONFIG).then((res) => {
+                window.location.reload();
+            });
+        }
     };
 
     const [channelProfileImage, setChannelProfileImage] = useState<string | ArrayBuffer | null>();
-    const [channelImageFile, setChannelImageFile] = useState<File | null>();
+    const [channelImageFile, setChannelImageFile] = useState<File | null>(null);
 
     const handleChannelProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files || []);
@@ -44,6 +83,21 @@ const ModifyChannelInfo = () => {
         }
         event.target.value = "";
     };
+
+    const getChannelInfo = () => {
+        axios.get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
+            console.log(res.data.data);
+            setChannelProfileImage(res.data.data.logoImageUrl);
+            setClubname(res.data.data.name);
+            if(!res.data.data.isOwner){
+                // 잘못된 접근
+            }
+        })
+    };
+
+    useEffect(() => {
+        getChannelInfo();
+    }, []);
 
     return(
         <>
@@ -72,13 +126,13 @@ const ModifyChannelInfo = () => {
                 <div style={{ height: '30px' }}></div>
                 <BtnInfoDuplicate
                     label='링크'
-                    text='www.zenga/kusitms4834'
+                    text={`www.zenga.club/${channelCode}`}
                     message='링크를 누르면 생성한 채널로 들어갈 수 있어요.'
                 ></BtnInfoDuplicate>
                 <div style={{ height: '30px' }}></div>
                 <BtnInfoDuplicate
                     label='코드'
-                    text='ad3f78e1'
+                    text={`${channelCode}`}
                     message='코드를 입력하면 생성한 채널로 들어갈 수 있어요.'
                 ></BtnInfoDuplicate>
                 <div style={{ height: '51px' }}></div>

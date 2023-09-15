@@ -27,6 +27,7 @@ const MeetupDetail = () => {
     dayjs.extend(relativeTime);
     dayjs.locale('ko');
     const { channelCode, meetupId } = useParams();
+    const CHANNEL_ID = localStorage.getItem("channelId");
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
       headers: {
@@ -58,14 +59,21 @@ const MeetupDetail = () => {
         setShowDeletePopup(false);
     };
 
-    const handleMeetupParticipateBtnClick = () => {
-        setButtonState(2);
-        setShowMeetupPopup(false);
+    const handleMeetupParticipateBtnClick = async () => {
+        await axios.post(`${SERVER_URL}/party/apply`, {
+            "channelId": CHANNEL_ID,
+            "partyId": meetupId
+        }, CONFIG).then((res) => {
+            setButtonState(2);
+            setShowMeetupPopup(false);
+        })
     };
 
-    const handleMeetupCancelBtnClick = () => {
-        setButtonState(1);
-        setShowMeetupCancelPopup(false);
+    const handleMeetupCancelBtnClick = async () => {
+        await axios.delete(`${SERVER_URL}/party/apply/cancel?channelId=${CHANNEL_ID}&partyId=${meetupId}`, CONFIG). then((res) => {
+            setButtonState(1);
+            setShowMeetupCancelPopup(false);
+        }).catch((err) => console.error(err));
     };
 
     const handleMeetupCompleteBtnClick = () => {
@@ -126,6 +134,7 @@ const MeetupDetail = () => {
 
     const [meetupTitle, setMeetupTitle] = useState<string>("");
     const [meetupContent, setMeetupContent] = useState<string>("");
+    const [meetupAdminId, setMeetupAdminId] = useState<number>();
     const [meetupAdminName, setMeetupAdminName] = useState<string>("");
     const [meetupAdminImg, setMeetupAdminImg] = useState<string>("");
     const [meetupPostedBefore, setMeetupPostedBefore] = useState<string>("");
@@ -146,6 +155,7 @@ const MeetupDetail = () => {
             const meetupData = res.data.data;
             setMeetupTitle(meetupData.title);
             setMeetupContent(meetupData.content);
+            setMeetupAdminId(meetupData.openMemberId);
             setMeetupAdminName(meetupData.openMemberName);
             setMeetupAdminImg(meetupData.openMemberProfileImageUrl);
             setMeetupImg(meetupData.partyImageUrl === "" ? undefined : meetupData.partyImageUrl);
@@ -202,7 +212,16 @@ const MeetupDetail = () => {
                 setIsMeetupMaker(true);
             }
         }).catch((err) => console.log(err));
-    }, [])
+    }, [buttonState])
+
+    const handleAdminImgClick = () => {
+        if(`${meetupAdminId}` === localStorage.getItem("memberId")){
+            navigate(`/${channelCode}/mypage`);
+        }
+        else{
+            navigate(`/${channelCode}/memberpage/${meetupAdminId}`);
+        }
+    }
 
     return(
         <>
@@ -214,7 +233,7 @@ const MeetupDetail = () => {
                         color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
             }}>
                 <div
-                    onClick={() => navigate('/memberpage/1')}
+                    onClick={handleAdminImgClick}
                     style={{ display: 'flex', alignItems: 'center',
                             gap: '6px', cursor: 'pointer'
                 }}>
@@ -236,19 +255,19 @@ const MeetupDetail = () => {
                     {meetupPostedBefore}
                 </div>
             </div>
-            <div style={{ height: '28px' }}></div>
+            <div style={{ height: '22px' }}></div>
             <div
                 style={{ margin: '0 20px 0 20px', 
-                        height: '20px', display: 'block',
+                        height: '32px', display: 'block',
                         alignItems: 'center', overflow: 'hidden',
                         textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         color: 'var(--text-text-active, var(--light-text-text-active, #0D0D0D))',
-                        fontSize: '21px', fontStyle: 'normal',
+                        fontSize: '21px', fontStyle: 'normal', lineHeight: '150%',
                         fontWeight: '600', wordBreak: 'break-all'
             }}>
                 {meetupTitle}
             </div>
-            <div style={{ height: '18px' }}></div>
+            <div style={{ height: '12px' }}></div>
             <div
                 style={{ margin: '0 20px 0 20px', display: 'flex',
                         flexDirection: 'column'
@@ -401,6 +420,7 @@ const MeetupDetail = () => {
                                 key={index}
                                 userImg={item.memberProfileImageUrl}
                                 userName={item.memberName}
+                                userId={item.memberId}
                                 isChannelAdmin={item.isChannelMaker ? true : undefined}
                             />
                         )

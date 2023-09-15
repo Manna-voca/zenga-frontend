@@ -115,6 +115,7 @@ const Album = () => {
                     <Header type="card" download={who === "my" ? undefined : false} func={handleParticipantImgClick}></Header>
                     <div style={{ height: '20px' }}></div>
                     <Swiper
+                        className="album"
                         style={{ width: '100%', height: '600px' }}
                         effect={'coverflow'}
                         pagination={{ clickable: true, dynamicBullets: true, dynamicMainBullets: 4}}

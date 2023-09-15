@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useEffect, useRef } from "react";
 import { css } from "@emotion/react";
+import { ReactComponent as MoreArrowImg } from "../images/moreArrow.svg";
+import { ReactComponent as LessArrowImg } from "../images/lessArrow.svg";
 
 interface Props{
     date: string;
@@ -63,16 +65,17 @@ const Card = ({date, title, text, image}: Props) => {
                         {text}
                     </div>
                     {moreBtnState &&
-                        <span
-                            onClick={() => setIsAllText(true)}
-                            style={{ cursor: 'pointer', display: isAllText ? 'none' : '',
+                        <div
+                            onClick={() => setIsAllText((current => !(current)))}
+                            style={{ cursor: 'pointer', display: 'inline-flex',
                                     fontSize: '14px', fontStyle: 'normal',
-                                    fontWeight: '400', lineHeight: '150%',
-                                    color: '#D9D9D9'
+                                    fontWeight: '600', lineHeight: '150%',
+                                    alignItems: 'center', width: '64px'
                             }}
                         >
-                            [더보기]
-                        </span>
+                            {isAllText ? '줄이기' : '더보기'}
+                            {isAllText ? <LessArrowImg height={21} width={21}/> : <MoreArrowImg height={21} width={21}/>}
+                        </div>
                     }
                 </div>
             </div>

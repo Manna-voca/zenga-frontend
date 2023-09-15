@@ -109,7 +109,7 @@ const PopupComplaint = ({func}: Props) => {
                 </div>
             </div>
             {toastState &&
-                <Toast type={isDuplicateSuccess ? "O" : "X"} func={() => setToastState(false)}></Toast>
+                <Toast type={isDuplicateSuccess ? "O" : "X"} text="링크 복사에 성공했어요!" func={() => setToastState(false)}></Toast>
             }
         </>
     );

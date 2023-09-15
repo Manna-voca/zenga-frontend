@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as ArrowImg } from "../images/arrow.svg";
 import GatheringList from "./GatheringList";
@@ -7,11 +7,20 @@ import testImg from '../images/jun.png';
 import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import axios from "axios";
 
 
 const ProfileMeetup = () => {
     const navigate = useNavigate();
-
+    const MEMBER_ID = localStorage.getItem("memberId");
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
+    
     dayjs.extend(relativeTime);
     dayjs.locale('ko');
 
@@ -19,6 +28,16 @@ const ProfileMeetup = () => {
         const meetupState : string = event.currentTarget.id
         navigate('/my-meetup', { state: {meetupState}});
     };
+
+    const getMeetupInfo = async () => {
+        await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/parties/all`, CONFIG).then((res) => {
+            console.log(res.data.data);
+        })
+    };
+
+    useEffect(() => {
+        getMeetupInfo();
+    }, []);
 
     return(
         <>
@@ -42,6 +61,7 @@ const ProfileMeetup = () => {
                 </div>
                 <div style={{ height: '14px' }}></div>
                 <GatheringList
+                    meetupId={1}
                     title="비오니까 파전에 막걸리"
                     image={testImg}
                     date={"날짜 미정"}
@@ -53,6 +73,7 @@ const ProfileMeetup = () => {
                 ></GatheringList>
                 <div style={{ height: '8px' }}></div>
                 <GatheringList
+                    meetupId={1}
                     title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
                     date={"날짜 미정"}
                     location={"장소 미정"}
@@ -82,6 +103,7 @@ const ProfileMeetup = () => {
                 </div>
                 <div style={{ height: '14px' }}></div>
                 <GatheringList
+                    meetupId={1}
                     title="비오니까 파전에 막걸리"
                     image={testImg}
                     date={"날짜 미정"}
@@ -93,6 +115,7 @@ const ProfileMeetup = () => {
                 ></GatheringList>
                 <div style={{ height: '8px' }}></div>
                 <GatheringList
+                    meetupId={1}
                     title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
                     date={"날짜 미정"}
                     location={"장소 미정"}
@@ -123,6 +146,7 @@ const ProfileMeetup = () => {
                 </div>
                 <div style={{ height: '14px' }}></div>
                 <GatheringList
+                    meetupId={1}
                     title="비오니까 파전에 막걸리"
                     image={testImg}
                     date={"날짜 미정"}
@@ -135,6 +159,7 @@ const ProfileMeetup = () => {
                 ></GatheringList>
                 <div style={{ height: '8px' }}></div>
                 <GatheringList
+                    meetupId={1}
                     title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
                     date={"날짜 미정"}
                     location={"장소 미정"}
