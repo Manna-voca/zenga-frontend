@@ -95,22 +95,23 @@ const DatePicker: FC<DatePickerProps> = ({
           />
         )}
         {/* <div style={{ position: "relative", zIndex: "2" }}> */}
-          <StyledDatePicker
-            onCalendarClose={() => setIsSelecting((prev) => !prev)}
-            onCalendarOpen={() => {
-              setIsSelecting((prev) => !prev);
-            }}
-            title=""
-            locale={ko}
-            onChange={handleDateChange}
-            value={birthDate}
-            placeholderText={placeholder}
-            required
-            onFocus={(e) => e.target.blur()}
-            showMonthDropdown
-            showYearDropdown
-            dropdownMode="select"
-          />
+        <StyledDatePicker
+          onCalendarClose={() => setIsSelecting((prev) => !prev)}
+          onCalendarOpen={() => {
+            setIsSelecting((prev) => !prev);
+          }}
+          title=""
+          locale={ko}
+          onChange={handleDateChange}
+          value={birthDate}
+          placeholderText={placeholder}
+          required
+          onFocus={(e) => e.target.blur()}
+          showMonthDropdown
+          showYearDropdown
+          maxDate={new Date()}
+          dropdownMode="select"
+        />
         {/* </div> */}
         <img
           style={{

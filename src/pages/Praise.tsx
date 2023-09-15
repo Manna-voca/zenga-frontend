@@ -189,7 +189,7 @@ const ChannelCode = ({
 
 const Praise = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
-  const [isChannelActive, setIsChannelActive] = useState<boolean>(false);
+  const [isChannelActive, setIsChannelActive] = useState<boolean>(true);
   const [toastState, setToastState] = useState<boolean>(false);
   const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
   const [memberCount, setMemberCount] = useState<number>(0);
@@ -198,7 +198,6 @@ const Praise = () => {
   const CONFIG = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      // Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
     },
   };
 
