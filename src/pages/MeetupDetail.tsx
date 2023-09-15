@@ -167,12 +167,7 @@ const MeetupDetail = () => {
             setComment(meetupData.roughCommentInfo.commentContent);
             setCommentWriterName(meetupData.roughCommentInfo.commentWriterName);
             setCommentWriterProfileImg(meetupData.roughCommentInfo.commentWriterProfileImageUrl);
-            let meetingAt = meetupData.partyDate;
-            if(meetingAt !== "날짜 미정"){
-                meetingAt = dayjs(meetupData.partyDate);
-                meetingAt.format('M월 D일(ddd) HH:mm');
-            }
-            setMeetupDate(meetingAt);
+            setMeetupDate(meetupData.partyDate);
             const now = dayjs();
             const duration = now.diff(meetupData.createdAt, 'minute');
             if (duration > 1440) {

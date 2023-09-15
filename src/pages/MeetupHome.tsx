@@ -107,18 +107,13 @@ const MeetupHome = () => {
                             }}>
                                 <div style={{ height: '20px' }}></div>
                                 {meetupList.map((item, index) => {
-                                    let meetingAt = item.partyDate;
-                                    if(meetingAt !== "날짜 미정"){
-                                        meetingAt = dayjs(item.partyDate);
-                                        meetingAt.format('M월 D일(ddd) HH:mm');
-                                    }
                                     return (
                                     <>
                                         <GatheringList
                                             key={item.partyId}
                                             title={item.title}
                                             image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
-                                            date={meetingAt}
+                                            date={item.partyDate}
                                             location={item.location}
                                             userImg={item.openMemberProfileImageUrl}
                                             userName={item.openMemberName}
