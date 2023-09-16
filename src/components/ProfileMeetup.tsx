@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as ArrowImg } from "../images/arrow.svg";
 import GatheringList from "./GatheringList";
 import testUserImg from '../images/channelprofile.png';
@@ -12,6 +12,7 @@ import axios from "axios";
 
 const ProfileMeetup = () => {
     const navigate = useNavigate();
+    const { channelCode } = useParams();
     const MEMBER_ID = localStorage.getItem("memberId");
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
@@ -26,7 +27,7 @@ const ProfileMeetup = () => {
 
     const handleArrowBtnClick = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         const meetupState : string = event.currentTarget.id
-        navigate('/my-meetup', { state: {meetupState}});
+        navigate(`/${channelCode}/my-meetup`, { state: {meetupState}});
     };
 
     const getMeetupInfo = async () => {
