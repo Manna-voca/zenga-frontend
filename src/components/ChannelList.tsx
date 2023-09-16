@@ -17,6 +17,7 @@ const ChannelList = ({type = 'channel', name, img, channelCode, memberId}: Props
     const navigate = useNavigate();
 
     const handleClick = async () => {
+      localStorage.removeItem('praise');
         if(type === 'new'){
             document.body.style.overflow = "unset";
             navigate('/create-channel');

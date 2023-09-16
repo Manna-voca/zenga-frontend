@@ -203,14 +203,23 @@ const Praise = () => {
     },
   };
 
+  const [local, setLocal] = useState(() => {
+    if (localStorage.getItem("praise")) {
+      setSelectedCategory(Number(localStorage.getItem("praise")));
+    }
+  });
+
   const handleCategory1Click = async () => {
     setSelectedCategory(1);
+    localStorage.setItem("praise", "1");
   };
   const handleCategory2Click = async () => {
     setSelectedCategory(2);
+    localStorage.setItem("praise", "2");
   };
   const handleCategory3Click = async () => {
     setSelectedCategory(3);
+    localStorage.setItem("praise", "3");
   };
 
   const fetchChannelIdAndValidity = async () => {
