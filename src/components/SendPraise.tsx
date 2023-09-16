@@ -313,6 +313,7 @@ const SendPraise = () => {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   };
+
   const [praiseInfo, setPraiseInfo] = useState({
     praise: "",
     memberList: [
@@ -328,6 +329,27 @@ const SendPraise = () => {
     shuffleCount: 0,
     memberPraiseId: 0,
   });
+  const start = praiseInfo.shuffleCount ? 4 : 0;
+  const end = praiseInfo.shuffleCount ? 8 : 4;
+  const [selectedMember, setSelectedMember] = useState<number>(-1);
+  const [showPraiseModal, setShowPraiseModal] = useState(false);
+  const [showPraiseNotTimer, setShowPraiseNotTimer] = useState(true);
+  const [showFirstModal, setShowFirstModal] = useState(false);
+  const [firstModalNeverShow, setFirstModalNeverShow] = useState(false);
+
+  const getChannelId = async () => {
+    try {
+      const res = await axios.get(
+        `${SERVER_URL}/channels/info?code=${channelCode}`,
+        CONFIG
+      );
+      if (res.data.data.id !== Number(localStorage.getItem("channelId"))) {
+        localStorage.setItem("channelId", res.data.data.id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchModalInfo = async () => {
     try {
@@ -342,10 +364,11 @@ const SendPraise = () => {
   };
 
   const fetchPraiseData = async () => {
+    const CHANNEL_ID = localStorage.getItem("channelId");
     try {
       const res = await axios.post(
         `${SERVER_URL}/praise/todo`,
-        { channelId: localStorage.getItem("channelId") },
+        { channelId: CHANNEL_ID },
         CONFIG
       );
       if (res.data.data === null) {
@@ -359,18 +382,14 @@ const SendPraise = () => {
   };
 
   useEffect(() => {
-    fetchPraiseData();
-    fetchModalInfo();
+    const checkIdAndFetch = async () => {
+      await getChannelId();
+      fetchModalInfo();
+      fetchPraiseData();
+    };
+    checkIdAndFetch();
     // eslint-disable-next-line
   }, []);
-
-  const start = praiseInfo.shuffleCount ? 4 : 0;
-  const end = praiseInfo.shuffleCount ? 8 : 4;
-  const [selectedMember, setSelectedMember] = useState<number>(-1);
-  const [showPraiseModal, setShowPraiseModal] = useState(false);
-  const [showPraiseNotTimer, setShowPraiseNotTimer] = useState(true);
-  const [showFirstModal, setShowFirstModal] = useState(false);
-  const [firstModalNeverShow, setFirstModalNeverShow] = useState(false);
 
   const firstModalCloseOnClick = async () => {
     try {
@@ -394,7 +413,7 @@ const SendPraise = () => {
     try {
       setPraiseInfo((prev) => ({
         ...prev,
-        shuffleCount: prev.shuffleCount === 1 ? 0 : 1, // 개발 후 false로 변경하고 shuffle Click 막아야 함
+        shuffleCount: prev.shuffleCount === 1 ? 0 : 1,
       }));
       setSelectedMember(-1);
       await axios.patch(

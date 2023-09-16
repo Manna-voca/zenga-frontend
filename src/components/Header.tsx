@@ -162,11 +162,11 @@ const Header = ({type, text, isChannelAdmin, download, func, shareFunc}: Props) 
                     }}>
                         {channelInfo !== null && channelInfo.isOwner ? (
                             <>
-                                <NoticeImg onClick={()=>navigate('/notification')} style={{ cursor: 'pointer' }}/>
+                                <NoticeImg onClick={()=>navigate(`/${channelCode}/notification`)} style={{ cursor: 'pointer' }}/>
                                 <FrameImg onClick={() => navigate(`/${channelCode}/modify-channel-info`)} style={{ cursor: 'pointer' }}/>
                             </>
                          ) : (
-                            <NoticeImg onClick={()=>navigate('/notification')} style={{ cursor: 'pointer' }}/>
+                            <NoticeImg onClick={()=>navigate(`/${channelCode}/notification`)} style={{ cursor: 'pointer' }}/>
                         )}
                         
                     </div>

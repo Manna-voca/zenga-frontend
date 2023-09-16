@@ -14,7 +14,6 @@ import axios from "axios";
 
 const OldChannelOnboarding = () => {
   const navigate = useNavigate();
-
   const [step, setStep] = useState<number>(1);
   const [code, setCode] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
@@ -127,6 +126,19 @@ const OldChannelOnboarding = () => {
     }
   };
 
+  const getRedirectChannelCode = () => {
+    if (localStorage.getItem("redirectChannelCode")) {
+      const code = localStorage.getItem("redirectChannelCode");
+      if(code){
+        setCode(code);
+      }
+      localStorage.removeItem("redirectChannelCode");
+    }
+  }
+
+  useEffect(() =>{
+    getRedirectChannelCode();
+  },[])
 
   const [preventPopState, setPreventPopstate] = useState<boolean>(false);
   useEffect(() => {

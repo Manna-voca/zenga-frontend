@@ -551,7 +551,7 @@ const MeetupDetail = () => {
                             onClickList={[
                                 () => {
                                     setKebabState(false);
-                                    navigate('/edit-meetup/1');
+                                    navigate(`/${channelCode}/edit-meetup/${meetupId}`);
                                 },
                                 () => {
                                     setKebabState(false);

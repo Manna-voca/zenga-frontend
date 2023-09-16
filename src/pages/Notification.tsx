@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
@@ -50,18 +50,33 @@ export default function Notification() {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   };
-  const USER_ID = localStorage.getItem("userId");
+  const MEMBER_ID = localStorage.getItem("memberId");
 
   const [notifications, setNotifications] = useState();
 
   const fetchNotifications = async () => {
-    const notificationResponse = await axios.get(
-      `${SERVER_URL}/notification/member/${USER_ID}`,
-      CONFIG
-    );
-    console.log(notificationResponse.data);
+    try {
+      await axios
+        .get(`${SERVER_URL}/notification/member/${MEMBER_ID}`, CONFIG)
+        .then((res) => {
+          console.log(res.data);
+        });
+      // .catch((err) => {
+      //   console.log(err.response.data.errorCode);
+      //   if (err.response.data.errorCode === (7000 || 7001)) {
+      //     console.log("토큰 에러");
+      //   }
+      // });
+    } catch (error) {
+      const err = error as any;
+      if (err.response.data.errorCode === (7000 || 7001)) {
+        console.log("토큰 에러");
+      }
+    }
   };
-  fetchNotifications();
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   return (
     <>

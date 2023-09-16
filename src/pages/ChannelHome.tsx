@@ -62,6 +62,7 @@ export default function ChannelHome() {
   const handleChannelClick = async (item: any) => {
     try {
       localStorage.setItem("memberId", item.memberId);
+      localStorage.setItem("id", item.id);
       navigate(`/${item.code}/praise`);
     } catch (error) {
       console.error(error);
@@ -69,6 +70,9 @@ export default function ChannelHome() {
   };
 
   useEffect(() => {
+    if (localStorage.getItem("redirectChannelCode")) {
+      navigate('/' + localStorage.getItem("redirectChannelCode"));
+    }
     fetchChannelData();
   }, []);
 

@@ -25,6 +25,8 @@ import Comment from "./pages/Comment";
 import "./styles/font.css"
 import Album from "./pages/Album";
 import KaKao from "./pages/KaKao";
+import { channel } from "diagnostics_channel";
+import CheckChannelCode from "./pages/CheckChannelCode";
 
 
 function App() {
@@ -37,11 +39,12 @@ function App() {
       <Route path="/create-channel" element={<CreateChannel />}></Route>
       <Route path="/create-channel/new-onboarding" element={<NewChannelOnboarding />}></Route>
       <Route path="/create-channel/old-onboarding" element={<OldChannelOnboarding />}></Route>
+      <Route path="/:channelCode" element={<CheckChannelCode />}></Route>
       <Route path="/:channelCode/praise" element={<Praise />}></Route>
       <Route path="/:channelCode/member-list" element={<MemberList />}></Route>
-      <Route path="/notification" element={<Notification />}></Route>
-      <Route path="/create-meetup" element={<CreateMeetup />}></Route>
-      <Route path="/edit-meetup/:meetupId" element={<EditMeetup />}></Route>
+      <Route path="/:channelCode/notification" element={<Notification />}></Route>
+      <Route path="/:channelCode/create-meetup" element={<CreateMeetup />}></Route>
+      <Route path="/:channelCode/edit-meetup/:meetupId" element={<EditMeetup />}></Route>
       <Route path="/:channelCode/modify-channel-info" element={<ModifyChannelInfo />}></Route>
       <Route path="/:channelCode/meetup-home" element={<MeetupHome />}></Route>
       <Route path="/:channelCode/meetup-detail/:meetupId" element={<MeetupDetail />}></Route>

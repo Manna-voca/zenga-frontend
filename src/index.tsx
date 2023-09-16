@@ -1,24 +1,19 @@
-// Modules import
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-
-// StyleSheet import
-
-// Image import
-
-// Component Import
 import App from "./App";
 import ScrollToTop from "./components/ScrollToTop";
+import TokenRefresh from "./components/TokenRefresh";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   // <React.StrictMode>
-    <BrowserRouter basename="">
-      <ScrollToTop/>
-      <App />
-    </BrowserRouter>
+  <BrowserRouter basename="">
+    <ScrollToTop />
+    <TokenRefresh />
+    <App />
+  </BrowserRouter>
   // </React.StrictMode>
 );

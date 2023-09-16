@@ -16,6 +16,7 @@ import MeetupImageEditor from "../components/MeetupImageEditor";
 import ButtonBasic from "../components/ButtonBasic";
 import { typography } from "../styles/typography";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface MeetupInfoProps {
   title: string;
@@ -23,10 +24,6 @@ interface MeetupInfoProps {
   place?: string;
   content: string;
   personNum: string;
-}
-
-interface Attachment {
-  file: File;
 }
 
 const initialMeetupInfo: MeetupInfoProps = {
@@ -38,17 +35,22 @@ const initialMeetupInfo: MeetupInfoProps = {
 };
 
 const CreateMeetup = () => {
+  const navigate = useNavigate();
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const { channelCode } = useParams();
   const CONFIG = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      // Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM5MjA3MTAsImV4cCI6MTY5NzUyMDcxMCwic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.IT2kHS9XkWMI_Q92nrYmaKHtq8qlb_f55bWqQBP09JI",
     },
   };
   const CHANNEL_ID = localStorage.getItem("channelId");
 
   const [meetupInfo, setMeetupInfo] =
     useState<MeetupInfoProps>(initialMeetupInfo);
+
+    const currentDate = new Date(); // 현재 날짜 및 시간 가져오기
+    const MAX_DATE = new Date(currentDate); // 복제하여 새로운 Date 객체 생성
+    MAX_DATE.setFullYear(currentDate.getFullYear() + 1); // 1년을 추가
 
   const setDateUndefined = () => {
     setMeetupInfo((prev) => ({
@@ -69,12 +71,12 @@ const CreateMeetup = () => {
   };
 
   // 게시글 첨부 사진
-  const [attachment, setAttachment] = useState<Attachment | null>(null);
+  const [attachment, setAttachment] = useState<File | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length > 0) {
-      setAttachment({ file: files[0] });
+      setAttachment(files[0]);
     }
     event.target.value = "";
   };
@@ -88,32 +90,52 @@ const CreateMeetup = () => {
     meetupInfo.date !== null &&
     meetupInfo.place !== "" &&
     meetupInfo.content.length > 0 &&
-    meetupInfo.personNum.length > 0;
+    Number(meetupInfo.personNum) > 1;
 
   const postNewMeetup = async () => {
-    const partyInfo = {
+    let partyInfo = {
       channelId: CHANNEL_ID,
       title: meetupInfo.title,
       content: meetupInfo.content,
       maxCapacity: meetupInfo.personNum,
-      location: meetupInfo.place === undefined? "" : meetupInfo.place,
+      location: meetupInfo.place === undefined ? "" : meetupInfo.place,
       partyDate: meetupInfo.date === undefined ? "" : meetupInfo.date,
       partyImageUrl: "",
     };
-    const postResponse = await axios.post(
-      `${SERVER_URL}/party/create`,
-      partyInfo,
-      CONFIG
-    );
-    if (postResponse.status === 200) {
-      console.log(postResponse.data);
-      const res = await axios.get(
-        `${SERVER_URL}/party/list?channelId=${CHANNEL_ID}`,
+    try {
+      if (attachment !== null) {
+        const formData = new FormData();
+        formData.append("image", attachment ? attachment : "");
+        const uploadImageResponse = await axios.post(
+          `${SERVER_URL}/image/upload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        if (uploadImageResponse.status === 200) {
+          console.log(uploadImageResponse.data);
+          partyInfo.partyImageUrl = uploadImageResponse.data.data.url;
+        } else {
+          alert(uploadImageResponse.data.message);
+        }
+      }
+      const postResponse = await axios.post(
+        `${SERVER_URL}/party/create`,
+        partyInfo,
         CONFIG
       );
-      if (res.data) {
-        console.log(res.data);
+      if (postResponse.status === 200) {
+        navigate(
+          `/${channelCode}/meetup-detail/${postResponse.data.data.partyId}`,
+          { replace: true }
+        );
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -173,6 +195,7 @@ const CreateMeetup = () => {
           timeCaption="시간"
           placeholderText="날짜 및 시간을 선택해 주세요"
           minDate={new Date()}
+          maxDate={MAX_DATE}
         />
 
         <div style={{ height: "16px" }} />
@@ -285,7 +308,6 @@ const CreateMeetup = () => {
           <ButtonBasic
             innerText="완료"
             onClick={() => {
-              alert("good");
               postNewMeetup();
             }}
             disable={!isPostValid}
