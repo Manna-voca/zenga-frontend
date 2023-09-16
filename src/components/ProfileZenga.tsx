@@ -62,6 +62,10 @@ const ProfileZenga = () => {
 
     const [helpboxState, setHelpboxState] = useState<boolean>(false);
 
+    const [blockNum, setBlockNum] = useState<Array<number>>([0, 0, 0, 0, 0, 0, 0]);
+
+    const [blockList, setBlockList] = useState<Array<any>>([]);
+
     const handleBlockListClick = () => {
         setHelpboxState(true);
     };
@@ -69,6 +73,36 @@ const ProfileZenga = () => {
     const getBlockInfo = async () => {
         await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/blocks`, CONFIG).then((res) => {
             console.log(res.data.data);
+            const blockData = res.data.data;
+            let blockArray = [0, 0, 0, 0, 0, 0, 0];
+            for(let i = 0; i < blockData.blockCountResponseDtoList.length; i++){
+                if(blockData.blockCountResponseDtoList[i].blockType === "PINK"){
+                    blockArray[0] = blockData.blockCountResponseDtoList[i].count;
+                }
+                else if(blockData.blockCountResponseDtoList[i].blockType === "ORANGE"){
+                    blockArray[1] = blockData.blockCountResponseDtoList[i].count;
+                }
+                else if(blockData.blockCountResponseDtoList[i].blockType === "SKY_BLUE"){
+                    blockArray[2] = blockData.blockCountResponseDtoList[i].count;
+                }
+                else if(blockData.blockCountResponseDtoList[i].blockType === "LIGHT_GREEN"){
+                    blockArray[3] = blockData.blockCountResponseDtoList[i].count;
+                }
+                else if(blockData.blockCountResponseDtoList[i].blockType === "YELLOW"){
+                    blockArray[4] = blockData.blockCountResponseDtoList[i].count;
+                }
+                else if(blockData.blockCountResponseDtoList[i].blockType === "PURPLE"){
+                    blockArray[5] = blockData.blockCountResponseDtoList[i].count;
+                }
+                else if(blockData.blockCountResponseDtoList[i].blockType === "LIGHT_BROWN"){
+                    blockArray[6] = blockData.blockCountResponseDtoList[i].count;
+                }
+            }
+            setBlockNum(blockArray);
+            setBlockList(blockData.blockInfoResponseDtoList);
+        }).catch((err) => {
+            console.error(err);
+            setIsBlock0(true);
         });
     };
 
@@ -88,13 +122,13 @@ const ProfileZenga = () => {
                         background: 'var(--surface-surface, #FAFAFA)',
                         cursor: 'pointer'
             }}>
-                <BlockNumber type="Pink" number={2}></BlockNumber>
-                <BlockNumber type="Orange" number={12}></BlockNumber>
-                <BlockNumber type="Blue" number={21}></BlockNumber>
-                <BlockNumber type="Green" number={2}></BlockNumber>
-                <BlockNumber type="Yellow" number={2}></BlockNumber>
-                <BlockNumber type="Purple" number={2}></BlockNumber>
-                <BlockNumber type="Default" number={2}></BlockNumber>
+                <BlockNumber type="Pink" number={blockNum[0]}></BlockNumber>
+                <BlockNumber type="Orange" number={blockNum[1]}></BlockNumber>
+                <BlockNumber type="Blue" number={blockNum[2]}></BlockNumber>
+                <BlockNumber type="Green" number={blockNum[3]}></BlockNumber>
+                <BlockNumber type="Yellow" number={blockNum[4]}></BlockNumber>
+                <BlockNumber type="Purple" number={blockNum[5]}></BlockNumber>
+                <BlockNumber type="Default" number={blockNum[6]}></BlockNumber>
             </div>
             <div style={{ height: '50px' }}></div>
             {isBlock0 ? (
@@ -126,20 +160,71 @@ const ProfileZenga = () => {
                 <>
                     <div
                         style={{ margin: '0 20px 0 20px', display: 'flex',
-                                flexWrap: 'wrap', justifyContent: 'space-between',
-                                rowGap: '5px'
+                                flexWrap: 'wrap-reverse', justifyContent: 'space-between',
+                                rowGap: '5px', columnGap: '5px'
                     }}>
-                        <div style={{ width: '33%' }}>
-                            <ZengaBlock block={blueblockImg} date="2023.08.15" text="첫 칭찬을 받았어요 !"></ZengaBlock>
-                        </div>
-                        <div style={{ width: '33%' }}>
-                            <ZengaBlock block={yellowblockImg} date="2023.08.15" text="첫 칭찬을 받았어요 !"></ZengaBlock>
-                        </div>
-                        <div style={{ width: '33%' }}>
-                            <ZengaBlock block={pinkblockImg} date="2023.08.15" text="첫 칭찬을 받았어요 !"></ZengaBlock>
-                        </div>
-                        <ZengaBigBlock block={greenblockImg} color="Green"></ZengaBigBlock>
-
+                        {blockList.map((item, index) => {
+                            let blockImg = defaultblockImg;
+                            let longBlockImg = yellowblockImg;
+                            let longBlockColor : "Yellow" | "Blue" | "Green" | "Purple" | "Orange" | "Pink" | "Default" = "Yellow";
+                            if(item.blockType === "PINK"){
+                                blockImg = pinkblockImg;
+                                longBlockImg = blueblockImg;
+                                longBlockColor = "Blue";
+                            }
+                            else if(item.blockType === "ORANGE"){
+                                blockImg = orangeblockImg;
+                                longBlockImg = purpleblockImg;
+                                longBlockColor = "Purple";
+                            }
+                            else if(item.blockType === "SKY_BLUE"){
+                                blockImg = blueblockImg;
+                                longBlockImg = defaultblockImg;
+                                longBlockColor = "Default";
+                            }
+                            else if(item.blockType === "LIGHT_GREEN"){
+                                blockImg = greenblockImg;
+                                longBlockImg = pinkblockImg;
+                                longBlockColor = "Pink";
+                            }
+                            else if(item.blockType === "YELLOW"){
+                                blockImg = yellowblockImg;
+                                longBlockImg = orangeblockImg;
+                                longBlockColor = "Orange";
+                            }
+                            else if(item.blockType === "PURPLE"){
+                                blockImg = purpleblockImg;
+                                longBlockImg = greenblockImg;
+                                longBlockColor = "Green";
+                            }
+                            if(index % 3 !== 0 || index === 0){
+                                return(
+                                    <>
+                                        <div style={{ flex: '1' }}>
+                                            <ZengaBlock
+                                                block={blockImg}
+                                                date={item.createdAt}
+                                                text={item.description}
+                                            />
+                                        </div>
+                                    </>
+                                );
+                            }
+                            else{
+                                return(
+                                    <>
+                                        <ZengaBigBlock block={longBlockImg} color={longBlockColor}></ZengaBigBlock>
+                                        <div style={{ flex: '1' }}>
+                                            <ZengaBlock
+                                                block={blockImg}
+                                                date={item.createdAt}
+                                                text={item.description}
+                                            />
+                                        </div>
+                                    </>
+                                );
+                            }
+                        })}
                     </div>
                 </>
             )}
