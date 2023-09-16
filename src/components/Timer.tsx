@@ -17,8 +17,7 @@ const Timer: React.FC = () => {
 
       if (targetHour !== undefined) {
         const targetTime = new Date(now);
-        targetTime.setHours(targetHour, 0, 0, 0);
-
+        targetTime.setHours(targetHour, 0, -1, 0);
         const timeDifference = targetTime.getTime() - now.getTime();
         if (timeDifference <= 0) {
           clearInterval(interval);
@@ -29,8 +28,7 @@ const Timer: React.FC = () => {
           setIsLoading(false);
         }
       }
-    }, 1000); // Update every second
-
+    }, 1000);
     return () => {
       clearInterval(interval);
     };
@@ -76,6 +74,7 @@ const Timer: React.FC = () => {
       ) : (
         <p style={{ height: "113px" }}>
           새로 고침하면 새로운 칭찬을 볼 수 있어요 !
+          <button onClick={() => window.location.reload()}>새로고침</button>
         </p>
       )}
     </div>

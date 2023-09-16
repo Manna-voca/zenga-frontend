@@ -16,6 +16,7 @@ import PraiseContainer from "../components/PraiseContainer";
 import Toast from "../components/Toast";
 import { useParams } from "react-router";
 import axios from "axios";
+import TokenRefresh from "../components/TokenRefresh";
 
 interface CategoryProps {
   categoryName: string;
@@ -194,6 +195,7 @@ const Praise = () => {
   const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
   const [memberCount, setMemberCount] = useState<number>(0);
   const { channelCode } = useParams();
+  const [channelId, setChannelId] = useState<number>();
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {
@@ -261,12 +263,6 @@ const Praise = () => {
           isSelected={selectedCategory === 3}
           onClick={handleCategory3Click}
         />
-        {/* <CategoryBtn
-          onClick={() => setIsChannelActive((prev) => !prev)}
-          style={{ background: isChannelActive ? `${color.primary500}` : "" }}
-        >
-          {isChannelActive ? "on" : "off"}
-        </CategoryBtn> */}
       </CategoryContainer>
       {selectedCategory === 1 ? (
         isChannelActive ? (

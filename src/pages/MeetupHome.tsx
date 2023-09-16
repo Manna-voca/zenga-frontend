@@ -22,7 +22,7 @@ const MeetupHome = () => {
         'Content-Type':'application/json'
       },
     };
-
+    const { channelCode } = useParams();
 
     const [width, setWidth] = useState(window.innerWidth);
 
@@ -130,7 +130,7 @@ const MeetupHome = () => {
                         </>
                     )}
                     <div
-                        onClick={() => navigate('/create-meetup')}
+                        onClick={() => navigate(`/${channelCode}/create-meetup`)}
                         style={{ height: '60px', width: '60px', borderRadius: '30px',
                                 background: 'var(--primary-primary-500, #1F94FF)',
                                 display: 'flex', justifyContent: 'center', alignItems: 'center',

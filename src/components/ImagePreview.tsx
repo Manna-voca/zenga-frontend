@@ -12,7 +12,10 @@ const ImagePreview = ({ attachment, onDelete }: any) => {
       >
         <div
           style={{
-            backgroundImage: `url(${URL.createObjectURL(attachment.file)})`,
+            backgroundImage:
+              typeof attachment === typeof "string"
+                ? `url(${attachment})`
+                : `url(${URL.createObjectURL(attachment)})`,
             width: "64px",
             height: "64px",
             backgroundSize: "cover",

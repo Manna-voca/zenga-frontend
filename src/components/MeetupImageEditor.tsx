@@ -3,12 +3,8 @@ import { color } from "../styles/color";
 import cameraIcon from "../assets/icons/ic-camera.svg";
 import ImagePreview from "./ImagePreview";
 
-interface Attachment {
-  file: File;
-}
-
 interface OwnProps {
-  attachment: Attachment | null;
+  attachment: File | string | null;
   handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleImageDelete: () => void;
 }
