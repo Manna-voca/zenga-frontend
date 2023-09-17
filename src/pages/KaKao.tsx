@@ -7,7 +7,9 @@ import { useNavigate } from "react-router-dom";
 
 const KaKao = () => {
   const navigate = useNavigate();
-  let authcode = new URL(window.location.href).searchParams.get("code");
+  console.log(window.location.origin);
+  const authcode = new URL(window.location.href).searchParams.get("code");
+  console.log(authcode);
 
   const fetchTokenByKaKaoAuthCode = async () => {
     try {
@@ -25,6 +27,9 @@ const KaKao = () => {
             },
           }
         );
+        // if(에러땜시왔다는 로컬스토리지에 플래그 있으면){
+        //   navigate(-3);
+        // }
         if (userInfoResponse.data.data.name) {
           navigate("/channel-home");
         } else {

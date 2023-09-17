@@ -20,6 +20,7 @@ const Navbar = ({state = 1}: Props) => {
 
     const handleComplimentImgClick = () => {
         setCheck(1);
+        localStorage.removeItem("praise");
         navigate(`/${channelCode}/praise`, {replace: true});
     };
 

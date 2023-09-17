@@ -6,9 +6,10 @@ interface Props {
     text : string;
     btnText : string;
     func? : any;
+    image? : string;
 };
 
-const Popup1 = ({title, text, btnText, func}: Props) => {
+const Popup1 = ({title, text, btnText, func, image}: Props) => {
 
     const handleButtonClick = () => {
         func();
@@ -41,6 +42,9 @@ const Popup1 = ({title, text, btnText, func}: Props) => {
                     style={{ margin: '28px 0 16px 0', display: 'flex',
                             flexDirection: 'column', alignItems: 'center'
                 }}>
+                    <div style={{display: image ? "block" : "none", marginBottom: "10px"}}>
+                      <img width="48px" height="48px" src={image} alt="" />
+                    </div>
                     <div
                         style={{ height: '27px', fontSize: '16px',
                                 fontStyle: 'normal', fontWeight: '700',

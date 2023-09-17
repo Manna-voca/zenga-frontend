@@ -5,13 +5,20 @@ import { typography } from "../styles/typography";
 import axios from "axios";
 
 interface OwnProps {
+  id: number;
   title: string;
   content: string;
   date: string;
   isRead: boolean;
 }
 
-const NotificationWrapper = ({ title, content, date, isRead }: OwnProps) => {
+const NotificationWrapper = ({
+  id,
+  title,
+  content,
+  date,
+  isRead,
+}: OwnProps) => {
   return (
     <article
       style={{
@@ -52,15 +59,25 @@ export default function Notification() {
   };
   const MEMBER_ID = localStorage.getItem("memberId");
 
-  const [notifications, setNotifications] = useState();
+  const [notifications, setNotifications] = useState<Array<OwnProps>>();
 
   const fetchNotifications = async () => {
     try {
-      await axios
-        .get(`${SERVER_URL}/notification/member/${MEMBER_ID}`, CONFIG)
-        .then((res) => {
-          console.log(res.data);
-        });
+      const res = await axios.get(
+        `${SERVER_URL}/notification/member/${MEMBER_ID}`,
+        CONFIG
+      );
+      if (res.data && res.status === 200) {
+        const newList = res.data.data.notificationList.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          content: item.content,
+          date: item.createdDate,
+          isRead: item.check,
+        }));
+        setNotifications(newList);
+      }
+
       // .catch((err) => {
       //   console.log(err.response.data.errorCode);
       //   if (err.response.data.errorCode === (7000 || 7001)) {
@@ -68,31 +85,46 @@ export default function Notification() {
       //   }
       // });
     } catch (error) {
-      const err = error as any;
-      if (err.response.data.errorCode === (7000 || 7001)) {
-        console.log("토큰 에러");
-      }
+      console.log(error);
+      // const err = error as any;
+      // if (err.response.data.errorCode === (7000 || 7001)) {
+      //   Navigate(7000)
+      // }
+    }
+  };
+
+  const readAllNotifications = async () => {
+    try {
+      await axios.put(
+        `${SERVER_URL}/notification/member/${MEMBER_ID}/check/all`,
+        CONFIG
+      );
+    } catch (error) {
+      console.log(error);
     }
   };
   useEffect(() => {
     fetchNotifications();
+    return () => {
+      readAllNotifications();
+    };
   }, []);
 
   return (
     <>
-      <Header type="back" />
-      <NotificationWrapper
-        title="누군가 나를 칭찬했어요 !"
-        content="칭찬: 우리 동아리에서 당근 마켓 온도 99도 일 것 같은 사람은?"
-        date="7월 13일(목) 21:05"
-        isRead={false}
-      />
-      <NotificationWrapper
-        title="누군가 나를 칭찬했어요 !"
-        content="칭찬: 우리 동아리에서 당근 마켓 온도 99도 일 것 같은 사람은?"
-        date="7월 13일(목) 21:05"
-        isRead={true}
-      />
+      <Header type="back" text="알림" />
+      {notifications?.map((item, index) => {
+        return (
+          <NotificationWrapper
+            key={index}
+            id={item.id}
+            title={item.title}
+            content={item.content}
+            date={item.date}
+            isRead={item.isRead}
+          />
+        );
+      })}
     </>
   );
 }
