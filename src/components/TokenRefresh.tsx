@@ -49,6 +49,7 @@ const TokenRefresh = () => {
     if (!ACCESS_TOKEN) {
       if (
         location.pathname !== "/oauth/callback/kakao" &&
+        location.pathname !== "/oauth/callback/kakao/" &&
         location.pathname !== "/" &&
         location.pathname.length !== 9
       ) {
