@@ -39,13 +39,13 @@ const TokenRefresh = () => {
         refreshToken: REFRESH_TOKEN,
       });
       localStorage.setItem("accessToken", res.data.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.data.refreshToken);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    console.log(location.pathname);
     if (!ACCESS_TOKEN) {
       if (
         location.pathname !== "/oauth/callback/kakao" &&

@@ -7,6 +7,8 @@ import smallWhale from "../assets/images/smallWhale.png";
 import CircularImage from "./CircularImage";
 import axios from "axios";
 import Popup2 from "./Popup2";
+import Popup1 from "./Popup1";
+import PoorWhale from "../assets/images/poor_whale_character.png";
 
 interface PraiseProps {
   handlePraiseOpen: () => void;
@@ -50,6 +52,9 @@ const PraiseWrapper = ({
       : postImageNameStyle;
   const profileImagePath = image ? image : smallWhale;
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [showNotEnoughPointPopup, setShowNotEnoughPointPopup] =
+    useState<boolean>(false);
+  const [point, setPoint] = useState<number>();
 
   const getSenderOfPraise = async () => {
     try {
@@ -62,17 +67,29 @@ const PraiseWrapper = ({
           },
           CONFIG
         );
-        if (res.data.errorCode === 1200) {
-          alert("포인트가 부족합니다.");
-        } else {
-          handlePraiseOpen();
-          setShowPopup(false);
-        }
+        handlePraiseOpen();
+        setShowPopup(false);
       }
+    } catch (error) {
+      const err = error as any;
+      if (err.response.data.errorCode === 1200) {
+        setShowNotEnoughPointPopup(true);
+        setShowPopup(false);
+      }
+    }
+  };
+
+  const fetchPoint = async () => {
+    try {
+      const pointRes = await axios.get(`${SERVER_URL}/point/total`, CONFIG);
+      setPoint(pointRes.data.data.point);
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    fetchPoint();
+  }, []);
 
   return (
     <>
@@ -80,10 +97,21 @@ const PraiseWrapper = ({
         <Popup2
           leftBtnText="취소"
           rightBtnText="확인"
-          title="300 포인트를 차감하시겠어요?"
-          text="포인트 차감 시, 보낸 멤버가 누구인지 알 수 있어요"
+          title={"300 포인트를 차감하시겠어요?"}
+          text={`(현재포인트 : ${point})
+          포인트 차감 시, 보낸 멤버가 누구인지 알 수 있어요`}
           leftFunc={() => setShowPopup(false)}
           rightFunc={() => getSenderOfPraise()}
+        />
+      )}
+      {showNotEnoughPointPopup && (
+        <Popup1
+          image={PoorWhale}
+          title="포인트가 부족해요"
+          text={`포인트가 부족해서
+          칭찬을 보낸 멤버를 확인할 수 없어요`}
+          btnText="확인"
+          func={() => setShowNotEnoughPointPopup(false)}
         />
       )}
       <PraiseWrapperDiv>

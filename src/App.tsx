@@ -50,7 +50,7 @@ function App() {
       <Route path="/:channelCode/meetup-detail/:meetupId" element={<MeetupDetail />}></Route>
       <Route path="/:channelCode/meetup-member/:meetupId" element={<MeetupMember />}></Route>
       <Route path="/create-card/:meetupId" element={<CreateCard />}></Route>
-      <Route path="/comment/:meetupId" element={<Comment />}></Route>
+      <Route path="/:channelCode/comment/:meetupId" element={<Comment />}></Route>
       <Route path="/:channelCode/mypage" element={<Mypage />}></Route>
       <Route path="/:channelCode/memberpage/:memberId" element={<Memberpage />}></Route>
       <Route path="/:channelCode/my-meetup" element={<MyMeetup />}></Route>

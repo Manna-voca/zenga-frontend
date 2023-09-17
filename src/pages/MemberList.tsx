@@ -1,5 +1,7 @@
+/** @jsxImportSource @emotion/react */
+import { keyframes } from "@emotion/react";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import searchIcon from "../assets/icons/ic-search.svg";
@@ -18,7 +20,6 @@ interface MemberProps {
 }
 
 export default function MemberList() {
-  const [searchWord, setSearchWord] = useState("");
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {
@@ -42,37 +43,120 @@ export default function MemberList() {
     }
   };
 
-  const callSearchApi = (term: string) => {
-    if (!searchWord) return;
-    console.log("검색어:", term);
-  };
-
-  const fetchMemberList = async () => {
+  const fetchMemberList = async (
+    cursorId?: number,
+    cursorName?: string,
+    size?: number,
+    keyword?: string
+  ) => {
+    if (loading) return;
+    const uri =
+      `${SERVER_URL}/channels/${CHANNEL_ID}/members` +
+      (size || cursorId || keyword ? "?" : "") +
+      (size ? `size=${size}` : "") +
+      (cursorId
+        ? size
+          ? `&cursorId=${cursorId}`
+          : `cursorId=${cursorId}`
+        : "") +
+      (cursorName
+        ? size || cursorId
+          ? `&cursorName=${cursorName}`
+          : `cursorName=${cursorName}`
+        : "") +
+      (keyword
+        ? size || cursorId || cursorName
+          ? `&keyword=${keyword}`
+          : `keyword=${keyword}`
+        : "");
     try {
-      const membersResponse = await axios.get(
-        `${SERVER_URL}/channels/${CHANNEL_ID}/members?size=20`,
-        CONFIG
-      );
+      if (hasMore === false && keyword === "") {
+        return;
+      }
+      setLoading(true);
+
+      const membersResponse = await axios.get(`${uri}`, CONFIG);
       if (membersResponse.data && membersResponse.status === 200) {
-        let members = membersResponse.data.content;
-        const formatMembers = members.map((member: any) => ({
+        const newMembers = membersResponse.data.content.map((member: any) => ({
           id: member.id,
           name: member.name,
           intro: member.introduction,
           level: member.level,
           image: member.profileImageUrl,
         }));
-        setMemberList(formatMembers);
+        if (keyword) {
+          setSearchMemberList(newMembers);
+        } else {
+          setMemberList((prev) => [...prev, ...newMembers]);
+          if (cursorId !== undefined && size !== undefined) {
+            if (membersResponse.data.hasNext === false) {
+              setHasMore(false);
+              setCursorId(Number(newMembers[newMembers.length - 1].id));
+              setCursorName(newMembers[newMembers.length - 1].name);
+            } else {
+              setCursorId(Number(newMembers[newMembers.length - 1].id));
+              setCursorName(newMembers[newMembers.length - 1].name);
+            }
+          }
+        }
       }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTotalMemberCount = async () => {
+    try {
+      const res = await axios.get(
+        `${SERVER_URL}/channels/${CHANNEL_ID}/count`,
+        CONFIG
+      );
+      setTotalMemberCount(res.data.data.count);
+      return res.data.data.count as number;
     } catch (error) {
       console.log(error);
     }
   };
-  const [memberList, setMemberList] = useState<MemberProps[]>();
+
+  const [memberList, setMemberList] = useState<MemberProps[]>([]);
+  const [searchMemberList, setSearchMemberList] = useState<
+    MemberProps[] | null
+  >(null);
+  const [cursorId, setCursorId] = useState<number>(0);
+  const [cursorName, setCursorName] = useState<string>("");
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const SIZE = 15;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchWord, setSearchWord] = useState<string>("");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [totalMemberCount, setTotalMemberCount] = useState<number>(0);
+
+  const handleScroll = () => {
+    if (
+      containerRef.current &&
+      containerRef.current.scrollHeight - containerRef.current.scrollTop <=
+        containerRef.current.clientHeight + 1
+    ) {
+      fetchMemberList(cursorId, cursorName, SIZE, "");
+    }
+  };
+
+  const callSearchApi = async (term: string) => {
+    if (!searchWord) return;
+    setCursorId(0);
+    fetchMemberList(0, undefined, 100, term);
+  };
 
   useEffect(() => {
-    fetchMemberList();
+    fetchTotalMemberCount();
+    fetchMemberList(cursorId, cursorName, SIZE, "");
   }, []);
+
+  useEffect(() => {
+    if (searchWord === "") setSearchMemberList(null);
+  }, [searchWord]);
 
   return (
     <>
@@ -106,26 +190,60 @@ export default function MemberList() {
             height: "12px",
           }}
         >
-          멤버 {memberList?.length}
+          멤버 {searchMemberList ? searchMemberList?.length : totalMemberCount}
         </div>
       </div>
       <div
+        ref={containerRef}
+        onScroll={handleScroll}
         style={{
           display: "flex",
           flexDirection: "column",
+          height: "calc(100vh - 172px)",
+          maxHeight: "calc(100vh - 172px)",
+          overflowY: "scroll",
+          position: "relative",
         }}
       >
-        {memberList?.map((item, index) => {
-          return (
-            <MemberWrapper
-              key={index}
-              id={item.id}
-              name={item.name}
-              image={item.image}
-              isChannelAdmin={item.level === "MAINTAINER"}
-            />
-          );
-        })}
+        {loading && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: "20",
+            }}
+          >
+            <LoadingSpinner />
+          </div>
+        )}
+        {searchMemberList
+          ? searchMemberList?.map((item, index) => {
+              return (
+                <MemberWrapper
+                  key={index}
+                  id={item.id}
+                  name={item.name}
+                  image={item.image}
+                  isChannelAdmin={item.level === "MAINTAINER"}
+                />
+              );
+            })
+          : memberList?.map((item, index) => {
+              return (
+                <MemberWrapper
+                  key={index}
+                  id={item.id}
+                  name={item.name}
+                  image={item.image}
+                  isChannelAdmin={item.level === "MAINTAINER"}
+                />
+              );
+            })}
       </div>
       <div style={{ height: "57px" }}></div>
       <Navbar state={3}></Navbar>
@@ -156,4 +274,18 @@ const SearchInput = styled.input`
   &::placeholder {
     color: ${color.onSurfaceMuted};
   }
+`;
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+const LoadingSpinner = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 3px solid ${color.surface};
+  border-top-color: ${color.primary300};
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
 `;
