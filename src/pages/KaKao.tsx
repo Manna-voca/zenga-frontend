@@ -25,6 +25,9 @@ const KaKao = () => {
             },
           }
         );
+        // if(에러땜시왔다는 로컬스토리지에 플래그 있으면){
+        //   navigate(-3);
+        // }
         if (userInfoResponse.data.data.name) {
           navigate("/channel-home");
         } else {

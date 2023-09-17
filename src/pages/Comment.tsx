@@ -10,8 +10,22 @@ import styled from "@emotion/styled";
 import ButtonMultiple from "../components/ButtonMultiple";
 import PopupComplaint from "../components/PopupComplaint";
 import Popup2 from "../components/Popup2";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const CONFIG = {
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+  },
+};
+const CHANNEL_ID = localStorage.getItem("channelId");
 
 interface CommentData {
+  id: string;
   author: string;
   content: string;
   createdBefore: string;
@@ -36,6 +50,7 @@ const CommentWrapper = ({
   setReadyState,
   setPreviousComment,
 }: CommentWrapperProps) => {
+  const { meetupId } = useParams();
   return (
     <div
       style={{
@@ -101,26 +116,41 @@ const CommentWrapper = ({
 };
 
 interface CommentCreatorProps {
-  myImage: string;
   comment: string;
   setComment: React.Dispatch<React.SetStateAction<string>>;
   isFocused: boolean;
   replyTo: string | null;
   setReplyTo: React.Dispatch<React.SetStateAction<string | null>>;
+  commentId?: string;
 }
 
 const CommentCreator = ({
-  myImage,
   comment,
   setComment,
   isFocused,
   replyTo,
   setReplyTo,
+  commentId,
 }: CommentCreatorProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
+  const { meetupId } = useParams();
+  const [myImage, setMyImage] = useState<string>("");
+
+  const getMyImage = async () => {
+    try {
+      const res = await axios.get(
+        `${SERVER_URL}/members/info?channelId=${CHANNEL_ID}`,
+        CONFIG
+      );
+      setMyImage(res.data.data.profileImageUrl);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
+    getMyImage();
     adjustTextareaHeight();
     window.addEventListener("resize", adjustTextareaHeight);
     return () => {
@@ -149,6 +179,29 @@ const CommentCreator = ({
       div.style.height = `calc(${textarea.scrollHeight}px +  21px)`;
     }
   };
+
+  const postComment = async () => {
+    console.log(comment);
+    console.log(setReplyTo);
+    try {
+      if (replyTo === null) {
+        const res = await axios.post(
+          `${SERVER_URL}/comment`,
+          {
+            channelId: CHANNEL_ID,
+            partyId: meetupId,
+            content: comment,
+          },
+          CONFIG
+        );
+        console.log(res);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // 댓글관련 끝
   return (
     <>
@@ -225,7 +278,7 @@ const CommentCreator = ({
             onChange={handleTextareaChange}
             placeholder="댓글을 입력해주세요."
           />
-          <CommentButton>등록</CommentButton>
+          <CommentButton onClick={postComment}>등록</CommentButton>
         </div>
       </div>
     </>
@@ -233,37 +286,37 @@ const CommentCreator = ({
 };
 
 const Comment = () => {
-  const myImage = exImage1;
-  const comments: CommentData[] = [
-    {
-      author: "박세원",
-      content: "이 시간에 라면 먹으면 안되겠지?",
-      createdBefore: "2시간 전",
-      isReply: false,
-      authorImage: exImage1,
-      isChannelAdmin: false,
-      isMine: false,
-    },
-    {
-      author: "윤석민",
-      content: "당연하지",
-      createdBefore: "2시간 전",
-      isReply: true,
-      authorImage: exImage1,
-      isChannelAdmin: true,
-      isMine: true,
-    },
-    {
-      author: "윤석민",
-      content:
-        "우다다다다다다다다닫다다다다다다다다다다우더ㅜ아두ㅏㅇ다ㅏ다아두ㅏ우다ㅜ아다우ㅏ어ㅏㅜㅁㅇ런애ㅑ러매냐어램널애먀ㅓ램너ㅐ러내야ㅓ랴ㅓㄴ매ㅓ",
-      createdBefore: "2시간 전",
-      isReply: false,
-      authorImage: exImage1,
-      isChannelAdmin: true,
-      isMine: true,
-    },
-  ];
+  // const comments: CommentData[] = [
+  //   {
+  //     author: "박세원",
+  //     content: "이 시간에 라면 먹으면 안되겠지?",
+  //     createdBefore: "2시간 전",
+  //     isReply: false,
+  //     authorImage: exImage1,
+  //     isChannelAdmin: false,
+  //     isMine: false,
+  //   },
+  //   {
+  //     author: "윤석민",
+  //     content: "당연하지",
+  //     createdBefore: "2시간 전",
+  //     isReply: true,
+  //     authorImage: exImage1,
+  //     isChannelAdmin: true,
+  //     isMine: true,
+  //   },
+  //   {
+  //     author: "윤석민",
+  //     content:
+  //       "우다다다다다다다다닫다다다다다다다다다다우더ㅜ아두ㅏㅇ다ㅏ다아두ㅏ우다ㅜ아다우ㅏ어ㅏㅜㅁㅇ런애ㅑ러매냐어램널애먀ㅓ램너ㅐ러내야ㅓ랴ㅓㄴ매ㅓ",
+  //     createdBefore: "2시간 전",
+  //     isReply: false,
+  //     authorImage: exImage1,
+  //     isChannelAdmin: true,
+  //     isMine: true,
+  //   },
+  // ];
+  const [comments, setComments] = useState<CommentData[]>([]);
   const [previousComment, setPreviousComment] = useState<string>("");
   const [comment, setComment] = useState<string>("");
   const [isCommentFocused, setIsCommentFocused] = useState<boolean>(false);
@@ -274,6 +327,82 @@ const Comment = () => {
     useState<boolean>(false);
   const [showReport, setShowReport] = useState<boolean>(false);
   const [showDeletePopup, setShowDeletePopup] = useState<boolean>(false);
+  const { meetupId } = useParams();
+  const [commentId, setCommentId] = useState<string>();
+  dayjs.extend(relativeTime);
+  dayjs.locale("ko");
+
+  function formatDate(date: Date) {
+    const now = dayjs();
+    const duration = now.diff(date, "minute");
+    if (duration > 1440) return `${Math.floor(duration / 1440)}일전`;
+    else if (duration > 60) {
+      return `${Math.floor(duration / 60)}시간전`;
+    } else if (duration > 0) {
+      return `${duration}분전`;
+    } else {
+      return `1분전`;
+    }
+  }
+
+  const fetchComments = async () => {
+    try {
+      const res = await axios.get(`${SERVER_URL}/comment/${meetupId}`, CONFIG);
+      console.log(res.data);
+      let newComment: any = [];
+      if (res.data && res.status === 200) {
+        for (let i = 0; i < res.data.data.content.length; i++) {
+          newComment.push({
+            id: res.data.data.content[i].commentId,
+            author: res.data.data.content[i].writerName,
+            content: res.data.data.content[i].content,
+            createdBefore: formatDate(
+              new Date(res.data.data.content[i].createdAt)
+            ),
+            isReply: res.data.data.content[i].parentId !== null,
+            authorImage: res.data.data.content[i].writerProfileImageUrl,
+            isChannelAdmin: false,
+            isMine:
+              res.data.data.content[i].writerId ===
+              Number(localStorage.getItem("memberId")),
+          });
+          if (res.data.data.content[i].childComments.length !== 0) {
+            for (
+              let j = 0;
+              j < res.data.data.content[i].childComments.length;
+              j++
+            ) {
+              newComment.push({
+                id: res.data.data.content[i].commentId,
+                author: res.data.data.content[i].childComments[j].writerName,
+                content: res.data.data.content[i].childComments[j].content,
+                createdBefore: formatDate(
+                  new Date(res.data.data.content[i].childComments[j].createdAt)
+                ),
+                isReply:
+                  res.data.data.content[i].childComments[j].parentId !== null,
+                authorImage:
+                  res.data.data.content[i].childComments[j]
+                    .writerProfileImageUrl,
+                isChannelAdmin: false,
+                isMine:
+                  res.data.data.content[i].childComments[j].writerId ===
+                  Number(localStorage.getItem("memberId")),
+              });
+            }
+          }
+        }
+        setComments(newComment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
   return (
     <>
       <Header type="back" text={`댓글 ${comments.length}`} />
@@ -290,12 +419,12 @@ const Comment = () => {
         );
       })}
       <CommentCreator
-        myImage={myImage}
         comment={comment}
         isFocused={isCommentFocused}
         setComment={setComment}
         replyTo={replyTo}
         setReplyTo={setReplyTo}
+        commentId={commentId}
       />
       {showMyReplyControl && (
         <ButtonMultiple
