@@ -12,6 +12,7 @@ import { get } from "../api/api";
 const Login = () => {
   const navigate = useNavigate();
   let KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
+  console.log(KAKAO_URL);
 
   // const fetchUserInfo = async () => {
   //   try {
