@@ -23,6 +23,7 @@ interface Props {
     text? : string;
     isChannelAdmin? : boolean;
     download? : false;
+    downloadFunc? : any;
     func?: any;
     shareFunc?: any;
 };
@@ -35,7 +36,7 @@ interface ChannelInfoProps{
     name: string;  
 };
 
-const Header = ({type, text, isChannelAdmin, download, func, shareFunc}: Props) => {
+const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, shareFunc}: Props) => {
     const navigate = useNavigate();
     const { channelCode } = useParams();
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -258,6 +259,7 @@ const Header = ({type, text, isChannelAdmin, download, func, shareFunc}: Props) 
                     }}>
                         {download !== false &&
                             <DownloadImg
+                                onClick={() => downloadFunc()}
                                 style={{ cursor: 'pointer' }}
                             />
                         }
