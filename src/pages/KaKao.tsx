@@ -9,7 +9,7 @@ const KaKao = () => {
   const navigate = useNavigate();
   let authcode: string|null;
   console.log(window.location.origin);
-  if(!window.location.origin.startsWith("https://www.")){
+  if(window.location.origin.startsWith("https://www.")){
     authcode = new URL(window.location.href).searchParams.get("code");
   }
 
