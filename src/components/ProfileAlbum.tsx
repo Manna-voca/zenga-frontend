@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import whaleImg from '../images/whalealbum.png';
 import axios from "axios";
@@ -12,6 +12,7 @@ interface Props{
 
 const ProfileAlbum = ({who, memberId}: Props) => {
     const navigate = useNavigate();
+    const { channelCode } = useParams();
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
       headers: {
@@ -87,8 +88,8 @@ const ProfileAlbum = ({who, memberId}: Props) => {
                     }}>
                         {albumList.map((item, index) => {
                             return <CardContainer
-                                        onClick={() => navigate('/album/1', {state: {who: who, initialNum: index}})}
-                                        style={{ backgroundImage: `url(${item.imageUrl})`}}
+                                        onClick={() => navigate(`/${channelCode}/album/${memberId}`, {state: {who: who, initialNum: index}})}
+                                        style={{ backgroundImage: `url(${item.imageUrl})`, cursor: 'pointer'}}
                                     />
                         })}
                     </div>

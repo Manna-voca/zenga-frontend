@@ -100,9 +100,11 @@ const ProfileZenga = () => {
             }
             setBlockNum(blockArray);
             setBlockList(blockData.blockInfoResponseDtoList);
+            if(blockData.blockInfoResponseDtoList.length === 0){
+                setIsBlock0(true);
+            }
         }).catch((err) => {
             console.error(err);
-            setIsBlock0(true);
         });
     };
 
@@ -160,7 +162,7 @@ const ProfileZenga = () => {
                 <>
                     <div
                         style={{ margin: '0 20px 0 20px', display: 'flex',
-                                flexWrap: 'wrap-reverse', justifyContent: 'space-between',
+                                flexWrap: 'wrap-reverse', justifyContent: 'flex-start',
                                 rowGap: '5px', columnGap: '5px'
                     }}>
                         {blockList.map((item, index) => {
@@ -200,7 +202,7 @@ const ProfileZenga = () => {
                             if(index % 3 !== 0 || index === 0){
                                 return(
                                     <>
-                                        <div style={{ flex: '1' }}>
+                                        <div style={{ width: 'calc((100% - 10px) / 3)' }}>
                                             <ZengaBlock
                                                 block={blockImg}
                                                 date={item.createdAt}
@@ -214,7 +216,7 @@ const ProfileZenga = () => {
                                 return(
                                     <>
                                         <ZengaBigBlock block={longBlockImg} color={longBlockColor}></ZengaBigBlock>
-                                        <div style={{ flex: '1' }}>
+                                        <div style={{ width: 'calc((100% - 10px) / 3)' }}>
                                             <ZengaBlock
                                                 block={blockImg}
                                                 date={item.createdAt}

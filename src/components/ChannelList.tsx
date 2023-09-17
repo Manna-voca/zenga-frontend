@@ -74,7 +74,13 @@ const ChannelList = ({type = 'channel', name, img, channelCode, memberId}: Props
 
                         }}>
                             <img width='36px' height='36px' src={img} alt="channelprofile"></img>
-                            <span style={{ marginLeft: '12px' }}>{name}</span>
+                            <span
+                                style={{ marginLeft: '12px', overflow: 'hidden',
+                                        textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                                        width: '210px'
+                            }}>
+                                {name}
+                            </span>
                         </div>
                     </>
                 )}

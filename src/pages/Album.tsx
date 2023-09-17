@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Mousewheel, Keyboard } from "swiper";
 import "swiper/swiper-bundle.min.css";
@@ -12,6 +12,7 @@ import Header from "../components/Header";
 import MeetupMember from "./MeetupMember";
 import testImg from '../images/jun.png';
 import Card from "../components/Card";
+import axios from "axios";
 
 
 interface cardProps{
@@ -25,6 +26,16 @@ interface cardProps{
 const Album = () => {
     const location = useLocation();
     const who = location.state.who;
+    const { channelCode, memberId } = useParams();
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
+
+
     const [initialNum, setInitialNum] = useState<number>(location.state.initialNum);
 
     const [memberState, setMemberState] = useState<boolean>(false);
@@ -46,63 +57,19 @@ const Album = () => {
         setMemberState(true);
     };
 
-    const cardDummy: Array<cardProps> = [
-        {date: "2023.02.26",
-        title: "1맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "2맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "3맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "4맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "5맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "6맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "7맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "8맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "9맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "10맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-        {date: "2023.02.26",
-        title: "11맞짱 뜰 사람~!",
-        text: "일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-        image: testImg
-        },
-    ];
+
+    const [albumList, setAlbumList] = useState<Array<any>>([]);
+
+    const getAlbumInfo = async () => {
+        await axios.get(`${SERVER_URL}/album/list?memberId=${memberId}`, CONFIG).then((res) => {
+            console.log(res.data.data);
+            setAlbumList(res.data.data.albumList);
+        }).catch((err) => console.error(err));
+    };
+
+    useEffect(() => {
+        getAlbumInfo();
+    }, []);
 
     return(
         <>
@@ -138,10 +105,11 @@ const Album = () => {
                         observeParents={true}
                         onSlideChange={(e) => setInitialNum(e.activeIndex)}
                     >
-                        {cardDummy.map((item, index) => {
+                        {albumList.map((item, index) => {
                             return (
                                 <SwiperSlide style={{ width: 'calc(100% - 40px)' }}>
                                     <Card
+                                        key={index}
                                         date={item.date}
                                         title={item.title}
                                         text={item.text}

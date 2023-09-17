@@ -12,7 +12,8 @@ const ProfileUpper = ({image, name, text}: Props) => {
         <>
             <div
                 style={{ display: 'flex', gap: '28px',
-                        alignItems: 'flex-start'
+                        alignItems: 'flex-start', width: 'calc(100vw - 40px)',
+                        maxWidth: '460px'
             }}>
                 <CircularImage
                     size="98"
@@ -20,12 +21,14 @@ const ProfileUpper = ({image, name, text}: Props) => {
                 />
                 <div
                     style={{ display: 'flex', flexDirection: 'column',
-                            gap: '4px'
+                            gap: '4px', minWidth: '0'
                 }}>
                     <div
                         style={{ fontSize: '14px', fontStyle: 'normal',
                                 fontWeight: '500', lineHeight: '150%',
-                                color: 'var(--on-surface-active, #0A0A0A)'
+                                color: 'var(--on-surface-active, #0A0A0A)',
+                                overflow: 'hidden', textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap'
                     }}>
                         {name}
                     </div>
@@ -34,7 +37,7 @@ const ProfileUpper = ({image, name, text}: Props) => {
                                 fontWeight: '400', lineHeight: '160%',
                                 color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
                                 height: '60px', maxWidth: '334px',
-                                width: '100%'
+                                width: 'calc(100%-166px)'
                     }}>
                         {text}
                     </div>

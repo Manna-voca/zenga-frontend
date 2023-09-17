@@ -4,9 +4,6 @@ import { ReactComponent as ArrowImg } from "../images/arrow.svg";
 import GatheringList from "./GatheringList";
 import testUserImg from '../images/channelprofile.png';
 import testImg from '../images/jun.png';
-import dayjs from "dayjs";
-import 'dayjs/locale/ko';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import axios from "axios";
 
 
@@ -21,9 +18,10 @@ const ProfileMeetup = () => {
         'Content-Type':'application/json'
       },
     };
-    
-    dayjs.extend(relativeTime);
-    dayjs.locale('ko');
+
+    const [recruitingList, setRecruitingList] = useState<Array<any>>([]);
+    const [inProgressList, setInProgressList] = useState<Array<any>>([]);
+    const [completedList, setCompletedList] = useState<Array<any>>([]);
 
     const handleArrowBtnClick = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         const meetupState : string = event.currentTarget.id
@@ -32,7 +30,23 @@ const ProfileMeetup = () => {
 
     const getMeetupInfo = async () => {
         await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/parties/all`, CONFIG).then((res) => {
-            console.log(res.data.data);
+            let rList = [];
+            let iList = [];
+            let cList = [];
+            for(let i = 0; i < res.data.data.length; i++){
+                if(res.data.data[i].state === "RECRUITING"){
+                    rList.push(res.data.data[i]);
+                }
+                else if(res.data.data[i].state === "IN_PROGRESS"){
+                    iList.push(res.data.data[i]);
+                }
+                else{
+                    cList.push(res.data.data[i]);
+                }
+            }
+            setRecruitingList(rList);
+            setInProgressList(iList);
+            setCompletedList(cList);
         })
     };
 
@@ -60,33 +74,46 @@ const ProfileMeetup = () => {
                         style={{ cursor: 'pointer' }}
                     />
                 </div>
-                <div style={{ height: '14px' }}></div>
-                <GatheringList
-                    meetupId={1}
-                    title="비오니까 파전에 막걸리"
-                    image={testImg}
-                    date={"날짜 미정"}
-                    location={"장소 미정"}
-                    userImg={testUserImg}
-                    userName="모아이"
-                    currentNum={1}
-                    maxNum={4}
-                ></GatheringList>
-                <div style={{ height: '8px' }}></div>
-                <GatheringList
-                    meetupId={1}
-                    title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                    date={"날짜 미정"}
-                    location={"장소 미정"}
-                    userImg={testUserImg}
-                    userName="모아이"
-                    currentNum={1}
-                    maxNum={8}
-                ></GatheringList>
-                <div style={{ height: '22px' }}></div>
 
-
-
+                {recruitingList.length === 0 ? (
+                    <>
+                        <div style={{ height: '48px' }}></div>
+                        <div
+                            style={{ height: '46px', display: 'flex',
+                                    alignItems: 'center', justifyContent: 'center',
+                                    color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
+                                    fontSize: '16px', fontStyle: 'normal',
+                                    fontWeight: '400', lineHeight: '150%',
+                                    textAlign: 'center'
+                        }}>
+                            참여 중인<br></br>모임이 없어요
+                        </div>
+                        <div style={{ height: '94px' }}></div>
+                    </>
+                ) : (
+                    <>
+                        <div style={{ height: '14px' }}></div>
+                        <div style={{ height: '152px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {recruitingList.map((item, index) => {
+                                return(
+                                    <GatheringList
+                                        key={item.partyId}
+                                        meetupId={item.partyId}
+                                        title={item.title}
+                                        image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
+                                        date={item.partyDate}
+                                        location={item.location}
+                                        userImg={item.openMemberProfileImageUrl}
+                                        userName={item.openMemberName}
+                                        currentNum={item.joinMemberCount}
+                                        maxNum={item.maxCapacity}
+                                    ></GatheringList>
+                                );
+                            })}
+                        </div>
+                        <div style={{ height: '22px' }}></div>
+                    </>
+                )}
 
                 <div
                     style={{ height: '24px', display: 'flex',
@@ -102,34 +129,46 @@ const ProfileMeetup = () => {
                         style={{ cursor: 'pointer' }}
                     />
                 </div>
-                <div style={{ height: '14px' }}></div>
-                <GatheringList
-                    meetupId={1}
-                    title="비오니까 파전에 막걸리"
-                    image={testImg}
-                    date={"날짜 미정"}
-                    location={"장소 미정"}
-                    userImg={testUserImg}
-                    userName="모아이"
-                    currentNum={1}
-                    maxNum={4}
-                ></GatheringList>
-                <div style={{ height: '8px' }}></div>
-                <GatheringList
-                    meetupId={1}
-                    title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                    date={"날짜 미정"}
-                    location={"장소 미정"}
-                    userImg={testUserImg}
-                    userName="모아이"
-                    currentNum={1}
-                    maxNum={8}
-                ></GatheringList>
-                <div style={{ height: '22px' }}></div>
 
-
-
-
+                {inProgressList.length === 0 ? (
+                    <>
+                        <div style={{ height: '48px' }}></div>
+                        <div
+                            style={{ height: '46px', display: 'flex',
+                                    alignItems: 'center', justifyContent: 'center',
+                                    color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
+                                    fontSize: '16px', fontStyle: 'normal',
+                                    fontWeight: '400', lineHeight: '150%',
+                                    textAlign: 'center'
+                        }}>
+                            참여 중인<br></br>모임이 없어요
+                        </div>
+                        <div style={{ height: '94px' }}></div>
+                    </>
+                ) : (
+                    <>
+                        <div style={{ height: '14px' }}></div>
+                        <div style={{ height: '152px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {inProgressList.map((item, index) => {
+                                return(
+                                    <GatheringList
+                                        key={item.partyId}
+                                        meetupId={item.partyId}
+                                        title={item.title}
+                                        image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
+                                        date={item.partyDate}
+                                        location={item.location}
+                                        userImg={item.openMemberProfileImageUrl}
+                                        userName={item.openMemberName}
+                                        currentNum={item.joinMemberCount}
+                                        maxNum={item.maxCapacity}
+                                    ></GatheringList>
+                                );
+                            })}
+                        </div>
+                        <div style={{ height: '22px' }}></div>
+                    </>
+                )}
 
                 <div
                     style={{ height: '24px', display: 'flex',
@@ -145,32 +184,46 @@ const ProfileMeetup = () => {
                         style={{ cursor: 'pointer' }}
                     />
                 </div>
-                <div style={{ height: '14px' }}></div>
-                <GatheringList
-                    meetupId={1}
-                    title="비오니까 파전에 막걸리"
-                    image={testImg}
-                    date={"날짜 미정"}
-                    location={"장소 미정"}
-                    userImg={testUserImg}
-                    userName="모아이"
-                    currentNum={1}
-                    maxNum={4}
-                    isEnd={true}
-                ></GatheringList>
-                <div style={{ height: '8px' }}></div>
-                <GatheringList
-                    meetupId={1}
-                    title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                    date={"날짜 미정"}
-                    location={"장소 미정"}
-                    userImg={testUserImg}
-                    userName="모아이"
-                    currentNum={1}
-                    maxNum={8}
-                    isEnd={true}
-                ></GatheringList>
-                <div style={{ height: '36px' }}></div>
+
+                {completedList.length === 0 ? (
+                    <>
+                        <div style={{ height: '48px' }}></div>
+                        <div
+                            style={{ height: '46px', display: 'flex',
+                                    alignItems: 'center', justifyContent: 'center',
+                                    color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
+                                    fontSize: '16px', fontStyle: 'normal',
+                                    fontWeight: '400', lineHeight: '150%',
+                                    textAlign: 'center'
+                        }}>
+                            참여한<br></br>모임이 없어요
+                        </div>
+                        <div style={{ height: '94px' }}></div>
+                    </>
+                ) : (
+                    <>
+                        <div style={{ height: '14px' }}></div>
+                        <div style={{ height: '152px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {completedList.map((item, index) => {
+                                return(
+                                    <GatheringList
+                                        key={item.partyId}
+                                        meetupId={item.partyId}
+                                        title={item.title}
+                                        image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
+                                        date={item.partyDate}
+                                        location={item.location}
+                                        userImg={item.openMemberProfileImageUrl}
+                                        userName={item.openMemberName}
+                                        currentNum={item.joinMemberCount}
+                                        maxNum={item.maxCapacity}
+                                    ></GatheringList>
+                                );
+                            })}
+                        </div>
+                        <div style={{ height: '36px' }}></div>
+                    </>
+                )}
             </div>
         </>
     );

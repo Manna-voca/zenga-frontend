@@ -49,14 +49,14 @@ function App() {
       <Route path="/:channelCode/meetup-home" element={<MeetupHome />}></Route>
       <Route path="/:channelCode/meetup-detail/:meetupId" element={<MeetupDetail />}></Route>
       <Route path="/:channelCode/meetup-member/:meetupId" element={<MeetupMember />}></Route>
-      <Route path="/create-card/:meetupId" element={<CreateCard />}></Route>
+      <Route path="/:channelCode/create-card/:meetupId" element={<CreateCard />}></Route>
       <Route path="/comment/:meetupId" element={<Comment />}></Route>
       <Route path="/:channelCode/mypage" element={<Mypage />}></Route>
       <Route path="/:channelCode/memberpage/:memberId" element={<Memberpage />}></Route>
       <Route path="/:channelCode/my-meetup" element={<MyMeetup />}></Route>
       <Route path="/modify-profile-info" element={<ModifyProfileInfo />}></Route>
       <Route path="/point" element={<PointDetail />}></Route>
-      <Route path="/album/:memberId" element={<Album />}></Route>
+      <Route path="/:channelCode/album/:memberId" element={<Album />}></Route>
     </Routes>
   );
 }
