@@ -73,7 +73,7 @@ const Timer: React.FC = () => {
         </TimerContainer>
       ) : (
         <p style={{ height: "113px" }}>
-          새로 고침하면 새로운 칭찬을 볼 수 있어요 !
+          새로 고침하면 새로운 칭찬을 볼 수 있어요!
           <button onClick={() => window.location.reload()}>새로고침</button>
         </p>
       )}
