@@ -33,8 +33,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />}></Route>
-      <Route path="/oauth/callback/kakao" element={<KaKao />}></Route>
       <Route path="/oauth/callback/kakao/" element={<KaKao />}></Route>
+      {/* <Route path="/oauth/callback/kakao" element={<KaKao />}></Route> */}
       <Route path="/onboarding" element={<Onboarding />}></Route>
       <Route path="/channel-home" element={<ChannelHome />}></Route>
       <Route path="/create-channel" element={<CreateChannel />}></Route>
