@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const KaKao = () => {
   const navigate = useNavigate();
   console.log(window.location.origin);
-  let authcode = new URL(window.location.href).searchParams.get("code");
+  const authcode = new URL(window.location.href).searchParams.get("code");
   console.log(authcode);
 
   const fetchTokenByKaKaoAuthCode = async () => {
