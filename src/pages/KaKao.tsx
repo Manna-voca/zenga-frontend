@@ -9,11 +9,12 @@ const KaKao = () => {
   const navigate = useNavigate();
   console.log(window.location.origin);
   let authcode = new URL(window.location.href).searchParams.get("code");
+  console.log(authcode);
 
   const fetchTokenByKaKaoAuthCode = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/auth/login/kakao?code=${authcode}`
+        `${process.env.REACT_APP_SERVER_URL}/auth/login/kakao?code=${new URL(window.location.href).searchParams.get("code")}`
       );
       if (response.data && response.data.data) {
         localStorage.setItem("accessToken", response.data.data.accessToken);
