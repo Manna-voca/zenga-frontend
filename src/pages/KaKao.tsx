@@ -14,7 +14,7 @@ const KaKao = () => {
   const fetchTokenByKaKaoAuthCode = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/auth/login/kakao?code=${new URL(window.location.href).searchParams.get("code")}`
+        `${process.env.REACT_APP_SERVER_URL}/auth/login/kakao?code=${authcode}`
       );
       if (response.data && response.data.data) {
         localStorage.setItem("accessToken", response.data.data.accessToken);
