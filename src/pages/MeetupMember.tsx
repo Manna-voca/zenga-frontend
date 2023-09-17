@@ -4,8 +4,13 @@ import MemberWrapper from "../components/MemberWrapper";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const MeetupMember = () => {
-    const { meetupId } = useParams();
+interface Props{
+    state?: "album";
+    albumId?: string;
+};
+
+const MeetupMember = ({state, albumId}:Props) => {
+    let { meetupId } = useParams();
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
       headers: {
@@ -23,8 +28,20 @@ const MeetupMember = () => {
         }
     };
 
+    const getMemberList = async () => {
+        await axios.get(`${SERVER_URL}/album/paticipation/${albumId}/with`, CONFIG).then((res) => {
+            console.log(res.data.data);
+            setMemberList(res.data.data.ParticipationList);
+        })
+    };
+
     useEffect(() => {
-        fetchMemberList();
+        if(state === "album"){
+            getMemberList();
+        }
+        else{
+            fetchMemberList();
+        }
     }, []);
 
     return(
@@ -37,10 +54,10 @@ const MeetupMember = () => {
                 return(
                     <MemberWrapper
                         key={index}
-                        name={item.memberName}
-                        id={item.memberId}
-                        image={item.memberProfileImageUrl}
-                        isChannelAdmin={item.isChannelMaker ? true : false}
+                        name={state === "album" ? item.nickname : item.memberName}
+                        id={state === "album" ? item.id : item.memberId}
+                        image={state === "album" ? item.profileUrl : item.memberProfileImageUrl}
+                        isChannelAdmin={state === "album" ? false : (item.isChannelMaker ? true : false)}
                     />
                 )
             })}

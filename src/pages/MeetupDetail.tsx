@@ -162,7 +162,6 @@ const MeetupDetail = () => {
 
     useEffect(() => {
         axios.get(`${SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, CONFIG).then((res) => {
-            console.log(res.data.data);
             const meetupData = res.data.data;
             setMeetupTitle(meetupData.title);
             setMeetupContent(meetupData.content);
@@ -545,7 +544,7 @@ const MeetupDetail = () => {
                     <ButtonBasic
                         innerText={buttonData[buttonState]}
                         onClick={handleButtonClick}
-                        disable= {buttonState === 3 || buttonState === 4 ? true : buttonState === 1 || buttonState === 5 ? false : undefined}
+                        disable= {buttonState === 3 || buttonState === 4 || (meetupMaxNum === meetupCurrentNum && buttonState === 1) ? true : buttonState === 1 || buttonState === 5 ? false : undefined}
                         btnColor={buttonState === 2 || buttonState === 6 ? "#FDB639" : undefined}
                     />
                 </div>

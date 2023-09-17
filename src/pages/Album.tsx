@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Mousewheel, Keyboard } from "swiper";
@@ -13,17 +13,14 @@ import MeetupMember from "./MeetupMember";
 import testImg from '../images/jun.png';
 import Card from "../components/Card";
 import axios from "axios";
-
-
-interface cardProps{
-    date: string;
-    title: string;
-    text: string;
-    image: string | ArrayBuffer | null | undefined;
-}
+import dayjs from "dayjs";
+import 'dayjs/locale/ko';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 
 const Album = () => {
+    dayjs.extend(relativeTime);
+    dayjs.locale('ko');
     const location = useLocation();
     const who = location.state.who;
     const { channelCode, memberId } = useParams();
@@ -35,6 +32,7 @@ const Album = () => {
       },
     };
 
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const [initialNum, setInitialNum] = useState<number>(location.state.initialNum);
 
@@ -57,6 +55,62 @@ const Album = () => {
         setMemberState(true);
     };
 
+    const handleDownloadImgClick = () => {
+        const canvas = canvasRef.current;
+        if(!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if(!ctx) return;
+
+        const image = new Image();
+        image.src = albumList[initialNum].imageUrl;
+
+        image.onload = () => {
+            const canvasWidth = window.innerWidth - 40 > 460 ? 460 : window.innerWidth - 40;
+            const canvasHeight = 535;
+
+            // 이미지 그리기
+            const aspectRatio = image.width / image.height;
+            let drawWidth = canvasWidth;
+            let drawHeight = canvasHeight;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            if(aspectRatio > canvasWidth / canvasHeight){
+                drawHeight = canvasWidth / aspectRatio;
+                offsetY = (canvasHeight - drawHeight) / 2;
+            }
+            else{
+                drawWidth = canvasHeight * aspectRatio;
+                offsetX = (canvasWidth - drawWidth) / 2;
+            }
+
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+
+            ctx.drawImage(image, 0, 0, image.width, image.height, offsetX, offsetY, drawWidth, drawHeight);
+
+            // 텍스트 스타일 설정
+            ctx.font = '14px normal 400 Pretendard';
+            ctx.fillStyle = '#FCFCFC';
+
+            // 텍스트 추가
+            const createdAt = dayjs(albumList[initialNum].albumCreatedDate);
+            const formattedCreatedAt = createdAt.format('YYYY.MM.DD');
+            ctx.fillText(formattedCreatedAt, 20, 34);
+
+            // 캔버스의 이미지 데이터를 가져옴
+            const imageDataUrl = canvas.toDataURL('image/png');
+
+            // a 태그 이용해서 이미지 다운로드
+            const a = document.createElement('a');
+            a.href = imageDataUrl;
+            a.download = 'zengaAlbum.png';
+            a.click();
+            document.body.removeChild(a);
+        }
+    };
+
 
     const [albumList, setAlbumList] = useState<Array<any>>([]);
 
@@ -75,11 +129,11 @@ const Album = () => {
         <>
             {memberState ? (
                 <>
-                    <MeetupMember></MeetupMember>
+                    <MeetupMember state="album" albumId={albumList[initialNum].id}></MeetupMember>
                 </>
             ) : (
                 <>
-                    <Header type="card" download={who === "my" ? undefined : false} func={handleParticipantImgClick}></Header>
+                    <Header type="card" download={who === "my" ? undefined : false} downloadFunc={handleDownloadImgClick} func={handleParticipantImgClick}></Header>
                     <div style={{ height: '20px' }}></div>
                     <Swiper
                         className="album"
@@ -106,19 +160,22 @@ const Album = () => {
                         onSlideChange={(e) => setInitialNum(e.activeIndex)}
                     >
                         {albumList.map((item, index) => {
+                            const createdAt = dayjs(item.albumCreatedDate);
+                            const formattedCreatedAt = createdAt.format('YYYY.MM.DD');
                             return (
-                                <SwiperSlide style={{ width: 'calc(100% - 40px)' }}>
+                                <SwiperSlide style={{ width: 'calc(100% - 40px)', display: 'flex', justifyContent: 'center' }}>
                                     <Card
                                         key={index}
-                                        date={item.date}
+                                        date={formattedCreatedAt}
                                         title={item.title}
-                                        text={item.text}
-                                        image={item.image}
+                                        text={item.content}
+                                        image={item.imageUrl}
                                     />
                                 </SwiperSlide>
                             )
                         })}
                     </Swiper>
+                    <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                 </>
             )}
         </>

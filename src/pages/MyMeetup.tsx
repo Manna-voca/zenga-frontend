@@ -6,6 +6,7 @@ import GatheringList from "../components/GatheringList";
 import testUserImg from '../images/channelprofile.png';
 import testImg from '../images/jun.png';
 import axios from "axios";
+import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
 
 interface meetupInfoProps{
     content: Array<any>;
@@ -108,7 +109,31 @@ const MyMeetup = () => {
                 </div>
                 <div style={{ height: '20px' }}></div>
                 {meetupInfo?.content.length === 0 ? (
-                    <></>
+                    <>
+                        <div style={{ height: '100px' }}></div>
+                        <div
+                            style={{ display: 'flex', height: '140px',
+                                    flexDirection: 'column',
+                                    alignItems: 'center', gap: '20px'
+                        }}>
+                            <TwowhaleImg/>
+                            <div
+                                style={{ color: 'var(--on-surface-active, #0A0A0A)',
+                                        textAlign: 'center', fontSize: '16px',
+                                        fontStyle: 'normal', lineHeight: '150%'
+                               }}>
+                                <span style={{ fontWeight: '400' }}>
+                                    {meetupState === '3' ? '참여한' : '참여 중인'}&nbsp;
+                                </span>
+                                <span style={{ fontWeight: '600' }}>
+                                    모임
+                                </span>
+                                <span style={{ fontWeight: '400' }}>
+                                    이 없어요
+                                </span>
+                            </div>
+                        </div>
+                    </>
                 ) : (
                     <>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

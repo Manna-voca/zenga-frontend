@@ -43,6 +43,7 @@ const CreateCard = () => {
                 }
             });
             if(uploadCardImgResponse.status === 200){
+                setCardImage(uploadCardImgResponse.data.data.url);
                 axios.patch(`${SERVER_URL}/party/finish`, {
                     "channelId": CHANNEL_ID,
                     "partyId": meetupId,
@@ -134,6 +135,62 @@ const CreateCard = () => {
         return blob;
     }
 
+    const handleDownloadImgClick = () => {
+        const canvas = canvasRef.current;
+        if(!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if(!ctx) return;
+
+        const image = new Image();
+
+        if(typeof(cardImage) !== 'string') return;
+        image.src = cardImage;
+
+        image.onload = () => {
+            const canvasWidth = window.innerWidth - 40 > 460 ? 460 : window.innerWidth - 40;
+            const canvasHeight = 535;
+
+            // 이미지 그리기
+            const aspectRatio = image.width / image.height;
+            let drawWidth = canvasWidth;
+            let drawHeight = canvasHeight;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            if(aspectRatio > canvasWidth / canvasHeight){
+                drawHeight = canvasWidth / aspectRatio;
+                offsetY = (canvasHeight - drawHeight) / 2;
+            }
+            else{
+                drawWidth = canvasHeight * aspectRatio;
+                offsetX = (canvasWidth - drawWidth) / 2;
+            }
+
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+
+            ctx.drawImage(image, 0, 0, image.width, image.height, offsetX, offsetY, drawWidth, drawHeight);
+
+            // 텍스트 스타일 설정
+            ctx.font = '14px normal 400 Pretendard';
+            ctx.fillStyle = '#FCFCFC';
+
+            // 텍스트 추가
+            ctx.fillText(now.format('YYYY.MM.DD'), 20, 34);
+
+            // 캔버스의 이미지 데이터를 가져옴
+            const imageDataUrl = canvas.toDataURL('image/png');
+
+            // a 태그 이용해서 이미지 다운로드
+            const a = document.createElement('a');
+            a.href = imageDataUrl;
+            a.download = 'zengaAlbum.png';
+            a.click();
+            document.body.removeChild(a);
+        }
+    };
+
 
     const [preventPopState, setPreventPopstate] = useState<boolean>(false);
 
@@ -155,7 +212,7 @@ const CreateCard = () => {
                 </>
             ) : (
                 <>
-                    <Header type={cardState ? "card" : "back"} text="카드 만들기" func={handleParticipantImgClick}></Header>
+                    <Header type={cardState ? "card" : "back"} text="카드 만들기" downloadFunc={handleDownloadImgClick} func={handleParticipantImgClick}></Header>
                     <div style={{ height: '20px' }}></div>
                     <div style={{ margin: '0 20px 0 20px' }}>
                         {cardState ? (
