@@ -48,6 +48,9 @@ const MeetupDetail = () => {
     const [buttonState, setButtonState] = useState<number>(4);
 
     const handleKebabClick = () => {
+        if(buttonState === 4){
+            setIsMeetupMaker(false);
+        }
         setKebabState(true);
     };
 
@@ -55,8 +58,11 @@ const MeetupDetail = () => {
         navigate(`/${channelCode}/meetup-member/${meetupId}`);
     };
 
-    const handleMeetupDeleteBtnClick = () => {
-        setShowDeletePopup(false);
+    const handleMeetupDeleteBtnClick = async () => {
+        await axios.delete(`${SERVER_URL}/party/cancel?channelId=${CHANNEL_ID}&partyId=${meetupId}`, CONFIG).then((res) => {
+            setShowDeletePopup(false);
+            navigate(-1);
+        })
     };
 
     const handleMeetupParticipateBtnClick = async () => {
@@ -76,9 +82,14 @@ const MeetupDetail = () => {
         }).catch((err) => console.error(err));
     };
 
-    const handleMeetupCompleteBtnClick = () => {
-        setButtonState(6);
-        setShowMeetupCompletePopup(false);
+    const handleMeetupCompleteBtnClick = async () => {
+        await axios.patch(`${SERVER_URL}/party/close`,{
+            "channelId": CHANNEL_ID,
+            "partyId": meetupId
+        }, CONFIG).then((res) => {
+            setButtonState(6);
+            setShowMeetupCompletePopup(false);
+        })
     };
 
     const handleButtonClick = () => {
@@ -92,7 +103,7 @@ const MeetupDetail = () => {
             setShowMeetupCompletePopup(true);
         }
         else if(buttonState === 6){
-            navigate('/create-card/1');
+            navigate(`/${channelCode}/create-card/${meetupId}`);
         }
     };
 

@@ -1,25 +1,55 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import GatheringList from "../components/GatheringList";
 import testUserImg from '../images/channelprofile.png';
 import testImg from '../images/jun.png';
-import dayjs from "dayjs";
-import 'dayjs/locale/ko';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import axios from "axios";
+
+interface meetupInfoProps{
+    content: Array<any>;
+    hasNext: boolean;
+    page: number;
+    size: number;
+}
 
 const MyMeetup = () => {
     const location = useLocation();
-
-    dayjs.extend(relativeTime);
-    dayjs.locale('ko');
+    const MEMBER_ID = localStorage.getItem("memberId");
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
 
     const [meetupState, setMeetupState] = useState<string>(location.state.meetupState);
+    const [meetupInfo, setMeetupInfo] = useState<meetupInfoProps|null>(null);
 
     const handleMeetupStateBtnClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         setMeetupState(event.currentTarget.id);
     };
+
+
+    const getMeetupList = async () => {
+        let state = "COMPLETED";
+        if(meetupState === "1"){
+            state = "RECRUITING";
+        }
+        else if(meetupState === "2"){
+            state = "IN_PROGRESS";
+        }
+        await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/parties?state=${state}`, CONFIG).then((res) => {
+            console.log(res.data.data);
+            setMeetupInfo(res.data.data);
+        })
+    };
+
+    useEffect(() => {
+        getMeetupList();
+    }, [meetupState]);
 
     return(
         <>
@@ -77,107 +107,29 @@ const MyMeetup = () => {
                     </div>
                 </div>
                 <div style={{ height: '20px' }}></div>
-                {meetupState === "1" ? (
-                    <>
-                        <GatheringList
-                            meetupId={1}
-                            title="비오니까 파전에 막걸리"
-                            image={testImg}
-                            date={"날짜 미정"}
-                            location="우이락"
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={4}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            meetupId={1}
-                            title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                            date={"날짜 미정"}
-                            location={"장소 미정"}
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={8}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            meetupId={1}
-                            title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                            date={"날짜 미정"}
-                            location={"장소 미정"}
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={8}
-                        ></GatheringList>
-                        <div style={{ height: '8px' }}></div>
-                        <GatheringList
-                            meetupId={1}
-                            title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                            date={"날짜 미정"}
-                            location={"장소 미정"}
-                            userImg={testUserImg}
-                            userName="모아이"
-                            currentNum={1}
-                            maxNum={8}
-                        ></GatheringList>
-                    </>
+                {meetupInfo?.content.length === 0 ? (
+                    <></>
                 ) : (
-                    meetupState === "2" ? (
-                        <>
-                            <GatheringList
-                                meetupId={1}
-                                title="비오니까 파전에 막걸리"
-                                image={testImg}
-                                date={"날짜 미정"}
-                                location="우이락"
-                                userImg={testUserImg}
-                                userName="모아이"
-                                currentNum={1}
-                                maxNum={4}
-                            ></GatheringList>
-                            <div style={{ height: '8px' }}></div>
-                            <GatheringList
-                                meetupId={1}
-                                title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                                date={"날짜 미정"}
-                                location={"장소 미정"}
-                                userImg={testUserImg}
-                                userName="모아이"
-                                currentNum={1}
-                                maxNum={8}
-                            ></GatheringList>
-                        </>
-                    ) : (
-                        <>
-                            <GatheringList
-                                meetupId={1}
-                                title="비오니까 파전에 막걸리"
-                                image={testImg}
-                                date={"날짜 미정"}
-                                location={"장소 미정"}
-                                userImg={testUserImg}
-                                userName="모아이"
-                                currentNum={1}
-                                maxNum={4}
-                                isEnd={true}
-                            ></GatheringList>
-                            <div style={{ height: '8px' }}></div>
-                            <GatheringList
-                                meetupId={1}
-                                title="IT분야(개발, 디자인, PM 상관 X) 북스터디 할 사람 구해요"
-                                date={"날짜 미정"}
-                                location={"장소 미정"}
-                                userImg={testUserImg}
-                                userName="모아이"
-                                currentNum={1}
-                                maxNum={8}
-                                isEnd={true}
-                            ></GatheringList>
-                        </>
-                    )
+                    <>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {meetupInfo?.content.map((item, index) => {
+                                return(
+                                    <GatheringList
+                                        key={item.partyId}
+                                        meetupId={item.partyId}
+                                        title={item.title}
+                                        image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
+                                        date={item.partyDate}
+                                        location={item.location}
+                                        userImg={item.openMemberProfileImageUrl}
+                                        userName={item.openMemberName}
+                                        currentNum={item.joinMemberCount}
+                                        maxNum={item.maxCapacity}
+                                    ></GatheringList>
+                                );
+                            })}
+                        </div>
+                    </>
                 )}
             </div>
         </>

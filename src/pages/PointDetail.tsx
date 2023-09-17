@@ -1,9 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { ReactComponent as PointsImg } from "../images/points.svg";
 import PointList from "../components/PointList";
+import axios from "axios";
+import dayjs from "dayjs";
+import 'dayjs/locale/ko';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 const PointDetail = () => {
+    dayjs.extend(relativeTime);
+    dayjs.locale('ko');
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
+
+    const [totalPoint, setTotalPoint] = useState<number>();
+    const [pointList, setPointList] = useState<Array<any>>([]);
+
+    const getTotalPoint = async () => {
+        await axios.get(`${SERVER_URL}/point/total`, CONFIG).then((res) => {
+            setTotalPoint(res.data.data.point);
+        })
+    };
+
+    const getPointInfo = async () => {
+        await axios.get(`${SERVER_URL}/point/info`, CONFIG).then((res) => {
+            setPointList(res.data.data.content);
+        })
+    };
+
+    useEffect(() => {
+        getTotalPoint();
+        getPointInfo();
+    }, []);
+
     return(
         <>
             <Header type="back" text="내 포인트"></Header>
@@ -36,7 +70,7 @@ const PointDetail = () => {
                             fontSize: '14px', fontStyle: 'normal',
                             fontWeight: '600', lineHeight: '150%'
                 }}>
-                    10,000
+                    {totalPoint}
                 </div>
             </div>
             <div style={{ height: '36px' }}></div>
@@ -49,46 +83,21 @@ const PointDetail = () => {
                 포인트 상세정보
             </div>
             <div style={{ height: '24px' }}></div>
-
-
-
-            <PointList
-                point={100}
-                date="23.08.16"
-                text="칭찬 열람"
-            ></PointList>
-            <div style={{ height: '12px' }}></div>
-            <PointList
-                point={1000}
-                date="23.08.16"
-                text="칭찬 열람"
-            ></PointList>
-            <div style={{ height: '12px' }}></div>
-            <PointList
-                point={50}
-                date="23.08.16"
-                text="뭘 봐 임마!!"
-            ></PointList>
-            <div style={{ height: '12px' }}></div>
-            <PointList
-                point={5}
-                date="23.08.16"
-                text="멋있다~~~ 카꾸이!!"
-            ></PointList>
-            <div style={{ height: '12px' }}></div>
-            <PointList
-                point={100}
-                date="23.08.16"
-                text="착해서"
-            ></PointList>
-            <div style={{ height: '12px' }}></div>
-            <PointList
-                point={100}
-                date="23.08.16"
-                text="칭찬 열람"
-            ></PointList>
-            <div style={{ height: '12px' }}></div>
-            
+            {pointList.map((item, index) => {
+                const createdAt = dayjs(item.createdAt);
+                const formattedCreatedAt = createdAt.format('YY.MM.DD');
+                return(
+                    <>
+                        <PointList
+                            key={index}
+                            point={item.point}
+                            date={formattedCreatedAt}
+                            text={item.description}
+                        ></PointList>
+                        <div style={{ height: '12px' }}></div>
+                    </>
+                );
+            })}
         </>
     );
 }

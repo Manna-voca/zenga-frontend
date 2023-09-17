@@ -20,3 +20,24 @@
         background-color: #1F94FF;
     }
 }
+
+.login{
+    .swiper-pagination{
+        position: absolute;
+        top: 0;
+        height: 14px;
+    }
+    .swiper-wrapper{
+        margin-top: 62px;
+    }
+    .swiper-pagination-bullet{
+        fill: var(--surface-divider, #D9D9D9);
+        width: 6px;
+        height: 6px;
+        margin-left: 3px !important;
+        margin-right: 3px !important;
+    }
+    .swiper-pagination-bullet-active{
+        fill: var(--primary-primary-500, #1F94FF)
+    }
+}

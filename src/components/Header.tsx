@@ -141,20 +141,25 @@ const Header = ({type, text, isChannelAdmin, download, func, shareFunc}: Props) 
                 <div style={{ height: '44px', padding: '0 20px 0 16px',
                             alignItems: 'center', display: 'flex',
                             justifyContent: 'space-between', zIndex: '1',
-                            position: 'sticky', top: '0px', backgroundColor: 'white'
+                            position: 'sticky', top: '0px', backgroundColor: 'white',
                 }}>
                     <div 
                         onClick={handleChannelButtonClick}
                         style={{ fontSize: '16px', fontStyle: 'normal',
                                 fontWeight: '400', lineHeight: '150%',
                                 cursor: 'pointer', alignItems: 'center',
-                                display: 'flex'
+                                display: 'flex', maxWidth: '360px', width: 'calc(100vw - 140px)'
                     }}>
                         <CircularImage
                             size="24"
                             image={channelInfo !== null ? channelInfo.logoImageUrl : ''}
                         />
-                        <span style={{ marginLeft: '10px' }}>{channelInfo !== null ? channelInfo.name : ''}</span>
+                        <span
+                            style={{ marginLeft: '10px', overflow: 'hidden',
+                                    textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+                        }}>
+                            {channelInfo !== null ? channelInfo.name : ''}
+                        </span>
                     </div>
                     <div
                         style={{ display: 'inline-flex', alignItems: 'flex-start',
