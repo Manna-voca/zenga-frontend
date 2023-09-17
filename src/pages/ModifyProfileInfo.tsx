@@ -44,7 +44,7 @@ const ModifyProfileInfo = () => {
     
 
     const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(defaultProfile);
-    const [profileImageFile, setProfileImageFile] = useState<File | null>();
+    const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
 
     const handleProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files || []);
@@ -59,8 +59,45 @@ const ModifyProfileInfo = () => {
         event.target.value = "";
     };
 
-    const handleModifyBtnClick = () => {
-        alert("수정하기 클릭!!");
+    const handleChannelModifyBtnClick = async () => {
+        if(profileImageFile !== null){
+            const profileImgFormData = new FormData();
+            profileImgFormData.append('image', profileImageFile);
+            const uploadProfileImgResponse = await axios.post(`${SERVER_URL}/image/upload`, profileImgFormData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            if(uploadProfileImgResponse.status === 200){
+                axios.put(`${SERVER_URL}/members/${memberId}`, {
+                    "name": nickname,
+                    "profileImageUrl": uploadProfileImgResponse.data.data.url,
+                    "description": intro
+                }, CONFIG).then((res) => {
+                    window.location.reload();
+                });
+            }
+        }
+        else{
+            axios.put(`${SERVER_URL}/members/${memberId}`, {
+                "name": nickname,
+                "profileImageUrl": profileImage,
+                "description": intro
+            }, CONFIG).then((res) => {
+                window.location.reload();
+            });
+        }
+    };
+
+    const handleZengaModifyBtnClick = async () => {
+        await axios.put(`${SERVER_URL}/users/update`, {
+            "name": name,
+            "gender": gender === "남자" ? "MAN" : "WOMAN",
+            "birthDate": birthDate.replace(/\./g, '-')
+        }, CONFIG).then((res) => {
+            window.location.reload();
+        });
     };
 
     const getProfileInfo = async () => {
@@ -74,7 +111,7 @@ const ModifyProfileInfo = () => {
         axios.get(`${SERVER_URL}/users/info`, CONFIG).then((res) => {
             console.log(res.data.data);
             setName(res.data.data.name);
-            setBirthDate(res.data.data.birth);
+            setBirthDate(res.data.data.birth.replace(/\-/g, '.'));
             if(res.data.data.gender === "MAN"){
                 setGender("남자");
             }
@@ -148,8 +185,14 @@ const ModifyProfileInfo = () => {
                     onChange={handleIntroChange}
                     maxLength={50}
                 />
+                <div style={{ height: '48px' }}></div>
+                <ButtonBasic
+                    innerText='수정'
+                    onClick={handleChannelModifyBtnClick}
+                    disable={!(nickname)}
+                ></ButtonBasic>
             </div>
-            <div style={{ height: '20px' }}></div>
+            <div style={{ height: '40px' }}></div>
             <div
                 style={{ background: 'var(--surface-surface, #FAFAFA)',
                         height: '8px', width: '100%'
@@ -211,22 +254,13 @@ const ModifyProfileInfo = () => {
                     setBirthDate={setBirthDate}
                 />
             </div>
-            <div style={{ height: '100px' }}></div>
-
-
-            <div
-                style={{ margin: '0', background: `${color.background}`,
-                        position: 'fixed', bottom: '0', maxWidth: '500px',
-                        width: '100%', display: 'flex', justifyContent: 'center',
-                        height: '47px', padding: '8px 0', zIndex: '2'
-            }}>
-                <div style={{ width: "calc(100% - 40px)", maxWidth: "460px",  }}>
-                    <ButtonBasic
-                        innerText='수정'
-                        onClick={handleModifyBtnClick}
-                        disable={!(nickname && name && gender)}
-                    ></ButtonBasic>
-                </div>
+            <div style={{ height: '48px' }}></div>
+            <div style={{ margin: '0 20px 0 20px'  }}>
+                <ButtonBasic
+                    innerText='수정'
+                    onClick={handleZengaModifyBtnClick}
+                    disable={!(name && gender)}
+                ></ButtonBasic>
             </div>
         </>
     );

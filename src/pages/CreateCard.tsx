@@ -1,20 +1,59 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import { ReactComponent as CameraImg } from "../images/camera.svg";
 import ButtonBasic from "../components/ButtonBasic";
 import MeetupMember from "./MeetupMember";
 import Card from "../components/Card";
+import axios from "axios";
+import dayjs from "dayjs";
+import 'dayjs/locale/ko';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 const CreateCard = () => {
     const navigate = useNavigate();
+    dayjs.extend(relativeTime);
+    dayjs.locale('ko');
+    const now = dayjs();
+    const { channelCode, meetupId } = useParams();
+    const CHANNEL_ID = localStorage.getItem("channelId");
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+    const CONFIG = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        'Content-Type':'application/json'
+      },
+    };
+
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const [cardState, setCardState] = useState<boolean>(false);
     const [memberState, setMemberState] = useState<boolean>(false);
+    const [meetupData, setMeetupData] = useState<any>();
 
-    const handleCardMakingBtnClick = () => {
-        setCardState(true);
+    const handleCardMakingBtnClick = async () => {
+        if(cardImageFile !== null){
+            const cardImgFormData = new FormData();
+            cardImgFormData.append('image', cardImageFile);
+            const uploadCardImgResponse = await axios.post(`${SERVER_URL}/image/upload`, cardImgFormData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            if(uploadCardImgResponse.status === 200){
+                axios.patch(`${SERVER_URL}/party/finish`, {
+                    "channelId": CHANNEL_ID,
+                    "partyId": meetupId,
+                    "partyCardImageUrl": uploadCardImgResponse.data.data.url
+                }, CONFIG).then((res) => {
+                    console.log(res.data.data);
+                    setMeetupData(res.data.data);
+                    setCardState(true);
+                })
+            }
+        }
     };
 
     const handleParticipantImgClick = () => {
@@ -28,20 +67,73 @@ const CreateCard = () => {
     };
 
     const [cardImage, setCardImage] = useState<string | ArrayBuffer | null>();
-    const [cardImageFile, setCardImageFile] = useState<File | null>();
+    const [cardImageFile, setCardImageFile] = useState<File | null>(null);
 
     const handleCardImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files || []);
         if(files.length > 0){
-            setCardImageFile(files[0]);
             const reader = new FileReader();
             reader.readAsDataURL(files[0]);
             reader.onloadend = () => {
-                setCardImage(reader.result);
+                const uploadImg = new Image();
+                if(typeof(reader.result) === "string"){
+                    uploadImg.src = reader.result;
+                    uploadImg.onload = () => {
+                        const canvas = canvasRef.current;
+                        if(canvas !== null){
+                            const context = canvas.getContext('2d');
+                            if((uploadImg.width / uploadImg.height) > 1.3){
+                                canvas.width = uploadImg.height;
+                                canvas.height = uploadImg.width;
+                                context?.rotate(Math.PI / 2);
+                                context?.drawImage(uploadImg, 0, (uploadImg.height * -1));
+                            }
+                            else{
+                                canvas.width = uploadImg.width;
+                                canvas.height = uploadImg.height;
+                                context?.drawImage(uploadImg, 0, 0);
+                            }
+                            setCardImage(canvas.toDataURL("image/jpeg"));
+                            setCardImageFile(convertBase64IngoFile(canvas.toDataURL("image/jpeg"), "1.jpeg"));
+                        }
+                    }
+                }
             };
         }
         event.target.value = "";
     };
+
+
+    function convertBase64IngoFile(image: any, fileName: any){
+        const mimeType = image?.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0];
+        const realData = image.split(',')[1];
+        const blob = b64toBlob(realData, mimeType);
+        if(blob !== undefined){
+            const raw = new File([blob], fileName, { type: mimeType });
+            return raw;
+        }
+        return cardImageFile;
+    }
+
+    function b64toBlob(b64Data: any, contentType = '', sliceSize = 512){
+        if (b64Data === '' || b64Data === undefined) return;
+
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+        }
+        const blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
 
     const [preventPopState, setPreventPopstate] = useState<boolean>(false);
 
@@ -69,9 +161,9 @@ const CreateCard = () => {
                         {cardState ? (
                             <>
                                 <Card
-                                    date="2023.02.26"
-                                    title="맞짱 뜰 사람~!"
-                                    text={"일이삼사오육칠팔구십일이삼사오육1111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaa11111111111111111111111111111111111칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십"}
+                                    date={now.format('YYYY.MM.DD')}
+                                    title={meetupData.title}
+                                    text={meetupData.content}
                                     image={cardImage}
                                 />
                                 <div style={{ height: '39px' }}></div>
@@ -139,6 +231,7 @@ const CreateCard = () => {
                                             accept="image/*"
                                             onChange={handleCardImageUpload}
                                         />
+                                        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                                     </label>
                                 </div>
                                 <div style={{ height: '39px' }}></div>

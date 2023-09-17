@@ -5,16 +5,11 @@ import Navbar from "../components/Navbar";
 import { ReactComponent as WhiteplusImg } from "../images/whiteplus.svg";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
 import GatheringList from "../components/GatheringList";
-import dayjs from "dayjs";
-import 'dayjs/locale/ko';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const MeetupHome = () => {
     const navigate = useNavigate();
-    dayjs.extend(relativeTime);
-    dayjs.locale('ko');
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
       headers: {
