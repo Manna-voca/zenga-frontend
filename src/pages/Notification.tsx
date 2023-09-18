@@ -19,6 +19,18 @@ const NotificationWrapper = ({
   date,
   isRead,
 }: OwnProps) => {
+  const formatDate = (notificationDate: string) => {
+    const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+    const newDate = new Date(notificationDate);
+    const month = newDate.getMonth() + 1;
+    const date = newDate.getDate();
+    const day = daysOfWeek[newDate.getDay()];
+    const hour = String(newDate.getHours() + 1).padStart(2, "0");
+    const minute = String(newDate.getMinutes()).padStart(2, "0");
+
+    return `${month}월 ${date}일(${day}) ${hour}:${minute}`;
+  };
+
   return (
     <article
       style={{
@@ -44,7 +56,7 @@ const NotificationWrapper = ({
           color: `${color.onSurfaceDefault}`,
         }}
       >
-        {date}
+        {formatDate(date)}
       </span>
     </article>
   );
