@@ -358,37 +358,6 @@ const CommentCreator = ({
 };
 
 const Comment = () => {
-  // const comments: CommentData[] = [
-  //   {
-  //     author: "박세원",
-  //     content: "이 시간에 라면 먹으면 안되겠지?",
-  //     createdBefore: "2시간 전",
-  //     isReply: false,
-  //     authorImage: exImage1,
-  //     isChannelAdmin: false,
-  //     isMine: false,
-  //   },
-  //   {
-  //     author: "윤석민",
-  //     content: "당연하지",
-  //     createdBefore: "2시간 전",
-  //     isReply: true,
-  //     authorImage: exImage1,
-  //     isChannelAdmin: true,
-  //     isMine: true,
-  //   },
-  //   {
-  //     author: "윤석민",
-  //     content:
-  //       "우다다다다다다다다닫다다다다다다다다다다우더ㅜ아두ㅏㅇ다ㅏ다아두ㅏ우다ㅜ아다우ㅏ어ㅏㅜㅁㅇ런애ㅑ러매냐어램널애먀ㅓ램너ㅐ러내야ㅓ랴ㅓㄴ매ㅓ",
-  //     createdBefore: "2시간 전",
-  //     isReply: false,
-  //     authorImage: exImage1,
-  //     isChannelAdmin: true,
-  //     isMine: true,
-  //   },
-  // ];
-
   // 댓글 데이터
   const [comments, setComments] = useState<CommentData[]>([]);
   // 댓글 수정 시 이전 내용
@@ -433,10 +402,13 @@ const Comment = () => {
   }
   const deleteComment = async () => {
     try {
-      await axios.delete(
+      const res =await axios.delete(
         `${SERVER_URL}/comment?channelId=${CHANNEL_ID}&commentId=${commentId}`,
         CONFIG
       );
+      if(res === undefined || null){
+        alert("삭제 실패");
+      }
       setReadyState("");
       setParentId(null);
       setCommentId(undefined);
