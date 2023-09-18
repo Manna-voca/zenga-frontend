@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import GatheringList from "../components/GatheringList";
-import testUserImg from '../images/channelprofile.png';
-import testImg from '../images/jun.png';
 import axios from "axios";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
 
@@ -26,7 +24,7 @@ const MyMeetup = () => {
       },
     };
 
-    const [meetupState, setMeetupState] = useState<string>(location.state.meetupState);
+    const [meetupState, setMeetupState] = useState<string>(location.state.meetupState ? location.state.meetupState : "1");
     const [meetupInfo, setMeetupInfo] = useState<meetupInfoProps|null>(null);
 
     const handleMeetupStateBtnClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

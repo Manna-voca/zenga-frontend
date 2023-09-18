@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import CircularImage from "../components/CircularImage";
-import testUserImg from '../images/channelprofile.png';
-import testImg from '../images/jun.png';
 import { ReactComponent as ClockImg } from "../images/clock.svg";
 import { ReactComponent as LocationImg } from "../images/location.svg";
 import { ReactComponent as ArrowImg } from "../images/arrow.svg";
