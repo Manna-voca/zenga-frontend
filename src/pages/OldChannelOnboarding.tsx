@@ -113,7 +113,7 @@ const OldChannelOnboarding = () => {
         // 이미지 안 넣었을 때
         const userFormData = new FormData();
         userFormData.append('channelId', channelId);
-        userFormData.append('profileImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+        userFormData.append('profileImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
         userFormData.append('nickname', nickname);
         userFormData.append('introduction', intro);
         userFormData.append('level', "NORMAL");

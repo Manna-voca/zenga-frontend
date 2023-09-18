@@ -146,7 +146,7 @@ const NewChannelOnboarding = () => {
                             // 참여자 이미지 없을 때
                             const adminFormData = new FormData();
                             adminFormData.append('channelId', channelDataResponse.data.data.id);
-                            adminFormData.append('profileImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+                            adminFormData.append('profileImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
                             adminFormData.append('nickname', nickname);
                             adminFormData.append('introduction', intro);
                             adminFormData.append('level', 'MAINTAINER');
@@ -165,7 +165,7 @@ const NewChannelOnboarding = () => {
                 // 채널 이미지 없을 때
                 const channelFormData = new FormData();
                 channelFormData.append('name', clubname);
-                channelFormData.append('logoImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+                channelFormData.append('logoImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
                 const channelDataResponse = await axios.post(`${SERVER_URL}/channels`, channelFormData, CONFIG);
                 if(channelDataResponse.status === 200){
                     if(adminImageFile !== null){
@@ -198,7 +198,7 @@ const NewChannelOnboarding = () => {
                         // 참여자 이미지 없을 때
                         const adminFormData = new FormData();
                         adminFormData.append('channelId', channelDataResponse.data.data.id);
-                        adminFormData.append('profileImageUrl', 'https://zenga-backend-bucket.s3.ap-northeast-2.amazonaws.com/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+                        adminFormData.append('profileImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
                         adminFormData.append('nickname', nickname);
                         adminFormData.append('introduction', intro);
                         adminFormData.append('level', 'MAINTAINER');
