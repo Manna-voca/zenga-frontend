@@ -33,6 +33,7 @@ interface CommentData {
   authorImage: string;
   isChannelAdmin: boolean;
   isMine: boolean;
+  parentId: string | null;
 }
 
 interface CommentWrapperProps {
@@ -41,6 +42,8 @@ interface CommentWrapperProps {
   setShowOthersReplyControl: React.Dispatch<React.SetStateAction<boolean>>;
   setReadyState: React.Dispatch<React.SetStateAction<string>>;
   setPreviousComment: React.Dispatch<React.SetStateAction<string>>;
+  setCommentId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setParentId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const CommentWrapper = ({
@@ -49,6 +52,8 @@ const CommentWrapper = ({
   setShowOthersReplyControl,
   setReadyState,
   setPreviousComment,
+  setCommentId,
+  setParentId,
 }: CommentWrapperProps) => {
   const { meetupId } = useParams();
   return (
@@ -101,10 +106,15 @@ const CommentWrapper = ({
             ? () => {
                 setShowMyReplyControl(true);
                 setPreviousComment(comment.content);
+                setCommentId(comment.id);
               }
             : () => {
                 setShowOthersReplyControl(true);
-                setReadyState(`${comment.author}`);
+                setReadyState(comment.author);
+                setCommentId(comment.id);
+                if (comment.parentId) {
+                  setParentId(comment.parentId);
+                }
               }
         }
         width="18px"
@@ -122,6 +132,9 @@ interface CommentCreatorProps {
   replyTo: string | null;
   setReplyTo: React.Dispatch<React.SetStateAction<string | null>>;
   commentId?: string;
+  setCommentId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  parentId: string | null;
+  setParentId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const CommentCreator = ({
@@ -131,6 +144,9 @@ const CommentCreator = ({
   replyTo,
   setReplyTo,
   commentId,
+  setCommentId,
+  parentId,
+  setParentId,
 }: CommentCreatorProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
@@ -181,12 +197,19 @@ const CommentCreator = ({
   };
 
   const postComment = async () => {
+    if (comment.length === 0) {
+      alert("댓글을 입력해주세요.");
+      return;
+    }
     console.log(comment);
-    console.log(setReplyTo);
+    console.log(replyTo);
+    console.log(commentId);
+    const URL = `${SERVER_URL}/comment`;
     try {
-      if (replyTo === null) {
+      // 새로운 댓글 작성
+      if (replyTo === null && commentId === undefined) {
         const res = await axios.post(
-          `${SERVER_URL}/comment`,
+          URL,
           {
             channelId: CHANNEL_ID,
             partyId: meetupId,
@@ -197,6 +220,51 @@ const CommentCreator = ({
         console.log(res);
         window.location.reload();
       }
+      // 내 댓글 수정
+      else if (replyTo === null && commentId !== undefined) {
+        const res = await axios.patch(
+          URL,
+          {
+            channelId: CHANNEL_ID,
+            commentId: commentId,
+            content: comment,
+          },
+          CONFIG
+        );
+        console.log(res);
+        window.location.reload();
+      }
+      // 남의 댓글에 대댓글
+      else if (replyTo !== null && commentId !== undefined) {
+        const res = await axios.post(
+          URL,
+          {
+            channelId: CHANNEL_ID,
+            partyId: meetupId,
+            parentId: parentId ? parentId : commentId,
+            content: comment,
+          },
+          CONFIG
+        );
+        console.log(res);
+        window.location.reload();
+      } else {
+        const res = await axios.patch(
+          URL,
+          {
+            channelId: CHANNEL_ID,
+            commentId: commentId,
+            content: comment,
+          },
+          CONFIG
+        );
+        console.log(res);
+        window.location.reload();
+      }
+
+      setReplyTo(null);
+      setCommentId(undefined);
+      setParentId(null);
     } catch (error) {
       console.log(error);
     }
@@ -255,7 +323,11 @@ const CommentCreator = ({
             <img
               src={xIcon}
               alt=""
-              onClick={() => setReplyTo(null)}
+              onClick={() => {
+                setReplyTo(null);
+                setCommentId(undefined);
+                setParentId(null);
+              }}
               style={{ cursor: "pointer" }}
             />
           </div>
@@ -316,19 +388,34 @@ const Comment = () => {
   //     isMine: true,
   //   },
   // ];
+
+  // 댓글 데이터
   const [comments, setComments] = useState<CommentData[]>([]);
+  // 댓글 수정 시 이전 내용
   const [previousComment, setPreviousComment] = useState<string>("");
+  // 댓글 작성 및 수정 시 현재 내용
   const [comment, setComment] = useState<string>("");
   const [isCommentFocused, setIsCommentFocused] = useState<boolean>(false);
-  const [readyState, setReadyState] = useState<string>(""); // 누구에게 대댓글을 쓰고있는지 케밥을 클릭했을 때 설정해놓음
+  // 누구에게 대댓글을 쓰고있는지 케밥을 클릭했을 때 설정해놓음
+  const [readyState, setReadyState] = useState<string>("");
+  // 누구에게 댓글을 쓰고있는지
   const [replyTo, setReplyTo] = useState<string | null>(null);
+  // 본인 댓글 클릭시 버튼
   const [showMyReplyControl, setShowMyReplyControl] = useState<boolean>(false);
+  // 다른 사람 댓글 클릭시 버튼
   const [showOthersReplyControl, setShowOthersReplyControl] =
     useState<boolean>(false);
+  //신고하기 모달
   const [showReport, setShowReport] = useState<boolean>(false);
+  // 댓글 삭제 모달
   const [showDeletePopup, setShowDeletePopup] = useState<boolean>(false);
   const { meetupId } = useParams();
+
+  // 수정 혹은 대댓글을 작성하려는 댓글 ID
   const [commentId, setCommentId] = useState<string>();
+  // 대댓글 부모 댓글 ID
+  const [parentId, setParentId] = useState<string | null>(null);
+
   dayjs.extend(relativeTime);
   dayjs.locale("ko");
 
@@ -344,6 +431,19 @@ const Comment = () => {
       return `1분전`;
     }
   }
+  const deleteComment = async () => {
+    try {
+      await axios.delete(
+        `${SERVER_URL}/comment?channelId=${CHANNEL_ID}&commentId=${commentId}`,
+        CONFIG
+      );
+      setReadyState("");
+      setParentId(null);
+      setCommentId(undefined);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchComments = async () => {
     try {
@@ -365,6 +465,7 @@ const Comment = () => {
             isMine:
               res.data.data.content[i].writerId ===
               Number(localStorage.getItem("memberId")),
+            parentId: res.data.data.content[i].parentId,
           });
           if (res.data.data.content[i].childComments.length !== 0) {
             for (
@@ -373,7 +474,7 @@ const Comment = () => {
               j++
             ) {
               newComment.push({
-                id: res.data.data.content[i].commentId,
+                id: res.data.data.content[i].childComments[j].commentId,
                 author: res.data.data.content[i].childComments[j].writerName,
                 content: res.data.data.content[i].childComments[j].content,
                 createdBefore: formatDate(
@@ -388,6 +489,7 @@ const Comment = () => {
                 isMine:
                   res.data.data.content[i].childComments[j].writerId ===
                   Number(localStorage.getItem("memberId")),
+                parentId: res.data.data.content[i].childComments[j].parentId,
               });
             }
           }
@@ -415,6 +517,8 @@ const Comment = () => {
             setShowOthersReplyControl={setShowOthersReplyControl}
             setReadyState={setReadyState}
             setPreviousComment={setPreviousComment}
+            setCommentId={setCommentId}
+            setParentId={setParentId}
           />
         );
       })}
@@ -425,6 +529,9 @@ const Comment = () => {
         replyTo={replyTo}
         setReplyTo={setReplyTo}
         commentId={commentId}
+        setCommentId={setCommentId}
+        parentId={parentId}
+        setParentId={setParentId}
       />
       {showMyReplyControl && (
         <ButtonMultiple
@@ -432,7 +539,7 @@ const Comment = () => {
           textList={["댓글 수정", "댓글 삭제", "취소"]}
           onClickList={[
             async () => {
-              await setIsCommentFocused((prev) => !prev);
+              setIsCommentFocused(true);
               setComment(previousComment);
               setReplyTo(null);
               setIsCommentFocused(true);
@@ -459,10 +566,18 @@ const Comment = () => {
               setShowOthersReplyControl(false);
             },
             () => {
+              setReadyState("");
+              setParentId(null);
+              setCommentId(undefined);
               setShowOthersReplyControl(false);
               setShowReport(true);
             },
-            () => setShowOthersReplyControl(false),
+            () => {
+              setShowOthersReplyControl(false);
+              setReadyState("");
+              setParentId(null);
+              setCommentId(undefined);
+            },
           ]}
         />
       )}
@@ -473,8 +588,17 @@ const Comment = () => {
           text="댓글을 삭제하시나요?"
           leftBtnText="취소"
           rightBtnText="삭제"
-          leftFunc={() => setShowDeletePopup(false)}
-          rightFunc={() => setShowDeletePopup(false)}
+          leftFunc={() => {
+            setShowDeletePopup(false);
+            setReadyState("");
+            setParentId(null);
+            setCommentId(undefined);
+          }}
+          rightFunc={() => {
+            deleteComment();
+            setShowDeletePopup(false);
+            window.location.reload();
+          }}
         />
       )}
     </>
