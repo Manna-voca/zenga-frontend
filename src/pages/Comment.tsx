@@ -447,7 +447,7 @@ const Comment = () => {
 
   const fetchComments = async () => {
     try {
-      const res = await axios.get(`${SERVER_URL}/comment/${meetupId}`, CONFIG);
+      const res = await axios.get(`${SERVER_URL}/comment/${meetupId}?size=100`, CONFIG);
       console.log(res.data);
       let newComment: any = [];
       if (res.data && res.status === 200) {
