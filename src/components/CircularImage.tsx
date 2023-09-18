@@ -7,7 +7,6 @@ interface CircularImageProps {
   image: string;
   alt?: string;
   isChannelAdmin?: true;
-  loadingLazy?: boolean;
 }
 
 const CircularImage: FC<CircularImageProps> = ({
@@ -15,7 +14,6 @@ const CircularImage: FC<CircularImageProps> = ({
   image,
   alt,
   isChannelAdmin,
-  loadingLazy,
 }: CircularImageProps) => {
   if (size !== "36" && isChannelAdmin) {
     console.error("36px 크기의 사진에서만 isChannelAdmin 속성을 제공하세요");
@@ -35,10 +33,17 @@ const CircularImage: FC<CircularImageProps> = ({
         src={image}
         alt={alt}
         style={{
-          border: size === "36"? `0.367px solid ${color.outline}` : "",
+          border:
+            size === "36"
+              ? `0.367px solid ${color.outline}`
+              : size === "24"
+              ? `0.243px solid ${color.outline}`
+              : size === "98"
+              ? `0.983px solid ${color.outline}`
+              : "none",
           borderRadius: "500px",
           display: "block",
-          objectFit: "cover"
+          objectFit: "cover",
         }}
       ></img>
       {isChannelAdmin && (
