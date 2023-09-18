@@ -374,6 +374,7 @@ const SendPraise = () => {
       if (res.data.data === null) {
         setShowPraiseNotTimer(false);
       } else {
+        setShowPraiseNotTimer(true);
         setPraiseInfo(res.data.data);
       }
     } catch (error) {
