@@ -65,6 +65,7 @@ const Album = () => {
 
         const image = new Image();
         image.src = albumList[initialNum].imageUrl;
+        image.crossOrigin = 'Anonymous';
 
         image.onload = () => {
             const canvasWidth = window.innerWidth - 40 > 460 ? 460 : window.innerWidth - 40;
