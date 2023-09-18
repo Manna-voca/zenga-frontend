@@ -9,12 +9,14 @@ import axios from "axios";
 import Popup2 from "./Popup2";
 import Popup1 from "./Popup1";
 import PoorWhale from "../assets/images/poor_whale_character.png";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface PraiseProps {
   handlePraiseOpen: () => void;
   praiseId: number;
   isGetNotPost: boolean;
   content: string;
+  memberId: string|null;
   image?: string;
   isOpened?: boolean;
   name: string;
@@ -27,17 +29,19 @@ const PraiseWrapper = ({
   isGetNotPost,
   isOpened,
   content,
+  memberId,
   image,
   name,
   type,
 }: PraiseProps) => {
+  const navigate = useNavigate();
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   };
-
+  const { channelCode: CHANNEL_CODE } = useParams();
   const CHANNEL_ID = localStorage.getItem("channelId");
   const blockType = `block${type}`;
   const blockImagePath = `/assets/ic-${blockType}.svg`;
@@ -134,7 +138,9 @@ const PraiseWrapper = ({
                   fetchPoint();
                 }
               : () => {
-                  /* 멤버 페이지로 이동 */
+                  if(memberId){
+                    navigate(`/${CHANNEL_CODE}/memberpage/${memberId}`);
+                  }
                 }
           }
           css={imageNameStyle}

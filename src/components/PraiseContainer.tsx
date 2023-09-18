@@ -13,10 +13,13 @@ interface OwnProps {
 }
 
 interface PraiseProps {
-  content: string;
-  image?: string;
-  name: string;
-  type: "Blue" | "Yellow" | "Green" | "Purple" | "Orange" | "Pink" | "Default";
+  memberPraiseId: number;
+  praiseDescription: string;
+  memberId: string|null;
+  memberName: string;
+  memberProfileImageUrl: string;
+  praiseType: string;
+  isOpened: boolean;
 }
 
 const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
@@ -47,26 +50,10 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
     }
   };
 
-  const [receivePraiseList, setReceivePraiseList] = useState([
-    {
-      memberPraiseId: -1,
-      isOpened: false,
-      praiseDescription: "",
-      memberName: "",
-      memberProfileImageUrl: "",
-      praiseType: "",
-    },
-  ]);
-  const [sendPraiseList, setSendPraiseList] = useState([
-    {
-      memberPraiseId: -1,
-      praiseDescription: "",
-      memberName: "",
-      memberProfileImageUrl: "",
-      praiseType: "",
-      isOpened: true,
-    },
-  ]);
+  const [receivePraiseList, setReceivePraiseList] =
+    useState<Array<PraiseProps> | null>();
+  const [sendPraiseList, setSendPraiseList] =
+    useState<Array<PraiseProps> | null>();
 
   const praiseList = isGetNotPost ? receivePraiseList : sendPraiseList;
 
@@ -96,7 +83,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
 
   useEffect(() => {
     fetchPraiseData().then(() => setIsLoading(false));
-  }, [newPraiseOpened])
+  }, [newPraiseOpened]);
 
   return (
     <PraiseContainerDiv>
@@ -104,7 +91,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
         <LoadingDiv>
           <LoadingSpinner />
         </LoadingDiv>
-      ) : praiseList.length === 0 ? (
+      ) : praiseList?.length === 0 ? (
         <div css={inactiveCategoryDivStyle}>
           <img width="72px" src={whaleCharacter7} alt="" />
           <span css={inactiveCategorySpanStyle}>
@@ -112,11 +99,11 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
           </span>
         </div>
       ) : (
-        praiseList.map((praise, index) => {
-          console.log(praise);
+        praiseList?.map((praise, index) => {
           return (
             <PraiseWrapper
-              handlePraiseOpen={() => setNewPraiseOpened(prev => !prev)}
+              memberId={praise.memberId}
+              handlePraiseOpen={() => setNewPraiseOpened((prev) => !prev)}
               praiseId={praise.memberPraiseId}
               key={index}
               isGetNotPost={isGetNotPost}

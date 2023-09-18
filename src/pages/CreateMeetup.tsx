@@ -48,9 +48,9 @@ const CreateMeetup = () => {
   const [meetupInfo, setMeetupInfo] =
     useState<MeetupInfoProps>(initialMeetupInfo);
 
-    const currentDate = new Date(); // 현재 날짜 및 시간 가져오기
-    const MAX_DATE = new Date(currentDate); // 복제하여 새로운 Date 객체 생성
-    MAX_DATE.setFullYear(currentDate.getFullYear() + 1); // 1년을 추가
+  const currentDate = new Date(); // 현재 날짜 및 시간 가져오기
+  const MAX_DATE = new Date(currentDate); // 복제하여 새로운 Date 객체 생성
+  MAX_DATE.setFullYear(currentDate.getFullYear() + 1); // 1년을 추가
 
   const setDateUndefined = () => {
     setMeetupInfo((prev) => ({
@@ -253,10 +253,14 @@ const CreateMeetup = () => {
           isNecessary={true}
           label="모임 내용"
           placeholder="내용을 입력해 주세요"
-          onChange={(event) =>
-            setMeetupInfo((prev) => ({ ...prev, content: event.target.value }))
-          }
+          onChange={(event) => {
+            if (event.target.value.length > 255) {
+              event.target.value = event.target.value.slice(0, 255);
+            }
+            setMeetupInfo((prev) => ({ ...prev, content: event.target.value }));
+          }}
           value={meetupInfo.content}
+          maxLength={255}
         />
         {/* 모임 내용 ----------------------------------- end */}
 
