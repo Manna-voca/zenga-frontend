@@ -59,7 +59,7 @@ const PraiseWrapper = ({
   const getSenderOfPraise = async () => {
     try {
       if (isGetNotPost === true && isOpened === false) {
-        const res = await axios.patch(
+        await axios.patch(
           `${SERVER_URL}/praise/open`,
           {
             channelId: CHANNEL_ID,
@@ -67,11 +67,13 @@ const PraiseWrapper = ({
           },
           CONFIG
         );
+        fetchPoint();
         handlePraiseOpen();
         setShowPopup(false);
       }
     } catch (error) {
       const err = error as any;
+      console.log(err);
       if (err.response.data.errorCode === 1200) {
         setShowNotEnoughPointPopup(true);
         setShowPopup(false);
@@ -83,6 +85,7 @@ const PraiseWrapper = ({
     try {
       const pointRes = await axios.get(`${SERVER_URL}/point/total`, CONFIG);
       setPoint(pointRes.data.data.point);
+      console.log(pointRes.data);
     } catch (error) {
       console.log(error);
     }
