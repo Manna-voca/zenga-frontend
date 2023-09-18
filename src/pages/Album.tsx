@@ -10,7 +10,6 @@ import 'swiper/css/effect-coverflow';
 import "../styles/albumSwiper.css";
 import Header from "../components/Header";
 import MeetupMember from "./MeetupMember";
-import testImg from '../images/jun.png';
 import Card from "../components/Card";
 import axios from "axios";
 import dayjs from "dayjs";
