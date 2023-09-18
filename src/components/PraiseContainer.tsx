@@ -113,6 +113,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
         </div>
       ) : (
         praiseList.map((praise, index) => {
+          console.log(praise);
           return (
             <PraiseWrapper
               handlePraiseOpen={() => setNewPraiseOpened(prev => !prev)}

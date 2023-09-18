@@ -24,20 +24,6 @@ interface ChannelProps {
 
 export default function ChannelHome() {
   const navigate = useNavigate();
-  // const channelDummy = [
-  //   {
-  //     image: exChannel_1,
-  //     name: "모아모아 모아모아 2기",
-  //   },
-  //   { image: exChannel_2, name: "롤 칼바람 나락 good 동아리 3기 good" },
-  //   {
-  //     image: exChannel_3,
-  //     name: "멋쟁이 사자처럼 12기",
-  //   },
-  //   { image: exChannel_1, name: "곰돌이  곰돌이이 adfasdfsfdasfasdfadsfasdd" },
-  //   // { image: exChannel_3, name: "멋쟁이 사자처럼sdfasfsdfasdfadf fdssadfsafd" },
-  //   // { image: exChannel_2, name: "모아모아aasdfasdfasfdsafsafadfafsafadfsaf" },
-  // ];
 
   const [channelList, setChannelList] = useState<Array<ChannelProps>>();
 
@@ -70,6 +56,7 @@ export default function ChannelHome() {
   };
 
   useEffect(() => {
+    localStorage.removeItem("praise");
     if (localStorage.getItem("redirectChannelCode")) {
       navigate('/' + localStorage.getItem("redirectChannelCode"));
     }

@@ -56,6 +56,19 @@ const PraiseWrapper = ({
     useState<boolean>(false);
   const [point, setPoint] = useState<number>();
 
+  const fetchPoint = async () => {
+    try {
+      await axios
+        .get(`${SERVER_URL}/point/total`, CONFIG)
+        .then((res) => {
+          setPoint(res.data.data.point);
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getSenderOfPraise = async () => {
     try {
       if (isGetNotPost === true && isOpened === false) {
@@ -67,7 +80,6 @@ const PraiseWrapper = ({
           },
           CONFIG
         );
-        fetchPoint();
         handlePraiseOpen();
         setShowPopup(false);
       }
@@ -81,15 +93,6 @@ const PraiseWrapper = ({
     }
   };
 
-  const fetchPoint = async () => {
-    try {
-      const pointRes = await axios.get(`${SERVER_URL}/point/total`, CONFIG);
-      setPoint(pointRes.data.data.point);
-      console.log(pointRes.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
     fetchPoint();
   }, []);
@@ -126,7 +129,10 @@ const PraiseWrapper = ({
         <div
           onClick={
             isGetNotPost === true && isOpened === false
-              ? () => setShowPopup(true)
+              ? () => {
+                  setShowPopup(true);
+                  fetchPoint();
+                }
               : () => {
                   /* 멤버 페이지로 이동 */
                 }
