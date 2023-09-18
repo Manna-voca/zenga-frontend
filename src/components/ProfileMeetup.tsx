@@ -215,6 +215,7 @@ const ProfileMeetup = () => {
                                         userName={item.openMemberName}
                                         currentNum={item.joinMemberCount}
                                         maxNum={item.maxCapacity}
+                                        isEnd={true}
                                     ></GatheringList>
                                 );
                             })}

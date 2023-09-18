@@ -544,6 +544,7 @@ const MeetupDetail = () => {
                         onClick={handleButtonClick}
                         disable= {buttonState === 3 || buttonState === 4 || (meetupMaxNum === meetupCurrentNum && buttonState === 1) ? true : buttonState === 1 || buttonState === 5 ? false : undefined}
                         btnColor={buttonState === 2 || buttonState === 6 ? "#FDB639" : undefined}
+                        textDisable = {buttonState === 3 || buttonState === 4 || (meetupMaxNum === meetupCurrentNum && buttonState === 1) ? true : false}
                     />
                 </div>
             </div>

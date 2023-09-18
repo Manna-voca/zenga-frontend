@@ -173,7 +173,7 @@ const SwiperText = styled.div`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  lien-height: 150%;
+  line-height: 150%;
   width: 224px;
   height: 42px;
   text-align: center;

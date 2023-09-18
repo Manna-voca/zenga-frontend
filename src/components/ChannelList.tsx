@@ -74,7 +74,13 @@ const ChannelList = ({type = 'channel', name, img, channelCode, memberId}: Props
                                     color: 'var(--on-surface-active, #0A0A0A)'
 
                         }}>
-                            <img width='36px' height='36px' src={img} alt="channelprofile"></img>
+                            <img
+                                width='34px'
+                                height='34px'
+                                src={img}
+                                alt="channelprofile"
+                                style={{ borderRadius: '200px', border: '0.367px solid var(--surface-outline, rgba(10, 10, 10, 0.10))' }}
+                            ></img>
                             <span
                                 style={{ marginLeft: '12px', overflow: 'hidden',
                                         textOverflow: 'ellipsis', whiteSpace: 'nowrap',
