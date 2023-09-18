@@ -50,7 +50,7 @@ const Sidebar = () => {
         </div>
         <ChannelList type="new"></ChannelList>
         {channelList.map((item, index) => {
-          return <ChannelList key={index} name={item.name} img={item.logoImageUrl} channelCode={item.code} memberId={item.memberId}/>;
+          return <ChannelList key={index} name={item.name} img={item.logoImageUrl} code={item.code} memberId={item.memberId}/>;
         })}
       </div>
     </>

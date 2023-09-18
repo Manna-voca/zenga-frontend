@@ -37,7 +37,8 @@ const ProfileUpper = ({image, name, text}: Props) => {
                                 fontWeight: '400', lineHeight: '160%',
                                 color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
                                 height: '60px', maxWidth: '334px',
-                                width: 'calc(100%-166px)'
+                                width: 'calc(100%-166px)', whiteSpace: 'pre-wrap',
+                                wordBreak: 'break-all'
                     }}>
                         {text}
                     </div>

@@ -25,7 +25,6 @@ const ProfileAlbum = ({who, memberId}: Props) => {
 
     const getAlbumInfo = async () => {
         await axios.get(`${SERVER_URL}/album/list?memberId=${memberId}`, CONFIG).then((res) => {
-            console.log(res.data.data);
             setAlbumList(res.data.data.albumList);
         }).catch((err) => console.error(err));
     };
@@ -88,7 +87,7 @@ const ProfileAlbum = ({who, memberId}: Props) => {
                     }}>
                         {albumList.map((item, index) => {
                             return <CardContainer
-                                        onClick={() => navigate(`/${channelCode}/album/${memberId}`, {state: {who: who, initialNum: index}})}
+                                        onClick={() => navigate(`/${channelCode}/album/${memberId}?who=${who}&index=${index}`)}
                                         style={{ backgroundImage: `url(${item.imageUrl})`, cursor: 'pointer'}}
                                     />
                         })}
