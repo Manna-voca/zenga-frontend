@@ -13,6 +13,7 @@ const ButtonMultiple = ({ textList, onClickList, closeHandler }: OwnProps) => {
   return (
     <>
       <div
+        onClick={closeHandler}
         style={{
           position: "fixed",
           top: "0",
@@ -24,6 +25,7 @@ const ButtonMultiple = ({ textList, onClickList, closeHandler }: OwnProps) => {
         }}
       ></div>
       <div
+        onClick={(e) => e.stopPropagation()}
         style={{
           position: "fixed",
           width: "calc(100% - 40px)",
