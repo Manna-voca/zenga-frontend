@@ -10,6 +10,7 @@ import { color } from "../styles/color";
 import { typography } from "../styles/typography";
 import MemberWrapper from "../components/MemberWrapper";
 import axios from "axios";
+import memberNotFoundWhale from "../assets/images/x_whale_character.png";
 
 interface MemberProps {
   id: number;
@@ -221,8 +222,29 @@ export default function MemberList() {
             <LoadingSpinner />
           </div>
         )}
-        {searchMemberList
-          ? searchMemberList?.map((item, index) => {
+        {searchMemberList ? (
+          searchMemberList.length === 0 ? (
+            <div
+              style={{
+                marginTop: "98px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "20px",
+              }}
+            >
+              <img width={"72px"} src={memberNotFoundWhale} alt="" />
+              <div
+                style={{
+                  ...typography.body1Regular,
+                  color: `${color.onSurfaceActive}`,
+                }}
+              >
+                해당하는 <b>멤버</b>가 없어요
+              </div>
+            </div>
+          ) : (
+            searchMemberList?.map((item, index) => {
               return (
                 <MemberWrapper
                   key={index}
@@ -233,17 +255,20 @@ export default function MemberList() {
                 />
               );
             })
-          : memberList?.map((item, index) => {
-              return (
-                <MemberWrapper
-                  key={index}
-                  id={item.id}
-                  name={item.name}
-                  image={item.image}
-                  isChannelAdmin={item.level === "MAINTAINER"}
-                />
-              );
-            })}
+          )
+        ) : (
+          memberList?.map((item, index) => {
+            return (
+              <MemberWrapper
+                key={index}
+                id={item.id}
+                name={item.name}
+                image={item.image}
+                isChannelAdmin={item.level === "MAINTAINER"}
+              />
+            );
+          })
+        )}
       </div>
       <div style={{ height: "57px" }}></div>
       <Navbar state={3}></Navbar>

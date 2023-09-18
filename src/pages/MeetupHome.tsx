@@ -26,7 +26,7 @@ const MeetupHome = () => {
     const [meetupList, setMeetupList] = useState<Array<any>>([]);
 
     useEffect(() => {
-        axios.get(`${SERVER_URL}/party/list?channelId=${localStorage.getItem("channelId")}`, CONFIG).then((res) => {
+        axios.get(`${SERVER_URL}/party/list?channelId=${localStorage.getItem("channelId")}&size=100`, CONFIG).then((res) => {
             console.log(res.data.data);
             setMeetupList(res.data.data.content);
         });

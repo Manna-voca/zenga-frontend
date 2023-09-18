@@ -333,8 +333,8 @@ const SendPraise = () => {
   const end = praiseInfo.shuffleCount ? 8 : 4;
   const [selectedMember, setSelectedMember] = useState<number>(-1);
   const [showPraiseModal, setShowPraiseModal] = useState(false);
-  const [showPraiseNotTimer, setShowPraiseNotTimer] = useState(true);
-  const [showFirstModal, setShowFirstModal] = useState(false);
+  const [showPraiseNotTimer, setShowPraiseNotTimer] = useState<boolean|null>(null);
+  const [showFirstModal, setShowFirstModal] = useState<boolean|null>(null);
   const [firstModalNeverShow, setFirstModalNeverShow] = useState(false);
 
   const getChannelId = async () => {
@@ -374,6 +374,7 @@ const SendPraise = () => {
       if (res.data.data === null) {
         setShowPraiseNotTimer(false);
       } else {
+        setShowPraiseNotTimer(true);
         setPraiseInfo(res.data.data);
       }
     } catch (error) {

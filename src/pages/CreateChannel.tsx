@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -33,6 +33,10 @@ const CreateChannel = () => {
         }
          
     };
+
+    useEffect(() =>{
+      localStorage.removeItem('praise');
+    },[])
 
     return(
         <>

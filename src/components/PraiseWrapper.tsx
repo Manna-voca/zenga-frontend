@@ -9,12 +9,14 @@ import axios from "axios";
 import Popup2 from "./Popup2";
 import Popup1 from "./Popup1";
 import PoorWhale from "../assets/images/poor_whale_character.png";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface PraiseProps {
   handlePraiseOpen: () => void;
   praiseId: number;
   isGetNotPost: boolean;
   content: string;
+  memberId: string|null;
   image?: string;
   isOpened?: boolean;
   name: string;
@@ -27,17 +29,19 @@ const PraiseWrapper = ({
   isGetNotPost,
   isOpened,
   content,
+  memberId,
   image,
   name,
   type,
 }: PraiseProps) => {
+  const navigate = useNavigate();
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   };
-
+  const { channelCode: CHANNEL_CODE } = useParams();
   const CHANNEL_ID = localStorage.getItem("channelId");
   const blockType = `block${type}`;
   const blockImagePath = `/assets/ic-${blockType}.svg`;
@@ -56,6 +60,19 @@ const PraiseWrapper = ({
     useState<boolean>(false);
   const [point, setPoint] = useState<number>();
 
+  const fetchPoint = async () => {
+    try {
+      await axios
+        .get(`${SERVER_URL}/point/total`, CONFIG)
+        .then((res) => {
+          setPoint(res.data.data.point);
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getSenderOfPraise = async () => {
     try {
       if (isGetNotPost === true && isOpened === false) {
@@ -67,7 +84,6 @@ const PraiseWrapper = ({
           },
           CONFIG
         );
-        fetchPoint();
         handlePraiseOpen();
         setShowPopup(false);
       }
@@ -81,15 +97,6 @@ const PraiseWrapper = ({
     }
   };
 
-  const fetchPoint = async () => {
-    try {
-      const pointRes = await axios.get(`${SERVER_URL}/point/total`, CONFIG);
-      setPoint(pointRes.data.data.point);
-      console.log(pointRes.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
     fetchPoint();
   }, []);
@@ -126,9 +133,14 @@ const PraiseWrapper = ({
         <div
           onClick={
             isGetNotPost === true && isOpened === false
-              ? () => setShowPopup(true)
+              ? () => {
+                  setShowPopup(true);
+                  fetchPoint();
+                }
               : () => {
-                  /* 멤버 페이지로 이동 */
+                  if(memberId){
+                    navigate(`/${CHANNEL_CODE}/memberpage/${memberId}`);
+                  }
                 }
           }
           css={imageNameStyle}

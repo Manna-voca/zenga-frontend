@@ -21,7 +21,7 @@ const PopupComplaint = ({func}: Props) => {
 
     const handleDuplicateImgClick = async () => {
         try{
-            await navigator.clipboard.writeText('www.instagram.com/moa_zzi/');
+            await navigator.clipboard.writeText('www.instagram.com/zenga_0fficial/');
             if(userAgent.match(/Android/i)){
 
             }
@@ -92,12 +92,12 @@ const PopupComplaint = ({func}: Props) => {
 
                     }}>
                         <a
-                            href="https://www.instagram.com/moa_zzi/"
+                            href="https://www.instagram.com/zenga_0fficial/"
                             target="_blank"
                             style={{ textDecoration: 'none',
                                     color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))',
                         }}>
-                            www.instagram.com/moa_zzi/
+                            www.instagram.com/zenga_0fficial/
                         </a>
                     </div>
                     <DuplicateImg
