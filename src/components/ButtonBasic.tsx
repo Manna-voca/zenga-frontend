@@ -7,6 +7,7 @@ interface ButtonBasicProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   disable?: boolean;
   btnColor?: "#FDB639" | "#1F94FF" | "FAFAFA";
+  textDisable?: boolean;
 }
 
 const ButtonBasic: FC<ButtonBasicProps> = ({
@@ -14,6 +15,7 @@ const ButtonBasic: FC<ButtonBasicProps> = ({
   innerText,
   onClick,
   btnColor,
+  textDisable = false,
 }: ButtonBasicProps) => {
   if (
     (disable !== undefined && btnColor !== undefined) ||
@@ -33,7 +35,7 @@ const ButtonBasic: FC<ButtonBasicProps> = ({
           : disable
           ? `${color.surface}`
           : `${color.primary500}`,
-        color: disable ? "" : btnColor === 'FAFAFA' ? `${color.onSurfaceDefault}` : `${color.onPrimaryActive}`,
+        color: disable ? textDisable ? `${color.onSurfaceDisabled}` : "" : btnColor === 'FAFAFA' ? `${color.onSurfaceDefault}` : `${color.onPrimaryActive}`,
         cursor: disable ? "" : "pointer",
       }}
     >

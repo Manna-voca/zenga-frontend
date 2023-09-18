@@ -136,7 +136,7 @@ const Album = () => {
                     <div style={{ height: '20px' }}></div>
                     <Swiper
                         className="album"
-                        style={{ width: '100%', height: '600px' }}
+                        style={{ width: '100%', height: '600px', zIndex: '0' }}
                         effect={'coverflow'}
                         pagination={{ clickable: true, dynamicBullets: true, dynamicMainBullets: 4}}
                         mousewheel
