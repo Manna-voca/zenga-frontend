@@ -90,7 +90,7 @@ const ModifyChannelInfo = () => {
             setChannelProfileImage(res.data.data.logoImageUrl);
             setClubname(res.data.data.name);
             if(!res.data.data.isOwner){
-                // 잘못된 접근
+                window.alert("잘못된 접근입니다");
             }
         })
     };

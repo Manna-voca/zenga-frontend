@@ -15,6 +15,8 @@ interface meetupInfoProps{
 
 const MyMeetup = () => {
     const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const initState = searchParams.get('state');
     const MEMBER_ID = localStorage.getItem("memberId");
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
@@ -24,11 +26,12 @@ const MyMeetup = () => {
       },
     };
 
-    const [meetupState, setMeetupState] = useState<string>(location.state.meetupState ? location.state.meetupState : "1");
+    const [meetupState, setMeetupState] = useState<string|null>(initState);
     const [meetupInfo, setMeetupInfo] = useState<meetupInfoProps|null>(null);
 
     const handleMeetupStateBtnClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         setMeetupState(event.currentTarget.id);
+        window.history.replaceState({}, '', `?state=${event.currentTarget.id}`);
     };
 
 
@@ -41,7 +44,6 @@ const MyMeetup = () => {
             state = "IN_PROGRESS";
         }
         await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/parties?state=${state}`, CONFIG).then((res) => {
-            console.log(res.data.data);
             setMeetupInfo(res.data.data);
         })
     };

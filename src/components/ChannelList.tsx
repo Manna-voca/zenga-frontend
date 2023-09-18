@@ -9,12 +9,13 @@ interface Props {
     type? : string; // new || channel
     name? : string;
     img? : string;
-    channelCode?: string;
+    code?: string;
     memberId?: number;
 };
 
-const ChannelList = ({type = 'channel', name, img, channelCode, memberId}: Props) => {
+const ChannelList = ({type = 'channel', name, img, code, memberId}: Props) => {
     const navigate = useNavigate();
+    const { channelCode } = useParams();
 
     const handleClick = async () => {
       localStorage.removeItem('praise');
@@ -26,7 +27,7 @@ const ChannelList = ({type = 'channel', name, img, channelCode, memberId}: Props
             document.body.style.overflow = "unset";
             try{
                 localStorage.setItem("memberId", `${memberId}`);
-                window.location.replace(`/${channelCode}/praise`);
+                window.location.replace(`/${code}/praise`);
             } catch(err){
                 console.error(err);
             }
@@ -37,11 +38,12 @@ const ChannelList = ({type = 'channel', name, img, channelCode, memberId}: Props
     return(
         <>
             <div
-                onClick={handleClick}
+                onClick={code === channelCode ? undefined :handleClick}
                 style={{ width: '260px', height: '36px',
                         padding: '12px 20px 12px 20px', display: 'flex',
-                        alignItems: 'center', cursor: 'pointer',
-                        borderBottom: '0.5px solid var(--surface-outline, rgba(10, 10, 10, 0.10))'
+                        alignItems: 'center', cursor: code === channelCode ? '' : 'pointer',
+                        borderBottom: '0.5px solid var(--surface-outline, rgba(10, 10, 10, 0.10))',
+                        background: code === channelCode ? 'var(--primary-primary-50, #E3F2FF)' : ''
             }}>
                 {type === 'new' && (
                     <>
@@ -79,7 +81,7 @@ const ChannelList = ({type = 'channel', name, img, channelCode, memberId}: Props
                                 height='34px'
                                 src={img}
                                 alt="channelprofile"
-                                style={{ borderRadius: '200px', border: '0.367px solid var(--surface-outline, rgba(10, 10, 10, 0.10))' }}
+                                style={{ borderRadius: '200px', border: '0.367px solid var(--surface-outline, rgba(10, 10, 10, 0.10))', background: 'white' }}
                             ></img>
                             <span
                                 style={{ marginLeft: '12px', overflow: 'hidden',

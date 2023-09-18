@@ -21,7 +21,9 @@ const Album = () => {
     dayjs.extend(relativeTime);
     dayjs.locale('ko');
     const location = useLocation();
-    const who = location.state.who;
+    const searchParams = new URLSearchParams(location.search);
+    const who = searchParams.get('who');
+    const index = searchParams.get('index');
     const { channelCode, memberId } = useParams();
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
@@ -33,7 +35,7 @@ const Album = () => {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const [initialNum, setInitialNum] = useState<number>(location.state.initialNum);
+    const [initialNum, setInitialNum] = useState<number>(Number(index));
 
     const [memberState, setMemberState] = useState<boolean>(false);
 
@@ -128,7 +130,7 @@ const Album = () => {
         <>
             {memberState ? (
                 <>
-                    <MeetupMember state="album" albumId={albumList[initialNum].id}></MeetupMember>
+                    <MeetupMember state="album" albumId={`${albumList[initialNum].id}`}></MeetupMember>
                 </>
             ) : (
                 <>
@@ -156,7 +158,7 @@ const Album = () => {
                         initialSlide={initialNum}
                         observer={true}
                         observeParents={true}
-                        onSlideChange={(e) => setInitialNum(e.activeIndex)}
+                        onSlideChange={(e) => {setInitialNum(e.activeIndex); window.history.replaceState({}, '', `?who=${who}&index=${e.activeIndex}`); }}
                     >
                         {albumList.map((item, index) => {
                             const createdAt = dayjs(item.albumCreatedDate);

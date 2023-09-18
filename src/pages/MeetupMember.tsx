@@ -31,7 +31,7 @@ const MeetupMember = ({state, albumId}:Props) => {
     const getMemberList = async () => {
         await axios.get(`${SERVER_URL}/album/paticipation/${albumId}/with`, CONFIG).then((res) => {
             console.log(res.data.data);
-            setMemberList(res.data.data.ParticipationList);
+            setMemberList(res.data.data.participationList);
         })
     };
 
