@@ -12,6 +12,7 @@ import InputProfile from '../components/InputProfile';
 import defaultChannelProfile from '../images/defaultchannelprofile.png';
 import { color } from "../styles/color";
 import axios from 'axios';
+import { debounce } from 'lodash';
 
 // 기존 뒤로가기 기능과 상단의 버튼을 통해 뒤로가기에 대해 이전 단계로 돌아가도록 추후 구현
 
@@ -95,7 +96,7 @@ const NewChannelOnboarding = () => {
 
     const [code, setCode] = useState<string>("");
 
-    const handleNextButtonClick = async () => {
+    const handleNextButtonClick = debounce(async () => {
         if(step === 1){
             setStep((current) => (current) + 1);
             setPreventPopstate(true);
@@ -213,7 +214,7 @@ const NewChannelOnboarding = () => {
                 }
             }
         }
-    };
+    }, 1000);
 
     return(
         <>
