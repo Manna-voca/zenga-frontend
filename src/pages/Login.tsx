@@ -120,10 +120,10 @@ const Login = () => {
       <button css={buttonStyles} onClick={() => navigate("/onboarding")}>
         서비스 온보딩
       </button>
-      <button css={buttonStyles} onClick={() => {navigate("/channel-home"); localStorage.setItem("accessToken", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTQ4ODA1MzEsImV4cCI6MTY5ODQ4MDUzMSwic3ViIjoiMTIiLCJUT0tFTl9UWVBFIjoiQUNDRVNTX1RPS0VOIn0.fOl04U_nQu2ORmSJTfa9oldRJ1PPq2l4VGzYj8mnxAo");}}>
+      <button css={buttonStyles} onClick={() => {navigate("/channel-home"); localStorage.setItem("accessToken", "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTQ4ODA1MzEsImV4cCI6MTY5ODQ4MDUzMSwic3ViIjoiMTIiLCJUT0tFTl9UWVBFIjoiQUNDRVNTX1RPS0VOIn0.fOl04U_nQu2ORmSJTfa9oldRJ1PPq2l4VGzYj8mnxAo");}}>
         채널 홈으로(현섭)
       </button>
-      <button css={buttonStyles} onClick={() => {navigate("/channel-home"); localStorage.setItem("accessToken", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM0OTI4MDMsImV4cCI6MTg5MzUyODgwMywic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.5-E7dQeUqr91r2mIRJGOO2latbYbK-MbUuiYRC0rvP0");}}>
+      <button css={buttonStyles} onClick={() => {navigate("/channel-home"); localStorage.setItem("accessToken", "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTM0OTI4MDMsImV4cCI6MTg5MzUyODgwMywic3ViIjoiMSIsIlRPS0VOX1RZUEUiOiJBQ0NFU1NfVE9LRU4ifQ.5-E7dQeUqr91r2mIRJGOO2latbYbK-MbUuiYRC0rvP0");}}>
         채널 홈으로(승민)
       </button>
     </>

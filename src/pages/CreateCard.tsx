@@ -207,7 +207,15 @@ const CreateCard = () => {
             const a = document.createElement('a');
             a.href = imageDataUrl;
             a.download = 'zengaAlbum.png';
-            a.click();
+            
+            // 다운로드를 시도합니다.
+            if (document.createEvent) {
+                const event = document.createEvent('MouseEvents');
+                event.initEvent('click', true, true);
+                a.dispatchEvent(event);
+            } else {
+                a.click();
+            }
         }
     };
 
