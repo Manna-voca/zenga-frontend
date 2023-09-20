@@ -51,6 +51,7 @@ export default function MemberList() {
     keyword?: string
   ) => {
     if (loading) return;
+    try {
     const uri =
       `${SERVER_URL}/channels/${CHANNEL_ID}/members` +
       (size || cursorId || keyword ? "?" : "") +
@@ -70,7 +71,7 @@ export default function MemberList() {
           ? `&keyword=${keyword}`
           : `keyword=${keyword}`
         : "");
-    try {
+    
       if (hasMore === false && keyword === "") {
         return;
       }

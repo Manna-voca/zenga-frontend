@@ -100,12 +100,15 @@ const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, share
     };
 
     const getChannelInfo  = async () => {
+      try{
         await axios.get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG).then((res) => {
             const CHANNEL_ID = res.data.data.id;
             axios.get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
                 setChannelInfo(res.data.data);
             });
-        });
+        });} catch(err){
+          console.log(err);
+        }
     };
 
     if(type === 'back' || type === 'out'){
