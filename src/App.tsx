@@ -60,6 +60,7 @@ function App() {
       <Route path="/point" element={<PointDetail />}></Route>
       <Route path="/:channelCode/album/:memberId" element={<Album />}></Route>
       <Route path="/error-400" element={<Error400 />}></Route>
+      <Route path="/error-404" element={<NotFound />}></Route>
       <Route path="/*" element={<NotFound />}></Route>
     </Routes>
   );

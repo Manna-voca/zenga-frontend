@@ -89,34 +89,35 @@ export default function Notification() {
         }));
         setNotifications(newList);
       }
-
-      // .catch((err) => {
-      //   console.log(err.response.data.errorCode);
-      //   if (err.response.data.errorCode === (7000 || 7001)) {
-      //     console.log("토큰 에러");
-      //   }
-      // });
     } catch (error) {
       console.log(error);
-      // const err = error as any;
-      // if (err.response.data.errorCode === (7000 || 7001)) {
-      //   Navigate(7000)
-      // }
     }
   };
 
   const readAllNotifications = async () => {
     try {
-      await axios.put(
-        `${SERVER_URL}/notification/check-all/member/${MEMBER_ID}`,
-        CONFIG
-      );
+      await axios
+        .put(
+          `${SERVER_URL}/notification/check-all/member/${MEMBER_ID}`,
+          {},
+          CONFIG
+        )
+        .then((res) => console.log(res));
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     fetchNotifications();
+    axios
+      .get(
+        `${SERVER_URL}/notification/member/${MEMBER_ID}/has-unchecked`,
+        CONFIG
+      )
+      .then((response) => {
+        console.log(response);
+      });
     return () => {
       readAllNotifications();
     };

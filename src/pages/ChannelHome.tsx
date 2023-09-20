@@ -58,14 +58,14 @@ export default function ChannelHome() {
   useEffect(() => {
     localStorage.removeItem("praise");
     if (localStorage.getItem("redirectChannelCode")) {
-      navigate('/' + localStorage.getItem("redirectChannelCode"));
+      navigate("/" + localStorage.getItem("redirectChannelCode"));
     }
     fetchChannelData();
   }, []);
 
   // 사이드바 열린 채로 뒤로가기를 하여 channel-home으로 이동 시
   // 스크롤 막히는거 방지
-  if(document.body.style.overflow === "hidden"){
+  if (document.body.style.overflow === "hidden") {
     document.body.style.overflow = "unset";
   }
 
@@ -99,7 +99,7 @@ export default function ChannelHome() {
           marginBottom: "100px",
         }}
       >
-        채널을 생성해 보세요 !
+        {channelList ? "채널을 선택해 주세요!" : "채널을 생성해 보세요!"}
       </h1>
       <div
         style={{

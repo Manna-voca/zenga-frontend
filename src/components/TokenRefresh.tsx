@@ -39,10 +39,12 @@ const TokenRefresh = () => {
     } catch (error) {
       console.log(error);
       navigate("/error-400");
+      return;
     }
   };
 
   useEffect(() => {
+    console.log(location.pathname);
     if (!ACCESS_TOKEN) {
       if (
         location.pathname !== "/oauth/callback/kakao" &&
@@ -51,15 +53,17 @@ const TokenRefresh = () => {
         location.pathname.length !== 9
       ) {
         navigate("/error-400");
+        return;
       }
-      return;
+    } else {
+      const EXPIRATION_TIME = calculateTokenExpiration(ACCESS_TOKEN as string);
+      if (EXPIRATION_TIME <= 300) {
+        refresh();
+      }
     }
-
-    const EXPIRATION_TIME = calculateTokenExpiration(ACCESS_TOKEN as string);
-    if (EXPIRATION_TIME <= 300) {
-      refresh();
-    }
+    // eslint-disable-next-line
   }, [location.pathname]);
+
   return null;
 };
 
