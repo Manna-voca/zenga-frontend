@@ -10,6 +10,10 @@ const CheckChannelCode = () => {
 
   const checkValidation = async () => {
     try {
+      if (channelCode?.length !== 8) {
+        navigate("/error-404");
+        return;
+      }
       if (!ACCESS_TOKEN) {
         if (channelCode) {
           localStorage.setItem("redirectChannelCode", channelCode);

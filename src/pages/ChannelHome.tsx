@@ -1,19 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { Player } from "@lottiefiles/react-lottie-player";
 import { typography } from "../styles/typography";
 import { color } from "../styles/color";
-
 import btnChannelAdd from "../assets/icons/btn-channel-add.svg";
-import exChannel_1 from "../assets/images/ex-channel-1.png";
-import exChannel_2 from "../assets/images/ex-channel-2.png";
-import exChannel_3 from "../assets/images/ex-channel-3.png";
-
 import CircularImage from "../components/CircularImage";
-import { get } from "../api/api";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 interface ChannelProps {
   code: string;
@@ -24,9 +18,7 @@ interface ChannelProps {
 
 export default function ChannelHome() {
   const navigate = useNavigate();
-
   const [channelList, setChannelList] = useState<Array<ChannelProps>>();
-
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {
@@ -58,14 +50,14 @@ export default function ChannelHome() {
   useEffect(() => {
     localStorage.removeItem("praise");
     if (localStorage.getItem("redirectChannelCode")) {
-      navigate('/' + localStorage.getItem("redirectChannelCode"));
+      navigate("/" + localStorage.getItem("redirectChannelCode"));
     }
     fetchChannelData();
   }, []);
 
   // 사이드바 열린 채로 뒤로가기를 하여 channel-home으로 이동 시
   // 스크롤 막히는거 방지
-  if(document.body.style.overflow === "hidden"){
+  if (document.body.style.overflow === "hidden") {
     document.body.style.overflow = "unset";
   }
 
@@ -99,7 +91,7 @@ export default function ChannelHome() {
           marginBottom: "100px",
         }}
       >
-        채널을 생성해 보세요 !
+        {channelList ? "채널을 선택해 주세요!" : "채널을 생성해 보세요!"}
       </h1>
       <div
         style={{

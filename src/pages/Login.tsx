@@ -1,13 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { color } from "../styles/color";
-import { typography } from "../styles/typography";
-import axios from "axios";
 import styled from "@emotion/styled";
 import kakaoIcon from "../assets/icons/ic-kakao.svg";
-import { get } from "../api/api";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Mousewheel, Keyboard } from "swiper";
 import "swiper/swiper-bundle.min.css";
@@ -19,24 +15,6 @@ const Login = () => {
   const navigate = useNavigate();
   let KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
   console.log(KAKAO_URL);
-
-  // const fetchUserInfo = async () => {
-  //   try {
-  //     const response = await get(
-  //       "/users/info",
-  //       `${localStorage.getItem("accessToken")}`
-  //     );
-  //     if (response instanceof Error) {
-  //       console.error("Error:", response);
-  //     } else {
-  //       console.log("Data:", response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
-
-  // fetchUserInfo();
 
   return (
     <>

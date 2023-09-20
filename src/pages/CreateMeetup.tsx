@@ -17,6 +17,7 @@ import ButtonBasic from "../components/ButtonBasic";
 import { typography } from "../styles/typography";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { debounce } from "lodash";
 
 interface MeetupInfoProps {
   title: string;
@@ -92,7 +93,7 @@ const CreateMeetup = () => {
     meetupInfo.content.length > 0 &&
     Number(meetupInfo.personNum) > 1;
 
-  const postNewMeetup = async () => {
+  const postNewMeetup = debounce(async () => {
     let partyInfo = {
       channelId: CHANNEL_ID,
       title: meetupInfo.title,
@@ -137,7 +138,7 @@ const CreateMeetup = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, 1000);
 
   return (
     <>
