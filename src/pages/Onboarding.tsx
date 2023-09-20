@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import { useState } from "react";
 import { typography } from "../styles/typography";
 import { color } from "../styles/color";
 import InputText from "../components/InputText";
@@ -7,7 +7,7 @@ import DatePicker from "../components/DatePicker";
 import ButtonBasic from "../components/ButtonBasic";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import { put } from "../api/api";
+import axios from "axios";
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -15,10 +15,14 @@ export default function Onboarding() {
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
-
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const CONFIG = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  };
   const [gender, setGender] = useState<string>("");
   const genderChoices = ["여자", "남자"];
-
   const [birthDate, setBirthDate] = useState<string>("");
 
   let checkOnboarding = !(name && gender);
@@ -26,21 +30,19 @@ export default function Onboarding() {
   const postOnboarding = async () => {
     try {
       const formatDate = (dateString: string) => {
-        return dateString.replace(/\./g, '-');
-      }
+        return dateString.replace(/\./g, "-");
+      };
       const data = {
         name: name,
         gender: gender === "남자" ? "MAN" : "WOMAN",
         birthDate: formatDate(birthDate),
       };
-      const onboardingRes = await put(
-        "/users/update",
+      const onboardingRes = await axios.put(
+        `${SERVER_URL}/users/update`,
         data,
-        `${localStorage.getItem("accessToken")}`
+        CONFIG
       );
-      if (onboardingRes instanceof Error) {
-        console.error("Error: ", onboardingRes);
-      } else {
+      if (onboardingRes.data) {
         navigate("/channel-home");
       }
     } catch (error) {

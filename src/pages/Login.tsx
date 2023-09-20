@@ -1,13 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { color } from "../styles/color";
-import { typography } from "../styles/typography";
-import axios from "axios";
 import styled from "@emotion/styled";
 import kakaoIcon from "../assets/icons/ic-kakao.svg";
-import { get } from "../api/api";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Mousewheel, Keyboard } from "swiper";
 import "swiper/swiper-bundle.min.css";
@@ -18,6 +14,7 @@ import "swiper/css/pagination";
 const Login = () => {
   const navigate = useNavigate();
   let KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
+  console.log(KAKAO_URL);
 
   return (
     <>

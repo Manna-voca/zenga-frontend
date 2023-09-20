@@ -1,19 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { Player } from "@lottiefiles/react-lottie-player";
 import { typography } from "../styles/typography";
 import { color } from "../styles/color";
-
 import btnChannelAdd from "../assets/icons/btn-channel-add.svg";
-import exChannel_1 from "../assets/images/ex-channel-1.png";
-import exChannel_2 from "../assets/images/ex-channel-2.png";
-import exChannel_3 from "../assets/images/ex-channel-3.png";
-
 import CircularImage from "../components/CircularImage";
-import { get } from "../api/api";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 interface ChannelProps {
   code: string;
@@ -24,9 +18,7 @@ interface ChannelProps {
 
 export default function ChannelHome() {
   const navigate = useNavigate();
-
   const [channelList, setChannelList] = useState<Array<ChannelProps>>();
-
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {

@@ -110,14 +110,6 @@ export default function Notification() {
 
   useEffect(() => {
     fetchNotifications();
-    axios
-      .get(
-        `${SERVER_URL}/notification/member/${MEMBER_ID}/has-unchecked`,
-        CONFIG
-      )
-      .then((response) => {
-        console.log(response);
-      });
     return () => {
       readAllNotifications();
     };
