@@ -87,6 +87,17 @@ const InputNumber: FC<InputNumberProps> = ({
         min={0}
         max={20}
       />
+      <div
+        style={{
+          display: isNaN(value as unknown as number) ? "" : "none",
+          ...typography.body3Regular,
+          color: `${color.error}`,
+          height: "30px",
+          lineHeight: "30px",
+        }}
+      >
+        참여 인원(숫자)만 입력해 주세요.
+      </div>
     </div>
   );
 };
