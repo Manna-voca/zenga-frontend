@@ -15,6 +15,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { debounce } from "lodash";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const CONFIG = {
@@ -196,14 +197,11 @@ const CommentCreator = ({
     }
   };
 
-  const postComment = async () => {
+  const postComment = debounce(async () => {
     if (comment.length === 0) {
       alert("댓글을 입력해주세요.");
       return;
     }
-    console.log(comment);
-    console.log(replyTo);
-    console.log(commentId);
     const URL = `${SERVER_URL}/comment`;
     try {
       // 새로운 댓글 작성
@@ -268,7 +266,7 @@ const CommentCreator = ({
     } catch (error) {
       console.log(error);
     }
-  };
+  }, 1000);
 
   // 댓글관련 끝
   return (
@@ -402,11 +400,11 @@ const Comment = () => {
   }
   const deleteComment = async () => {
     try {
-      const res =await axios.delete(
+      const res = await axios.delete(
         `${SERVER_URL}/comment?channelId=${CHANNEL_ID}&commentId=${commentId}`,
         CONFIG
       );
-      if(res === undefined || null){
+      if (res === undefined || null) {
         alert("삭제 실패");
       }
       setReadyState("");
@@ -419,7 +417,10 @@ const Comment = () => {
 
   const fetchComments = async () => {
     try {
-      const res = await axios.get(`${SERVER_URL}/comment/${meetupId}?size=100`, CONFIG);
+      const res = await axios.get(
+        `${SERVER_URL}/comment/${meetupId}?size=100`,
+        CONFIG
+      );
       console.log(res.data);
       let newComment: any = [];
       if (res.data && res.status === 200) {
