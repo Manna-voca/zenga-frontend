@@ -27,6 +27,8 @@ import Album from "./pages/Album";
 import KaKao from "./pages/KaKao";
 import { channel } from "diagnostics_channel";
 import CheckChannelCode from "./pages/CheckChannelCode";
+import NotFound from "./pages/NotFound";
+import Error400 from "./pages/Error400";
 
 
 function App() {
@@ -57,6 +59,8 @@ function App() {
       <Route path="/modify-profile-info" element={<ModifyProfileInfo />}></Route>
       <Route path="/point" element={<PointDetail />}></Route>
       <Route path="/:channelCode/album/:memberId" element={<Album />}></Route>
+      <Route path="/error-400" element={<Error400 />}></Route>
+      <Route path="/*" element={<NotFound />}></Route>
     </Routes>
   );
 }

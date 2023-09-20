@@ -3,6 +3,8 @@ import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
 import { color } from "../styles/color";
+import { typography } from "../styles/typography";
+import refreshIcon from "../assets/icons/ic-refresh.svg";
 
 const Timer: React.FC = () => {
   const [remainingTime, setRemainingTime] = useState<number | null>(null);
@@ -55,27 +57,65 @@ const Timer: React.FC = () => {
           <LoadingSpinner />
         </LoadingDiv> // 로딩 중일 때 보여주는 내용
       ) : remainingTime !== null ? (
-        <TimerContainer>
-          <TimerWrapper>
-            <TimerNumberDiv>{formatHours(remainingTime)}</TimerNumberDiv>
-            <span css={timerSpanStyle}>시간</span>
-          </TimerWrapper>
-          <TimerWrapper>
-            <TimerNumberDiv>{formatMinutes(remainingTime)}</TimerNumberDiv>
-            <span css={timerSpanStyle}>분</span>
-          </TimerWrapper>
-          <TimerWrapper>
-            <TimerNumberDiv style={{ color: `${color.primary300}` }}>
-              {formatSeconds(remainingTime)}
-            </TimerNumberDiv>
-            <span css={timerSpanStyle}>초</span>
-          </TimerWrapper>
-        </TimerContainer>
+        <>
+          <TimerTitle>
+            다음 칭찬 질문까지 <b>남은 시간</b>은
+          </TimerTitle>
+          <TimerContainer>
+            <TimerWrapper>
+              <TimerNumberDiv>{formatHours(remainingTime)}</TimerNumberDiv>
+              <span css={timerSpanStyle}>시간</span>
+            </TimerWrapper>
+            <TimerWrapper>
+              <TimerNumberDiv>{formatMinutes(remainingTime)}</TimerNumberDiv>
+              <span css={timerSpanStyle}>분</span>
+            </TimerWrapper>
+            <TimerWrapper>
+              <TimerNumberDiv style={{ color: `${color.primary300}` }}>
+                {formatSeconds(remainingTime)}
+              </TimerNumberDiv>
+              <span css={timerSpanStyle}>초</span>
+            </TimerWrapper>
+          </TimerContainer>
+        </>
       ) : (
-        <p style={{ height: "113px" }}>
-          새로 고침하면 새로운 칭찬을 볼 수 있어요!
-          <button onClick={() => window.location.reload()}>새로고침</button>
-        </p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            ...typography.body1Regular,
+            color: `${color.onSurfaceActive}`,
+          }}
+        >
+          새로 고침하면
+          <br />{" "}
+          <span>
+            <b>새로운 칭찬</b>을 볼 수 있어요!
+          </span>
+          <div
+            onClick={() => {
+              window.location.reload();
+            }}
+            style={{
+              ...typography.body2Semibold,
+              color: `${color.onPrimaryActive}`,
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "262px",
+              marginTop: "40px",
+              backgroundColor: `${color.primary500}`,
+              height: "44px",
+              borderRadius: "30px",
+              gap: "8px",
+            }}
+          >
+            칭찬 확인하기
+            <img width="18px" src={refreshIcon} alt="" />
+          </div>
+        </div>
       )}
     </div>
   );
@@ -96,6 +136,14 @@ const TimerWrapper = styled.div`
   gap: 4px;
   align-items: center;
   justify-content: space-between;
+`;
+const TimerTitle = styled.h1`
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: ${color.onSurfaceActive};
+  margin-bottom: 20px;
+  text-align: center;
 `;
 const TimerNumberDiv = styled.div`
   width: 74px;

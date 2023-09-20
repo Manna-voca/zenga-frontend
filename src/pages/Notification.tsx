@@ -108,7 +108,7 @@ export default function Notification() {
   const readAllNotifications = async () => {
     try {
       await axios.put(
-        `${SERVER_URL}/notification/member/${MEMBER_ID}/check/all`,
+        `${SERVER_URL}/notification/check-all/member/${MEMBER_ID}`,
         CONFIG
       );
     } catch (error) {

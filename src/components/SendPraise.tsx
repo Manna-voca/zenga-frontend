@@ -519,9 +519,7 @@ const SendPraise = () => {
             />
             <img css={waveSvgStyles} src={wave} alt="" />
           </WaveWhaleDiv>
-          <TimerTitle>
-            다음 칭찬 질문까지 <b>남은 시간</b>은
-          </TimerTitle>
+          
           <Timer />
           <span css={helpMessageStyle}>받고 싶은 칭찬이 있다면?</span>
           <a

@@ -77,6 +77,7 @@ export default function MemberList() {
       setLoading(true);
 
       const membersResponse = await axios.get(`${uri}`, CONFIG);
+      
       if (membersResponse.data && membersResponse.status === 200) {
         const newMembers = membersResponse.data.content.map((member: any) => ({
           id: member.id,
@@ -107,6 +108,8 @@ export default function MemberList() {
       setLoading(false);
     }
   };
+
+  
 
   const fetchTotalMemberCount = async () => {
     try {
@@ -146,7 +149,6 @@ export default function MemberList() {
 
   const callSearchApi = async (term: string) => {
     if (!searchWord) return;
-    setCursorId(0);
     fetchMemberList(0, undefined, 100, term);
   };
 

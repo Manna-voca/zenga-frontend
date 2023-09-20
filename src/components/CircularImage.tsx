@@ -1,5 +1,5 @@
 import { FC } from "react";
-import channelAdminIcon from "../assets/icons/ic-channelAdmin.svg";
+import channelAdminIcon from "../assets/images/ic-channelAdmin.png";
 import { color } from "../styles/color";
 
 interface CircularImageProps {
@@ -48,6 +48,7 @@ const CircularImage: FC<CircularImageProps> = ({
       ></img>
       {isChannelAdmin && (
         <img
+          width="12px"
           src={channelAdminIcon}
           alt="채널장"
           style={{
