@@ -112,28 +112,28 @@ const MeetupDetail = () => {
             navigator.share({
                 title: `모임명: ${meetupTitle}\n`,
                 text: "링크를 타고 들어와 공유된 모임을 확인해보세요\n",
-                url: `${window.location.href}`,
+                url: `${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}`,
             }).catch((error) => {
                 if(!error.toString().includes('Share canceled')){
-                    alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.href}`);
+                    alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`);
                 }
             });
         }
         else if(navigator.clipboard){
-            navigator.clipboard.writeText(`${window.location.href}`).then(() => {
+            navigator.clipboard.writeText(`${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`).then(() => {
                 alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
-            }).catch((error) => alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.href}`));
+            }).catch((error) => alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`));
         }
         else{
             const textArea = document.createElement('textarea');
-            textArea.value = `${window.location.href}`;
+            textArea.value = `${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`;
             document.body.appendChild(textArea);
             textArea.select();
             textArea.setSelectionRange(0, 99999);
             try{
                 document.execCommand('copy');
             } catch (err) {
-                alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.href}`);
+                alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`);
             }
             textArea.setSelectionRange(0, 0);
             document.body.removeChild(textArea);

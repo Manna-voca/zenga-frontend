@@ -5,11 +5,14 @@ import Navbar from "../components/Navbar";
 import { ReactComponent as WhiteplusImg } from "../images/whiteplus.svg";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
 import GatheringList from "../components/GatheringList";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const MeetupHome = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const meetupId = searchParams.get('meetupId');
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
       headers: {
@@ -26,6 +29,10 @@ const MeetupHome = () => {
     const [meetupList, setMeetupList] = useState<Array<any>>([]);
 
     useEffect(() => {
+        if(meetupId !== null){
+            window.history.replaceState({}, '', `${window.location.origin}${window.location.pathname}`);
+            navigate(`/${channelCode}/meetup-detail/${meetupId}`);
+        }
         axios.get(`${SERVER_URL}/party/list?channelId=${localStorage.getItem("channelId")}&size=100`, CONFIG).then((res) => {
             console.log(res.data.data);
             setMeetupList(res.data.data.content);
