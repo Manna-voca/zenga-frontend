@@ -112,7 +112,7 @@ const Memberpage = () => {
                 </>
             ) : (
                 <>
-                    <ProfileZenga></ProfileZenga>
+                    <ProfileZenga memberId={memberId}></ProfileZenga>
                 </>
             )}
             <div style={{ height: '57px' }}></div>
