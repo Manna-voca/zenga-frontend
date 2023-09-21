@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import backButton from "../images/back.svg";
 import outButton from "../images/out.svg";
-import profileImg from "../images/profile.png";
 import { ReactComponent as NoticeImg } from "../images/notice.svg";
 import { ReactComponent as FrameImg } from "../images/frame.svg";
 import { ReactComponent as ShareImg } from "../images/share.svg";
