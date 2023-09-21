@@ -60,33 +60,37 @@ const ModifyProfileInfo = () => {
     };
 
     const handleChannelModifyBtnClick = async () => {
-        if(profileImageFile !== null){
-            const profileImgFormData = new FormData();
-            profileImgFormData.append('image', profileImageFile);
-            const uploadProfileImgResponse = await axios.post(`${SERVER_URL}/image/upload`, profileImgFormData, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-                    'Content-Type': 'multipart/form-data'
+        try{
+            if(profileImageFile !== null){
+                const profileImgFormData = new FormData();
+                profileImgFormData.append('image', profileImageFile);
+                const uploadProfileImgResponse = await axios.post(`${SERVER_URL}/image/upload`, profileImgFormData, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                if(uploadProfileImgResponse.status === 200){
+                    axios.put(`${SERVER_URL}/members/${memberId}`, {
+                        "name": nickname,
+                        "profileImageUrl": uploadProfileImgResponse.data.data.url,
+                        "description": intro
+                    }, CONFIG).then((res) => {
+                        window.location.reload();
+                    });
                 }
-            });
-            if(uploadProfileImgResponse.status === 200){
+            }
+            else{
                 axios.put(`${SERVER_URL}/members/${memberId}`, {
                     "name": nickname,
-                    "profileImageUrl": uploadProfileImgResponse.data.data.url,
+                    "profileImageUrl": profileImage,
                     "description": intro
                 }, CONFIG).then((res) => {
                     window.location.reload();
                 });
             }
-        }
-        else{
-            axios.put(`${SERVER_URL}/members/${memberId}`, {
-                "name": nickname,
-                "profileImageUrl": profileImage,
-                "description": intro
-            }, CONFIG).then((res) => {
-                window.location.reload();
-            });
+        } catch(err) {
+            console.error(err);
         }
     };
 
@@ -97,19 +101,17 @@ const ModifyProfileInfo = () => {
             "birthDate": birthDate.replace(/\./g, '-')
         }, CONFIG).then((res) => {
             window.location.reload();
-        });
+        }).catch((err) => console.error(err));
     };
 
     const getProfileInfo = async () => {
         await axios.get(`${SERVER_URL}/members/info?channelId=${CHANNEL_ID}`, CONFIG).then((res) => {
-            console.log(res.data.data);
             setNickname(res.data.data.name);
             setIntro(res.data.data.introduction);
             setProfileImage(res.data.data.profileImageUrl);
             setMemberId(res.data.data.id);
-        })
+        }).catch((err) => console.error(err));
         axios.get(`${SERVER_URL}/users/info`, CONFIG).then((res) => {
-            console.log(res.data.data);
             setName(res.data.data.name);
             setBirthDate(res.data.data.birth.replace(/\-/g, '.'));
             if(res.data.data.gender === "MAN"){
@@ -118,7 +120,7 @@ const ModifyProfileInfo = () => {
             else if(res.data.data.gender === "WOMAN"){
                 setGender("여자");
             }
-        })
+        }).catch((err) => console.error(err));
     };
 
     useEffect(() => {

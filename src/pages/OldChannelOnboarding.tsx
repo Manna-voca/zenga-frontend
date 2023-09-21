@@ -199,7 +199,7 @@ const OldChannelOnboarding = () => {
               flexShrink: "0",
             }}
           >
-            <span>채널이 생성되었어요!</span>
+            <span>채널에 입장했어요!</span>
           </div>
           <div style={{ height: "114px" }}></div>
           <Player

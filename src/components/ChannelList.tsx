@@ -1,8 +1,6 @@
 import React from "react";
-import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as PlusImg } from "../images/plus.svg";
-import channelprofileImg from "../images/channelprofile.png";
 
 // 나중에 필요한 요소 더 추가할 예정
 interface Props {

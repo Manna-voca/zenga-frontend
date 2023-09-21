@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import ProfileUpper from "../components/ProfileUpper";
-import defaultChannelProfile from '../images/defaultchannelprofile.png';
 import ProfileAlbum from "../components/ProfileAlbum";
 import ProfileZenga from "../components/ProfileZenga";
 import Navbar from "../components/Navbar";
@@ -40,13 +39,12 @@ const Memberpage = () => {
 
     const getMemberpageInfo = async () => {
         await axios.get(`${SERVER_URL}/members/${memberId}`, CONFIG).then((res) => {
-            console.log(res.data.data);
             setMemberpageInfo({
                 intro: res.data.data.introduction,
                 name: res.data.data.name,
                 img: res.data.data.profileImageUrl
             });
-        })
+        }).catch((err) => console.error(err));
     };
 
     useEffect(() => {

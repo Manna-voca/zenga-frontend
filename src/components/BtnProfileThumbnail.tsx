@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CircularImage from "./CircularImage";
-import { userInfo } from "os";
 
 interface Props {
     userImg: string;

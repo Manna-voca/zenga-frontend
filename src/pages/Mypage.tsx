@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import defaultChannelProfile from '../images/defaultchannelprofile.png';
 import ProfileUpper from "../components/ProfileUpper";
 import Navbar from "../components/Navbar";
 import ProfileAlbum from "../components/ProfileAlbum";
@@ -59,7 +58,7 @@ const Mypage = () => {
                 name: res.data.data.name,
                 img: res.data.data.profileImageUrl
             });
-        })
+        }).catch((err) => console.error(err));
     };
 
     useEffect(() => {

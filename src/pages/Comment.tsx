@@ -23,7 +23,6 @@ const CONFIG = {
     Authorization: "Bearer " + localStorage.getItem("accessToken"),
   },
 };
-const CHANNEL_ID = localStorage.getItem("channelId");
 
 interface CommentData {
   id: string;
@@ -153,6 +152,7 @@ const CommentCreator = ({
   const divRef = useRef<HTMLDivElement>(null);
   const { meetupId } = useParams();
   const [myImage, setMyImage] = useState<string>("");
+  const CHANNEL_ID = localStorage.getItem("channelId");
 
   const getMyImage = async () => {
     try {
@@ -356,6 +356,7 @@ const CommentCreator = ({
 };
 
 const Comment = () => {
+  const CHANNEL_ID = localStorage.getItem("channelId");
   // 댓글 데이터
   const [comments, setComments] = useState<CommentData[]>([]);
   // 댓글 수정 시 이전 내용
