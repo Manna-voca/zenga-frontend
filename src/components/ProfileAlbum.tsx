@@ -1,7 +1,10 @@
+/** @jsxImportSource @emotion/react */
+import { keyframes } from "@emotion/react";
+import { color } from "../styles/color";
+import styled from "@emotion/styled";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styled from "@emotion/styled";
 import whaleImg from '../images/whalealbum.png';
 import axios from "axios";
 
@@ -21,12 +24,22 @@ const ProfileAlbum = ({who, memberId}: Props) => {
       },
     };
 
-    const [albumList, setAlbumList] = useState<Array<any>>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [albumList, setAlbumList] = useState<Array<any>>();
 
     const getAlbumInfo = async () => {
-        await axios.get(`${SERVER_URL}/album/list?memberId=${memberId}`, CONFIG).then((res) => {
-            setAlbumList(res.data.data.albumList);
-        }).catch((err) => console.error(err));
+        if(loading) return;
+        try{
+            setLoading(true);
+            await axios.get(`${SERVER_URL}/album/list?memberId=${memberId}`, CONFIG).then((res) => {
+                setAlbumList(res.data.data.albumList);
+            });
+        } catch(err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -35,7 +48,17 @@ const ProfileAlbum = ({who, memberId}: Props) => {
 
     return(
         <>
-            {albumList.length === 0 ? (
+            {loading && (
+                <div
+                    style={{ position: "absolute", bottom: "calc((100% - 271px) / 2)", left: "50%",
+                            transform: "translate(-50%, -50%)", display: "flex",
+                            justifyContent: "center", alignItems: "center",
+                            zIndex: "20",
+                }}>
+                    <LoadingSpinner />
+                </div>
+            )}
+            {albumList !== undefined && albumList.length === 0 ? (
                 <>
                     <div style={{ height: '110px' }}></div>
                     <div
@@ -85,7 +108,7 @@ const ProfileAlbum = ({who, memberId}: Props) => {
                     <div
                         style={{ display: 'flex', flexWrap: 'wrap'
                     }}>
-                        {albumList.map((item, index) => {
+                        {albumList?.map((item, index) => {
                             return <CardContainer
                                         onClick={() => navigate(`/${channelCode}/album/${memberId}?who=${who}&index=${index}`)}
                                         style={{ backgroundImage: `url(${item.imageUrl})`, cursor: 'pointer'}}
@@ -106,4 +129,18 @@ const CardContainer = styled.div`
     background: gray;
     background-position: 50% 50%;
     background-size: cover;
+`;
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+const LoadingSpinner = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 3px solid ${color.surface};
+  border-top-color: ${color.primary300};
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
 `;
