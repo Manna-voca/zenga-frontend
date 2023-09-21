@@ -325,10 +325,10 @@ const MeetupDetail = () => {
                         color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
             }}>
                 <div
-                    style={{ display: 'flex', gap: '20px'
+                    style={{ display: 'flex', gap: '20px', alignItems: "center"
                 }}>
                     <div
-                        style={{ display: 'flex', gap: '8px'
+                        style={{ display: 'flex', gap: '8px', alignItems: "center"
                     }}>
                         <ClockImg width={18} height={18} fillOpacity={0.7}/>
                         <div
@@ -346,10 +346,10 @@ const MeetupDetail = () => {
                     </div>
                 </div>
                 <div
-                    style={{ display: 'flex', gap: '20px'
+                    style={{ display: 'flex', gap: '20px', alignItems: "center"
                 }}>
                     <div
-                        style={{ display: 'flex', gap: '8px'
+                        style={{ display: 'flex', gap: '8px', alignItems: "center"
                     }}>
                         <LocationImg width={18} height={18} fillOpacity={0.7}/>
                         <div
@@ -394,10 +394,10 @@ const MeetupDetail = () => {
             }}>
                 <div
                     style={{ display: 'flex', gap: '20px',
-                            color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
+                            color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))', alignItems: "center"
                 }}>
                     <div
-                        style={{ display: 'flex', gap: '8px'
+                        style={{ display: 'flex', gap: '8px', alignItems: "center"
                     }}>
                         <PeopleImg width={18} height={18} fillOpacity={0.7}/>
                         <div
@@ -460,10 +460,10 @@ const MeetupDetail = () => {
             }}>
                 <div
                     style={{ display: 'flex', gap: '20px',
-                            color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))'
+                            color: 'var(--on-surface-default, rgba(10, 10, 10, 0.70))', alignItems: "center"
                 }}>
                     <div
-                        style={{ display: 'flex', gap: '8px'
+                        style={{ display: 'flex', gap: '8px', alignItems: "center"
                     }}>
                         <CommentImg/>
                         <div
