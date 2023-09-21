@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { Player } from "@lottiefiles/react-lottie-player";
 import CheckLottie from "../lotties/channelCreateCompleteLottie.json";
 import Header from '../components/Header';
 import InputText from '../components/InputText';
@@ -102,20 +102,73 @@ const NewChannelOnboarding = () => {
             setPreventPopstate(true);
         }
         if(step === 2){
-            if(channelImageFile !== null){
-                const channelImgFormData = new FormData();
-                channelImgFormData.append('image', channelImageFile);
-                const uploadChannelImgResponse = await axios.post(`${SERVER_URL}/image/upload`, channelImgFormData, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-                        'Content-Type': 'multipart/form-data'
+            try{
+                if(channelImageFile !== null){
+                    const channelImgFormData = new FormData();
+                    channelImgFormData.append('image', channelImageFile);
+                    const uploadChannelImgResponse = await axios.post(`${SERVER_URL}/image/upload`, channelImgFormData, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    if(uploadChannelImgResponse.status === 200){
+                        const channelFormData = new FormData();
+                        channelFormData.append('name', clubname);
+                        channelFormData.append('logoImageUrl', uploadChannelImgResponse.data.data.url);
+                        const channelDataResponse = await axios.post(`${SERVER_URL}/channels`, {name: clubname, logoImageUrl: uploadChannelImgResponse.data.data.url}, CONFIG);
+                        if(channelDataResponse.status === 200){
+                            if(adminImageFile !== null){
+                                const adminImgFormData = new FormData();
+                                adminImgFormData.append('image', adminImageFile);
+                                const uploadAdminImgResponse = await axios.post(`${SERVER_URL}/image/upload`, adminImgFormData, {
+                                    headers: {
+                                        'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                                        'Content-Type': 'multipart/form-data'
+                                    }
+                                });
+                                if(uploadAdminImgResponse.status === 200){
+                                    const adminFormData = new FormData();
+                                    adminFormData.append('channelId', channelDataResponse.data.data.id);
+                                    adminFormData.append('profileImageUrl', uploadAdminImgResponse.data.data.url);
+                                    adminFormData.append('nickname', nickname);
+                                    adminFormData.append('introduction', intro);
+                                    adminFormData.append('level', 'MAINTAINER');
+                                    const adminDataResponse = await axios.post(`${SERVER_URL}/members`, adminFormData, CONFIG);
+                                    if(adminDataResponse.status === 200){
+                                        setCode(channelDataResponse.data.data.code);
+                                        setMemberId(adminDataResponse.data.data.id);
+                                        setStep((current) => (current) + 1);
+                                        setPreventPopstate(false);
+                                    }
+                                }
+    
+                            }
+                            else{
+                                // 참여자 이미지 없을 때
+                                const adminFormData = new FormData();
+                                adminFormData.append('channelId', channelDataResponse.data.data.id);
+                                adminFormData.append('profileImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+                                adminFormData.append('nickname', nickname);
+                                adminFormData.append('introduction', intro);
+                                adminFormData.append('level', 'MAINTAINER');
+                                const adminDataResponse = await axios.post(`${SERVER_URL}/members`, adminFormData, CONFIG);
+                                if(adminDataResponse.status === 200){
+                                    setCode(channelDataResponse.data.data.code);
+                                    setMemberId(adminDataResponse.data.data.id);
+                                    setStep((current) => (current) + 1);
+                                    setPreventPopstate(false);
+                                }
+                            }
+                        }
                     }
-                });
-                if(uploadChannelImgResponse.status === 200){
+                }
+                else{
+                    // 채널 이미지 없을 때
                     const channelFormData = new FormData();
                     channelFormData.append('name', clubname);
-                    channelFormData.append('logoImageUrl', uploadChannelImgResponse.data.data.url);
-                    const channelDataResponse = await axios.post(`${SERVER_URL}/channels`, {name: clubname, logoImageUrl: uploadChannelImgResponse.data.data.url}, CONFIG);
+                    channelFormData.append('logoImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
+                    const channelDataResponse = await axios.post(`${SERVER_URL}/channels`, channelFormData, CONFIG);
                     if(channelDataResponse.status === 200){
                         if(adminImageFile !== null){
                             const adminImgFormData = new FormData();
@@ -141,7 +194,7 @@ const NewChannelOnboarding = () => {
                                     setPreventPopstate(false);
                                 }
                             }
-
+    
                         }
                         else{
                             // 참여자 이미지 없을 때
@@ -161,57 +214,8 @@ const NewChannelOnboarding = () => {
                         }
                     }
                 }
-            }
-            else{
-                // 채널 이미지 없을 때
-                const channelFormData = new FormData();
-                channelFormData.append('name', clubname);
-                channelFormData.append('logoImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
-                const channelDataResponse = await axios.post(`${SERVER_URL}/channels`, channelFormData, CONFIG);
-                if(channelDataResponse.status === 200){
-                    if(adminImageFile !== null){
-                        const adminImgFormData = new FormData();
-                        adminImgFormData.append('image', adminImageFile);
-                        const uploadAdminImgResponse = await axios.post(`${SERVER_URL}/image/upload`, adminImgFormData, {
-                            headers: {
-                                'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        });
-                        if(uploadAdminImgResponse.status === 200){
-                            const adminFormData = new FormData();
-                            adminFormData.append('channelId', channelDataResponse.data.data.id);
-                            adminFormData.append('profileImageUrl', uploadAdminImgResponse.data.data.url);
-                            adminFormData.append('nickname', nickname);
-                            adminFormData.append('introduction', intro);
-                            adminFormData.append('level', 'MAINTAINER');
-                            const adminDataResponse = await axios.post(`${SERVER_URL}/members`, adminFormData, CONFIG);
-                            if(adminDataResponse.status === 200){
-                                setCode(channelDataResponse.data.data.code);
-                                setMemberId(adminDataResponse.data.data.id);
-                                setStep((current) => (current) + 1);
-                                setPreventPopstate(false);
-                            }
-                        }
-
-                    }
-                    else{
-                        // 참여자 이미지 없을 때
-                        const adminFormData = new FormData();
-                        adminFormData.append('channelId', channelDataResponse.data.data.id);
-                        adminFormData.append('profileImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
-                        adminFormData.append('nickname', nickname);
-                        adminFormData.append('introduction', intro);
-                        adminFormData.append('level', 'MAINTAINER');
-                        const adminDataResponse = await axios.post(`${SERVER_URL}/members`, adminFormData, CONFIG);
-                        if(adminDataResponse.status === 200){
-                            setCode(channelDataResponse.data.data.code);
-                            setMemberId(adminDataResponse.data.data.id);
-                            setStep((current) => (current) + 1);
-                            setPreventPopstate(false);
-                        }
-                    }
-                }
+            } catch (err) {
+                console.error(err);
             }
         }
     }, 1000);

@@ -37,34 +37,38 @@ const ModifyChannelInfo = () => {
         setShowChannelDeletePopup(false);
         await axios.delete(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
             navigate('/channel-home');
-        });
+        }).catch((err) => console.error(err));
     };
 
     const handleChannelModifyBtnClick = async () => {
-        if(channelImageFile !== null){
-            const channelImgFormData = new FormData();
-            channelImgFormData.append('image', channelImageFile);
-            const uploadChannelImgResponse = await axios.post(`${SERVER_URL}/image/upload`, channelImgFormData, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-                    'Content-Type': 'multipart/form-data'
+        try{
+            if(channelImageFile !== null){
+                const channelImgFormData = new FormData();
+                channelImgFormData.append('image', channelImageFile);
+                const uploadChannelImgResponse = await axios.post(`${SERVER_URL}/image/upload`, channelImgFormData, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                if(uploadChannelImgResponse.status === 200){
+                    axios.put(`${SERVER_URL}/channels/${CHANNEL_ID}`, {
+                        "name": clubname,
+                        "logoImageUrl": uploadChannelImgResponse.data.data.url
+                    }, CONFIG).then((res) => {
+                        window.location.reload();
+                    });
                 }
-            });
-            if(uploadChannelImgResponse.status === 200){
+            }
+            else{
                 axios.put(`${SERVER_URL}/channels/${CHANNEL_ID}`, {
                     "name": clubname,
-                    "logoImageUrl": uploadChannelImgResponse.data.data.url
                 }, CONFIG).then((res) => {
                     window.location.reload();
                 });
             }
-        }
-        else{
-            axios.put(`${SERVER_URL}/channels/${CHANNEL_ID}`, {
-                "name": clubname,
-            }, CONFIG).then((res) => {
-                window.location.reload();
-            });
+        } catch(err){
+            console.error(err);
         }
     };
 
@@ -86,13 +90,12 @@ const ModifyChannelInfo = () => {
 
     const getChannelInfo = () => {
         axios.get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
-            console.log(res.data.data);
             setChannelProfileImage(res.data.data.logoImageUrl);
             setClubname(res.data.data.name);
             if(!res.data.data.isOwner){
-                window.alert("잘못된 접근입니다");
+                navigate('/error-404', {replace: true});
             }
-        })
+        }).catch((err) => console.error(err));
     };
 
     useEffect(() => {

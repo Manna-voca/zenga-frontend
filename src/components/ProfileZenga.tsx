@@ -1,3 +1,7 @@
+/** @jsxImportSource @emotion/react */
+import { keyframes } from "@emotion/react";
+import { color } from "../styles/color";
+import styled from "@emotion/styled";
 import React from "react";
 import { useState, useEffect } from "react";
 import BlockNumber from "./BlockNumber";
@@ -66,46 +70,53 @@ const ProfileZenga = () => {
 
     const [blockList, setBlockList] = useState<Array<any>>([]);
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     const handleBlockListClick = () => {
         setHelpboxState(true);
     };
 
     const getBlockInfo = async () => {
-        await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/blocks`, CONFIG).then((res) => {
-            console.log(res.data.data);
-            const blockData = res.data.data;
-            let blockArray = [0, 0, 0, 0, 0, 0, 0];
-            for(let i = 0; i < blockData.blockCountResponseDtoList.length; i++){
-                if(blockData.blockCountResponseDtoList[i].blockType === "PINK"){
-                    blockArray[0] = blockData.blockCountResponseDtoList[i].count;
+        if(loading) return;
+        try{
+            setLoading(true);
+            await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/blocks`, CONFIG).then((res) => {
+                const blockData = res.data.data;
+                if(blockData.blockInfoResponseDtoList.length === 0){
+                    setIsBlock0(true);
                 }
-                else if(blockData.blockCountResponseDtoList[i].blockType === "ORANGE"){
-                    blockArray[1] = blockData.blockCountResponseDtoList[i].count;
+                let blockArray = [0, 0, 0, 0, 0, 0, 0];
+                for(let i = 0; i < blockData.blockCountResponseDtoList.length; i++){
+                    if(blockData.blockCountResponseDtoList[i].blockType === "PINK"){
+                        blockArray[0] = blockData.blockCountResponseDtoList[i].count;
+                    }
+                    else if(blockData.blockCountResponseDtoList[i].blockType === "ORANGE"){
+                        blockArray[1] = blockData.blockCountResponseDtoList[i].count;
+                    }
+                    else if(blockData.blockCountResponseDtoList[i].blockType === "SKY_BLUE"){
+                        blockArray[2] = blockData.blockCountResponseDtoList[i].count;
+                    }
+                    else if(blockData.blockCountResponseDtoList[i].blockType === "LIGHT_GREEN"){
+                        blockArray[3] = blockData.blockCountResponseDtoList[i].count;
+                    }
+                    else if(blockData.blockCountResponseDtoList[i].blockType === "YELLOW"){
+                        blockArray[4] = blockData.blockCountResponseDtoList[i].count;
+                    }
+                    else if(blockData.blockCountResponseDtoList[i].blockType === "PURPLE"){
+                        blockArray[5] = blockData.blockCountResponseDtoList[i].count;
+                    }
+                    else if(blockData.blockCountResponseDtoList[i].blockType === "LIGHT_BROWN"){
+                        blockArray[6] = blockData.blockCountResponseDtoList[i].count;
+                    }
                 }
-                else if(blockData.blockCountResponseDtoList[i].blockType === "SKY_BLUE"){
-                    blockArray[2] = blockData.blockCountResponseDtoList[i].count;
-                }
-                else if(blockData.blockCountResponseDtoList[i].blockType === "LIGHT_GREEN"){
-                    blockArray[3] = blockData.blockCountResponseDtoList[i].count;
-                }
-                else if(blockData.blockCountResponseDtoList[i].blockType === "YELLOW"){
-                    blockArray[4] = blockData.blockCountResponseDtoList[i].count;
-                }
-                else if(blockData.blockCountResponseDtoList[i].blockType === "PURPLE"){
-                    blockArray[5] = blockData.blockCountResponseDtoList[i].count;
-                }
-                else if(blockData.blockCountResponseDtoList[i].blockType === "LIGHT_BROWN"){
-                    blockArray[6] = blockData.blockCountResponseDtoList[i].count;
-                }
-            }
-            setBlockNum(blockArray);
-            setBlockList(blockData.blockInfoResponseDtoList);
-            if(blockData.blockInfoResponseDtoList.length === 0){
-                setIsBlock0(true);
-            }
-        }).catch((err) => {
+                setBlockNum(blockArray);
+                setBlockList(blockData.blockInfoResponseDtoList);
+            })
+        } catch (err) {
             console.error(err);
-        });
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -133,6 +144,16 @@ const ProfileZenga = () => {
                 <BlockNumber type="Default" number={blockNum[6]}></BlockNumber>
             </div>
             <div style={{ height: '50px' }}></div>
+            {loading && (
+                <div
+                    style={{ position: "absolute", bottom: "calc((100% - 271px) / 2)", left: "50%",
+                            transform: "translate(-50%, -50%)", display: "flex",
+                            justifyContent: "center", alignItems: "center",
+                            zIndex: "20",
+                }}>
+                    <LoadingSpinner />
+                </div>
+            )}
             {isBlock0 ? (
                 <>
                     <div
@@ -275,3 +296,18 @@ const ProfileZenga = () => {
 }
 
 export default ProfileZenga;
+
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+const LoadingSpinner = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 3px solid ${color.surface};
+  border-top-color: ${color.primary300};
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+`;

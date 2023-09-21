@@ -1,3 +1,7 @@
+/** @jsxImportSource @emotion/react */
+import { keyframes } from "@emotion/react";
+import { color } from "../styles/color";
+import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as ArrowImg } from "../images/arrow.svg";
@@ -16,6 +20,8 @@ const ProfileMeetup = () => {
         'Content-Type':'application/json'
       },
     };
+    
+    const [loading, setLoading] = useState<boolean>(false);
 
     const [recruitingList, setRecruitingList] = useState<Array<any>>([]);
     const [inProgressList, setInProgressList] = useState<Array<any>>([]);
@@ -27,25 +33,33 @@ const ProfileMeetup = () => {
     };
 
     const getMeetupInfo = async () => {
-        await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/parties/all`, CONFIG).then((res) => {
-            let rList = [];
-            let iList = [];
-            let cList = [];
-            for(let i = 0; i < res.data.data.length; i++){
-                if(res.data.data[i].state === "RECRUITING"){
-                    rList.push(res.data.data[i]);
+        if(loading) return;
+        try{
+            setLoading(true);
+            await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/parties/all`, CONFIG).then((res) => {
+                let rList = [];
+                let iList = [];
+                let cList = [];
+                for(let i = 0; i < res.data.data.length; i++){
+                    if(res.data.data[i].state === "RECRUITING"){
+                        rList.push(res.data.data[i]);
+                    }
+                    else if(res.data.data[i].state === "IN_PROGRESS"){
+                        iList.push(res.data.data[i]);
+                    }
+                    else{
+                        cList.push(res.data.data[i]);
+                    }
                 }
-                else if(res.data.data[i].state === "IN_PROGRESS"){
-                    iList.push(res.data.data[i]);
-                }
-                else{
-                    cList.push(res.data.data[i]);
-                }
-            }
-            setRecruitingList(rList);
-            setInProgressList(iList);
-            setCompletedList(cList);
-        })
+                setRecruitingList(rList);
+                setInProgressList(iList);
+                setCompletedList(cList);
+            })
+        } catch(err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -82,9 +96,9 @@ const ProfileMeetup = () => {
                                     color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
                                     fontSize: '16px', fontStyle: 'normal',
                                     fontWeight: '400', lineHeight: '150%',
-                                    textAlign: 'center'
+                                    textAlign: 'center', whiteSpace: 'pre-line'
                         }}>
-                            참여 중인<br></br>모임이 없어요
+                            {loading ? <LoadingSpinner /> : "참여 중인\n모임이 없어요"}
                         </div>
                         <div style={{ height: '94px' }}></div>
                     </>
@@ -137,9 +151,9 @@ const ProfileMeetup = () => {
                                     color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
                                     fontSize: '16px', fontStyle: 'normal',
                                     fontWeight: '400', lineHeight: '150%',
-                                    textAlign: 'center'
+                                    textAlign: 'center', whiteSpace: 'pre-line'
                         }}>
-                            참여 중인<br></br>모임이 없어요
+                            {loading ? <LoadingSpinner /> : "참여 중인\n모임이 없어요"}
                         </div>
                         <div style={{ height: '94px' }}></div>
                     </>
@@ -192,9 +206,9 @@ const ProfileMeetup = () => {
                                     color: 'var(--on-surface-muted, rgba(10, 10, 10, 0.45))',
                                     fontSize: '16px', fontStyle: 'normal',
                                     fontWeight: '400', lineHeight: '150%',
-                                    textAlign: 'center'
+                                    textAlign: 'center', whiteSpace: 'pre-line'
                         }}>
-                            참여한<br></br>모임이 없어요
+                            {loading ? <LoadingSpinner /> : "참여한\n모임이 없어요"}
                         </div>
                         <div style={{ height: '94px' }}></div>
                     </>
@@ -229,3 +243,18 @@ const ProfileMeetup = () => {
 }
 
 export default ProfileMeetup;
+
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+const LoadingSpinner = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 3px solid ${color.surface};
+  border-top-color: ${color.primary300};
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+`;

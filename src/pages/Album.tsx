@@ -135,7 +135,7 @@ const Album = () => {
                 event.initEvent('click', true, true);
                 a.dispatchEvent(event);
             } else {
-                a.click();
+                alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다');
             }
         }
     };
@@ -145,7 +145,6 @@ const Album = () => {
 
     const getAlbumInfo = async () => {
         await axios.get(`${SERVER_URL}/album/list?memberId=${memberId}`, CONFIG).then((res) => {
-            console.log(res.data.data);
             setAlbumList(res.data.data.albumList);
         }).catch((err) => console.error(err));
     };

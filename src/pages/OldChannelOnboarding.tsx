@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { Player } from "@lottiefiles/react-lottie-player";
 import CheckLottie from "../lotties/channelCreateCompleteLottie.json";
 import Header from "../components/Header";
 import InputText from "../components/InputText";
@@ -75,9 +75,9 @@ const OldChannelOnboarding = () => {
           setChannelId(res1.data.data.id);
           setStep((current) => current + 1);
           setPreventPopstate(true);
-        })
+        }).catch((err) => console.error(err));
       }).catch((err) => {
-        console.log(err);
+        console.error(err);
         if(err.response.status === 404){
           setErrorState(true);
         }
@@ -95,7 +95,6 @@ const OldChannelOnboarding = () => {
           }
         });
         if(uploadUserImgResponse.status === 200){
-          console.log(uploadUserImgResponse.data.data);
           const userFormData = new FormData();
           userFormData.append('channelId', channelId);
           userFormData.append('profileImageUrl', uploadUserImgResponse.data.data.url);
@@ -103,10 +102,9 @@ const OldChannelOnboarding = () => {
           userFormData.append('introduction', intro);
           userFormData.append('level', "NORMAL");
           axios.post(`${SERVER_URL}/members`, userFormData, CONFIG).then((res) => {
-            console.log(res);
             localStorage.setItem("memberId", res.data.data.id);
             setStep((current) => current + 1);
-          }).catch((err) => console.log(err));
+          }).catch((err) => console.error(err));
         }
       }
       else{
@@ -118,10 +116,9 @@ const OldChannelOnboarding = () => {
         userFormData.append('introduction', intro);
         userFormData.append('level', "NORMAL");
         axios.post(`${SERVER_URL}/members`, userFormData, CONFIG).then((res) => {
-          console.log(res);
           localStorage.setItem("memberId", res.data.data.id);
           setStep((current) => current + 1);
-        }).catch((err) => console.log(err));
+        }).catch((err) => console.error(err));
       }
     }
   };

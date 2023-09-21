@@ -39,6 +39,7 @@ interface ChannelInfoProps{
 const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, shareFunc}: Props) => {
     const navigate = useNavigate();
     const { channelCode } = useParams();
+    const MEMBER_ID = localStorage.getItem("memberId");
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
       headers: {
@@ -49,16 +50,13 @@ const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, share
 
     const [sidebarState, setSidebarState] = useState<number>(0);
     const [channelInfo, setChannelInfo] = useState<ChannelInfoProps | null>(null);
+    const [noticeInfo, setNoticeInfo] = useState<boolean>(false);
 
     useEffect(() => {
         if(type === "common"){
             getChannelInfo();
         }
     }, []);
-
-    if(type === "common") {
-      // 알림있는지확인하는api();
-    }
 
     if(
         (type === "common" && isChannelAdmin === undefined) ||
@@ -100,14 +98,19 @@ const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, share
     };
 
     const getChannelInfo  = async () => {
-      try{
-        await axios.get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG).then((res) => {
-            const CHANNEL_ID = res.data.data.id;
-            axios.get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
-                setChannelInfo(res.data.data);
+        try{
+            await axios.get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG).then((res) => {
+                const CHANNEL_ID = res.data.data.id;
+                axios.get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
+                    setChannelInfo(res.data.data);
+                });
             });
-        });} catch(err){
-          console.log(err);
+            axios.get(`${SERVER_URL}/notification/member/${MEMBER_ID}/has-unchecked`, CONFIG).then((res) => {
+                setNoticeInfo(res.data.data.hasUncheckedNotification);
+            })
+    
+        } catch(err){
+            console.error(err);
         }
     };
 
@@ -175,7 +178,9 @@ const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, share
                                 <FrameImg onClick={() => navigate(`/${channelCode}/modify-channel-info`)} style={{ cursor: 'pointer' }}/>
                             </>
                          ) : (
-                            <NoticeImg onClick={()=>navigate(`/${channelCode}/notification`)} style={{ cursor: 'pointer' }}/>
+                            <div onClick={()=>navigate(`/${channelCode}/notification`)} style={{ cursor: 'pointer' }}>
+                                <NoticeImg visibility={noticeInfo ? "visible" : "hidden"} />
+                            </div>
                         )}
                         
                     </div>

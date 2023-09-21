@@ -33,27 +33,30 @@ const CreateCard = () => {
     const [meetupData, setMeetupData] = useState<any>();
 
     const handleCardMakingBtnClick = async () => {
-        if(cardImageFile !== null){
-            const cardImgFormData = new FormData();
-            cardImgFormData.append('image', cardImageFile);
-            const uploadCardImgResponse = await axios.post(`${SERVER_URL}/image/upload`, cardImgFormData, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-                    'Content-Type': 'multipart/form-data'
+        try{
+            if(cardImageFile !== null){
+                const cardImgFormData = new FormData();
+                cardImgFormData.append('image', cardImageFile);
+                const uploadCardImgResponse = await axios.post(`${SERVER_URL}/image/upload`, cardImgFormData, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                if(uploadCardImgResponse.status === 200){
+                    setCardImage(uploadCardImgResponse.data.data.url);
+                    axios.patch(`${SERVER_URL}/party/finish`, {
+                        "channelId": CHANNEL_ID,
+                        "partyId": meetupId,
+                        "partyCardImageUrl": uploadCardImgResponse.data.data.url
+                    }, CONFIG).then((res) => {
+                        setMeetupData(res.data.data);
+                        setCardState(true);
+                    })
                 }
-            });
-            if(uploadCardImgResponse.status === 200){
-                setCardImage(uploadCardImgResponse.data.data.url);
-                axios.patch(`${SERVER_URL}/party/finish`, {
-                    "channelId": CHANNEL_ID,
-                    "partyId": meetupId,
-                    "partyCardImageUrl": uploadCardImgResponse.data.data.url
-                }, CONFIG).then((res) => {
-                    console.log(res.data.data);
-                    setMeetupData(res.data.data);
-                    setCardState(true);
-                })
             }
+        } catch(err){
+            console.error(err);
         }
     };
 
@@ -214,7 +217,7 @@ const CreateCard = () => {
                 event.initEvent('click', true, true);
                 a.dispatchEvent(event);
             } else {
-                a.click();
+                alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다');
             }
         }
     };

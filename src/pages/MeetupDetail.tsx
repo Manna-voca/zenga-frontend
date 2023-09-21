@@ -60,7 +60,7 @@ const MeetupDetail = () => {
         await axios.delete(`${SERVER_URL}/party/cancel?channelId=${CHANNEL_ID}&partyId=${meetupId}`, CONFIG).then((res) => {
             setShowDeletePopup(false);
             navigate(-1);
-        })
+        }).catch((err) => console.error(err));
     };
 
     const handleMeetupParticipateBtnClick = async () => {
@@ -70,7 +70,7 @@ const MeetupDetail = () => {
         }, CONFIG).then((res) => {
             setButtonState(2);
             setShowMeetupPopup(false);
-        })
+        }).catch((err) => console.error(err));
     };
 
     const handleMeetupCancelBtnClick = async () => {
@@ -87,7 +87,7 @@ const MeetupDetail = () => {
         }, CONFIG).then((res) => {
             setButtonState(6);
             setShowMeetupCompletePopup(false);
-        })
+        }).catch((err) => console.error(err));
     };
 
     const handleButtonClick = () => {
@@ -107,6 +107,8 @@ const MeetupDetail = () => {
 
     const buttonData = ["", "모임 참여하기", "모임 참여 취소하기", "모임 진행 중", "모임 완료", "모집 완료", "카드 만들기"];
 
+    const [sharePopup, setSharePopup] = useState(false);
+
     const handleShareButtonClick = () => {
         if(navigator.share !== undefined){
             navigator.share({
@@ -115,14 +117,14 @@ const MeetupDetail = () => {
                 url: `${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}`,
             }).catch((error) => {
                 if(!error.toString().includes('Share canceled')){
-                    alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`);
+                    setSharePopup(true);
                 }
             });
         }
         else if(navigator.clipboard){
             navigator.clipboard.writeText(`${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`).then(() => {
                 alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
-            }).catch((error) => alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`));
+            }).catch((error) => setSharePopup(true));
         }
         else{
             const textArea = document.createElement('textarea');
@@ -133,7 +135,7 @@ const MeetupDetail = () => {
             try{
                 document.execCommand('copy');
             } catch (err) {
-                alert(`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}}`);
+                setSharePopup(true);
             }
             textArea.setSelectionRange(0, 0);
             document.body.removeChild(textArea);
@@ -214,7 +216,7 @@ const MeetupDetail = () => {
             if(`${meetupData.openMemberId}` === localStorage.getItem('memberId')){
                 setIsMeetupMaker(true);
             }
-        }).catch((err) => console.log(err));
+        }).catch((err) => console.error(err));
     }, [buttonState])
 
     const handleAdminImgClick = () => {
@@ -627,6 +629,14 @@ const MeetupDetail = () => {
                     rightBtnText="확인"
                     leftFunc={() => setShowMeetupCompletePopup(false)}
                     rightFunc={() => handleMeetupCompleteBtnClick()}
+                />
+            }
+            {sharePopup &&
+                <Popup1
+                    title="공유하기 실패"
+                    text={`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.origin}/${channelCode}/meetup-home?meetupId=${meetupId}`}
+                    btnText="닫기"
+                    func={() => setSharePopup(false)}
                 />
             }
         </>
