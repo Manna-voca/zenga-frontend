@@ -33,6 +33,7 @@ interface CommentData {
   isReply: boolean;
   authorImage: string;
   isChannelAdmin: boolean;
+  writerId: string;
   isMine: boolean;
   parentId: string | null;
 }
@@ -56,7 +57,16 @@ const CommentWrapper = ({
   setCommentId,
   setParentId,
 }: CommentWrapperProps) => {
-  const { meetupId } = useParams();
+  const navigate = useNavigate();
+  const { channelCode } = useParams();
+  const navigateHandler = () => {
+    if (Number(comment.writerId) === Number(localStorage.getItem("memberId"))) {
+      navigate(`/${channelCode}/mypage`);
+    } else {
+      navigate(`/${channelCode}/memberpage/${comment.writerId}`);
+    }
+  };
+
   return (
     <div
       style={{
@@ -67,11 +77,13 @@ const CommentWrapper = ({
         backgroundColor: comment.isReply ? `${color.surface}` : "",
       }}
     >
-      <CircularImage
-        image={comment.authorImage}
-        size={"36"}
-        isChannelAdmin={comment.isChannelAdmin ? true : undefined}
-      />
+      <div style={{ cursor: "pointer" }} onClick={navigateHandler}>
+        <CircularImage
+          image={comment.authorImage}
+          size={"36"}
+          isChannelAdmin={comment.isChannelAdmin ? true : undefined}
+        />
+      </div>
       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
         <span
           style={{
@@ -82,10 +94,12 @@ const CommentWrapper = ({
           {comment.createdBefore}
         </span>
         <span
+          onClick={navigateHandler}
           style={{
             ...typography.body2Medium,
             color: `${color.onSurfaceDefault}`,
             margin: "2px 0 1px 0",
+            cursor: "pointer",
           }}
         >
           {comment.author}
@@ -435,6 +449,7 @@ const Comment = () => {
             isReply: res.data.data.content[i].parentId !== null,
             authorImage: res.data.data.content[i].writerProfileImageUrl,
             isChannelAdmin: false,
+            writerId: res.data.data.content[i].writerId,
             isMine:
               res.data.data.content[i].writerId ===
               Number(localStorage.getItem("memberId")),
@@ -459,6 +474,7 @@ const Comment = () => {
                   res.data.data.content[i].childComments[j]
                     .writerProfileImageUrl,
                 isChannelAdmin: false,
+                writerId: res.data.data.content[i].childComments[j].writerId,
                 isMine:
                   res.data.data.content[i].childComments[j].writerId ===
                   Number(localStorage.getItem("memberId")),

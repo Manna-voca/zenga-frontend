@@ -14,6 +14,7 @@ import { ReactComponent as PointsImg } from "../images/points.svg";
 import Sidebar from "./Sidebar";
 import CircularImage from "./CircularImage";
 import axios from "axios";
+import { color } from "../styles/color";
 
 // 타입: 뒤로가기, 기본(동아리명, 알림), 모임 만들기, 모임 상세
 //       알림, 참여한 멤버, 댓글, 모임 수정, 카드 만들기
@@ -50,7 +51,7 @@ const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, share
 
     const [sidebarState, setSidebarState] = useState<number>(0);
     const [channelInfo, setChannelInfo] = useState<ChannelInfoProps | null>(null);
-    const [noticeInfo, setNoticeInfo] = useState<boolean>(false);
+    const [noticeInfo, setNoticeInfo] = useState<boolean|null>(null);
 
     useEffect(() => {
         if(type === "common"){
@@ -174,12 +175,18 @@ const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, share
                     }}>
                         {channelInfo !== null && channelInfo.isOwner ? (
                             <>
-                                <NoticeImg onClick={()=>navigate(`/${channelCode}/notification`)} style={{ cursor: 'pointer' }}/>
+                              <div onClick={()=>navigate(`/${channelCode}/notification`)} style={{ cursor: 'pointer', position: "relative" }}>
+                                <NoticeImg />
+                                <div style={{ display: noticeInfo ? "block" : "none", position: "absolute", width: "7px", height: "7px", borderRadius: "50%", 
+                                  backgroundColor: `${color.primary500}`, top: "1px", right: "2px"  }} />
+                              </div>
                                 <FrameImg onClick={() => navigate(`/${channelCode}/modify-channel-info`)} style={{ cursor: 'pointer' }}/>
                             </>
                          ) : (
-                            <div onClick={()=>navigate(`/${channelCode}/notification`)} style={{ cursor: 'pointer' }}>
-                                <NoticeImg visibility={noticeInfo ? "visible" : "hidden"} />
+                            <div onClick={()=>navigate(`/${channelCode}/notification`)} style={{ cursor: 'pointer', position: "relative" }}>
+                                <NoticeImg />
+                                <div style={{ display: noticeInfo ? "block" : "none", position: "absolute", width: "7px", height: "7px", borderRadius: "50%", 
+                                  backgroundColor: `${color.primary500}`, top: "1px", right: "2px"  }} />
                             </div>
                         )}
                         

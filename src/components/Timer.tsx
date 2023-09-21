@@ -88,10 +88,8 @@ const Timer: React.FC = () => {
             color: `${color.onSurfaceActive}`,
           }}
         >
-          새로 고침하면
-          <br />{" "}
           <span>
-            <b>새로운 칭찬</b>을 볼 수 있어요!
+            <b>새로운 칭찬</b>이 도착했어요!
           </span>
           <div
             onClick={() => {
