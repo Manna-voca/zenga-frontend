@@ -159,7 +159,7 @@ const Mypage = () => {
             ) : (
                 textState === "젠가" ? (
                     <>
-                        <ProfileZenga></ProfileZenga>
+                        <ProfileZenga memberId={localStorage.getItem("memberId")}></ProfileZenga>
                     </>
                 ) : (
                     <>

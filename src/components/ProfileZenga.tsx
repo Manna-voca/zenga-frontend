@@ -24,6 +24,10 @@ interface ExplainProps{
     text: string;
 }
 
+interface ZengaProps {
+    memberId: string | null | undefined;
+}
+
 const ExplainWrapper = ({type, title, text}: ExplainProps) => {
     return(
         <div style={{ height: '36px' }}>
@@ -52,8 +56,8 @@ const ExplainWrapper = ({type, title, text}: ExplainProps) => {
     );
 }
 
-const ProfileZenga = () => {
-    const MEMBER_ID = localStorage.getItem("memberId");
+const ProfileZenga = ({memberId}: ZengaProps) => {
+    // const MEMBER_ID = localStorage.getItem("memberId");
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
       headers: {
@@ -80,7 +84,7 @@ const ProfileZenga = () => {
         if(loading) return;
         try{
             setLoading(true);
-            await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/blocks`, CONFIG).then((res) => {
+            await axios.get(`${SERVER_URL}/members/${memberId}/blocks`, CONFIG).then((res) => {
                 const blockData = res.data.data;
                 if(blockData.blockInfoResponseDtoList.length === 0){
                     setIsBlock0(true);
