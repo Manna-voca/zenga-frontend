@@ -10,6 +10,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Popup1 from "../components/Popup1";
 
 const CreateCard = () => {
     const navigate = useNavigate();
@@ -31,6 +32,7 @@ const CreateCard = () => {
     const [cardState, setCardState] = useState<boolean>(false);
     const [memberState, setMemberState] = useState<boolean>(false);
     const [meetupData, setMeetupData] = useState<any>();
+    const [popupState, setPopupState] = useState<boolean>(false);
 
     const handleCardMakingBtnClick = async () => {
         try{
@@ -152,8 +154,8 @@ const CreateCard = () => {
         image.crossOrigin = 'Anonymous';
 
         image.onload = () => {
-            const canvasWidth = window.innerWidth - 40 > 460 ? 460 : window.innerWidth - 40;
-            const canvasHeight = 535;
+            const canvasWidth = window.innerWidth - 40 > 460 ? 460 * 2 : (window.innerWidth - 40) * 2;
+            const canvasHeight = 535 * 2;
 
             // 이미지 그리기
             const aspectRatio = canvasWidth / canvasHeight;
@@ -175,7 +177,7 @@ const CreateCard = () => {
             canvas.height = canvasHeight;
 
             // 이미지를 그릴 때 border-radius를 적용하여 원 모양으로 자릅니다.
-            const borderRadius = 10;
+            const borderRadius = 20;
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(borderRadius, 0);
@@ -194,11 +196,11 @@ const CreateCard = () => {
             ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight, 0, 0, canvasWidth, canvasHeight);
 
             // 텍스트 스타일 설정
-            ctx.font = '14px normal Pretendard';
+            ctx.font = '28px normal Pretendard';
             ctx.fillStyle = '#FCFCFC';
 
             // 텍스트 추가
-            ctx.fillText(now.format('YYYY.MM.DD'), 20, 34);
+            ctx.fillText(now.format('YYYY.MM.DD'), 40, 68);
 
             ctx.restore(); // clip 상태를 해제하여 다음 그림을 영향받지 않게 합니다.
 
@@ -206,19 +208,26 @@ const CreateCard = () => {
             // 캔버스의 이미지 데이터를 가져옴
             const imageDataUrl = canvas.toDataURL('image/png');
 
-            // a 태그 이용해서 이미지 다운로드
-            const a = document.createElement('a');
-            a.href = imageDataUrl;
-            a.download = 'zengaAlbum.png';
-            
-            // 다운로드를 시도합니다.
-            if (document.createEvent) {
-                const event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                a.dispatchEvent(event);
-            } else {
-                alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다');
-            }
+
+
+            fetch(imageDataUrl, {method: 'GET'})
+            .then((response) => response.blob())
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'zengaAlbum.png');
+
+                document.body.appendChild(link);
+
+                link.click();
+
+                link.parentNode?.removeChild(link);
+                window.URL.revokeObjectURL(url);
+
+                setPopupState(true);
+            }).catch((err) => alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다'));
         }
     };
 
@@ -260,6 +269,15 @@ const CreateCard = () => {
                                     onClick={handleConfirmBtnClick}
                                     disable={false}
                                 ></ButtonBasic>
+                                <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                                {popupState && (
+                                    <Popup1
+                                        title="저장 완료"
+                                        text={"카드에 있는 텍스트는 제외하고\n모임 날짜만 함께 저장했어요"}
+                                        btnText="확인"
+                                        func={() => setPopupState(false)}
+                                    />
+                                )}
                             </>
                         ) : (
                             <>

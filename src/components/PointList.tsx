@@ -10,13 +10,13 @@ const PointList = ({point, date, text}: Props) => {
     return(
         <>
             <div
-                style={{ height: '62px', display: 'flex',
+                style={{ display: 'flex',
                         alignItems: 'flex-start', justifyContent: 'center',
                         borderBottom: '1px solid var(--surface-outline, rgba(10, 10, 10, 0.10))',
-                        padding: '0 20px 0 20px'
+                        padding: '0 20px 20px 20px'
             }}>
                 <div
-                    style={{ width: '100%', height: '43px',
+                    style={{ width: '100%',
                             display: 'flex', flexDirection: 'column',
                             gap: '2px',
                 }}>
@@ -29,18 +29,18 @@ const PointList = ({point, date, text}: Props) => {
                         {date}
                     </div>
                     <div
-                        style={{ height: '21px', display: 'flex',
+                        style={{ display: 'flex', alignItems: 'center',
                                 justifyContent: 'space-between',
                                 color: 'var(--on-surface-active, #0A0A0A)',
                                 fontSize: '14px', fontStyle: 'normal',
-                                fontWeight: '600', lineHeight: '150%'
+                                fontWeight: '600', lineHeight: '150%', gap: '10px'
                     }}>
-                        <div>
+                        <div style={{ whiteSpace: 'pre-line', wordBreak: 'break-all' }}>
                             {text}
                         </div>
                         <div
                             style={{ display: 'flex', justifyContent: 'flex-end',
-                                    gap: '8px'
+                                    gap: '8px', whiteSpace: 'pre'
                         }}>
                             <div style={{ fontWeight: '400' }}>
                                 {point}
