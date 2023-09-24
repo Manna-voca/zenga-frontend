@@ -102,7 +102,7 @@ export default function Notification() {
           {},
           CONFIG
         )
-        .then((res) => console.log(res));
+        .then();
     } catch (error) {
       console.log(error);
     }
@@ -110,9 +110,8 @@ export default function Notification() {
 
   useEffect(() => {
     fetchNotifications();
-    return () => {
-      readAllNotifications();
-    };
+    
+    readAllNotifications();
   }, []);
 
   return (
