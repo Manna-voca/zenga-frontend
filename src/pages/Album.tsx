@@ -15,6 +15,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Popup1 from "../components/Popup1";
 
 
 const Album = () => {
@@ -41,6 +42,8 @@ const Album = () => {
 
     const [preventPopState, setPreventPopstate] = useState<boolean>(false);
 
+    const [popupState, setPopupState] = useState<boolean>(false);
+
     useEffect(() => {
         if(preventPopState){
             window.history.pushState(null, "", "");
@@ -56,7 +59,7 @@ const Album = () => {
         setMemberState(true);
     };
 
-    const handleDownloadImgClick = () => {
+    const handleDownloadImgClick = async () => {
         const canvas = canvasRef.current;
         if(!canvas) return;
 
@@ -68,8 +71,8 @@ const Album = () => {
         image.crossOrigin = 'Anonymous';
 
         image.onload = () => {
-            const canvasWidth = window.innerWidth - 40 > 460 ? 460 : window.innerWidth - 40;
-            const canvasHeight = 535;
+            const canvasWidth = window.innerWidth - 40 > 460 ? 460 * 2 : (window.innerWidth - 40) * 2;
+            const canvasHeight = 535 * 2;
 
             // 이미지 그리기
             const aspectRatio = canvasWidth / canvasHeight;
@@ -92,7 +95,7 @@ const Album = () => {
 
             
             // 이미지를 그릴 때 border-radius를 적용하여 원 모양으로 자릅니다.
-            const borderRadius = 10;
+            const borderRadius = 20;
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(borderRadius, 0);
@@ -111,32 +114,53 @@ const Album = () => {
             ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight, 0, 0, canvasWidth, canvasHeight);
 
             // 텍스트 스타일 설정
-            ctx.font = '14px normal Pretendard';
+            ctx.font = '28px normal Pretendard';
             ctx.fillStyle = '#FCFCFC';
 
             // 텍스트 추가
             const createdAt = dayjs(albumList[initialNum].albumCreatedDate);
             const formattedCreatedAt = createdAt.format('YYYY.MM.DD');
-            ctx.fillText(formattedCreatedAt, 20, 34);
+            ctx.fillText(formattedCreatedAt, 40, 68);
 
             ctx.restore(); // clip 상태를 해제하여 다음 그림을 영향받지 않게 합니다.
 
             // 캔버스의 이미지 데이터를 가져옴
             const imageDataUrl = canvas.toDataURL('image/png');
 
-            // a 태그 이용해서 이미지 다운로드
-            const a = document.createElement('a');
-            a.href = imageDataUrl;
-            a.download = 'zengaAlbum.png';
+
+
+            fetch(imageDataUrl, {method: 'GET'})
+            .then((response) => response.blob())
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'zengaAlbum.png');
+
+                document.body.appendChild(link);
+
+                link.click();
+
+                link.parentNode?.removeChild(link);
+                window.URL.revokeObjectURL(url);
+
+                setPopupState(true);
+            }).catch((err) => alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다'));
+
+            // // a 태그 이용해서 이미지 다운로드
+            // const a = document.createElement('a');
+            // a.href = imageDataUrl;
+            // a.download = 'zengaAlbum.png';
             
-            // 다운로드를 시도합니다.
-            if (document.createEvent) {
-                const event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                a.dispatchEvent(event);
-            } else {
-                alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다');
-            }
+            // // 다운로드를 시도합니다.
+            // if (document.createEvent) {
+            //     const event = document.createEvent('MouseEvents');
+            //     event.initEvent('click', true, true);
+            //     a.dispatchEvent(event);
+            // } else {
+            //     alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다');
+            // }
         }
     };
 
@@ -185,7 +209,7 @@ const Album = () => {
                         initialSlide={initialNum}
                         observer={true}
                         observeParents={true}
-                        onSlideChange={(e) => {setInitialNum(e.activeIndex); window.history.replaceState({}, '', `?who=${who}&index=${e.activeIndex}`); }}
+                        onSlideChange={(e) => {setInitialNum(e.activeIndex); window.history.replaceState({}, '', `${window.location.origin}${window.location.pathname}?who=${who}&index=${e.activeIndex}`); }}
                     >
                         {albumList.map((item, index) => {
                             const createdAt = dayjs(item.albumCreatedDate);
@@ -204,6 +228,14 @@ const Album = () => {
                         })}
                     </Swiper>
                     <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                    {popupState && (
+                        <Popup1
+                            title="저장 완료"
+                            text={"카드에 있는 텍스트는 제외하고\n모임 날짜만 함께 저장했어요"}
+                            btnText="확인"
+                            func={() => setPopupState(false)}
+                        />
+                    )}
                 </>
             )}
         </>

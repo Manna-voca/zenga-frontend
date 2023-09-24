@@ -46,7 +46,7 @@ const MyMeetup = () => {
 
     const handleMeetupStateBtnClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         setMeetupState(event.currentTarget.id);
-        window.history.replaceState({}, '', `?state=${event.currentTarget.id}`);
+        window.history.replaceState({}, '', `${window.location.origin}${window.location.pathname}?state=${event.currentTarget.id}`);
     };
 
 

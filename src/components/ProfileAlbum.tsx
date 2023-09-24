@@ -110,7 +110,7 @@ const ProfileAlbum = ({who, memberId}: Props) => {
                     }}>
                         {albumList?.map((item, index) => {
                             return <CardContainer
-                                        onClick={() => navigate(`/${channelCode}/album/${memberId}?who=${who}&index=${index}`)}
+                                        onClick={() => navigate(`/${channelCode}/album/${memberId}/?who=${who}&index=${index}`)}
                                         style={{ backgroundImage: `url(${item.imageUrl})`, cursor: 'pointer'}}
                                     />
                         })}
