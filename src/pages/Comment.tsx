@@ -433,7 +433,7 @@ const Comment = () => {
   const fetchComments = async () => {
     try {
       const res = await axios.get(
-        `${SERVER_URL}/comment/${meetupId}?size=100`,
+        `${SERVER_URL}/comment/${meetupId}?size=100&channelId=${CHANNEL_ID}`,
         CONFIG
       );
       console.log(res.data);
