@@ -186,8 +186,8 @@ const ProfileZenga = ({memberId}: ZengaProps) => {
                 <>
                     <div
                         style={{ margin: '0 20px 0 20px', display: 'flex',
-                                flexWrap: 'wrap', justifyContent: 'flex-start',
-                                rowGap: '5px', columnGap: '5px', alignItems: 'flex-end'
+                                flexWrap: 'wrap-reverse', justifyContent: 'flex-end',
+                                rowGap: '5px', columnGap: '5px'
                     }}>
                         {blockList.map((item, index) => {
                             let blockImg = defaultblockImg;
