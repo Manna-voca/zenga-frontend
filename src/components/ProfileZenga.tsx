@@ -186,7 +186,7 @@ const ProfileZenga = ({memberId}: ZengaProps) => {
                 <>
                     <div
                         style={{ margin: '0 20px 0 20px', display: 'flex',
-                                flexWrap: 'wrap-reverse', justifyContent: 'flex-end',
+                                flexWrap: 'wrap-reverse', justifyContent: 'flex-start',
                                 rowGap: '5px', columnGap: '5px'
                     }}>
                         {blockList.map((item, index) => {
