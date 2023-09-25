@@ -68,11 +68,10 @@ const Album = () => {
 
         const image = new Image();
         image.src = albumList[initialNum].imageUrl + "?timestamp=" + (new Date().getTime());
-        image.crossOrigin = 'Anonymous';
+        //image.crossOrigin = 'Anonymous';
 
         try{
             image.onload = () => {
-                setPopupState(true);
                 const canvasWidth = window.innerWidth - 40 > 460 ? 460 * 2 : (window.innerWidth - 40) * 2;
                 const canvasHeight = 535 * 2;
     
@@ -135,6 +134,8 @@ const Album = () => {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+
+                setPopupState(true);
             }
         } catch(err) {
             alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다');
