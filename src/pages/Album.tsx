@@ -149,7 +149,7 @@ const Album = () => {
             // }).catch((err) => alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다'));
 
             // a 태그 이용해서 이미지 다운로드
-            const link = document.createElement('a');
+            var link = document.createElement('a');
             link.href = imageDataUrl;
             link.download = `zenga_${dayjs().format('YYMMDDHHmmss')}`;
             
