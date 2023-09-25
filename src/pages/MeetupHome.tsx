@@ -76,17 +76,39 @@ const MeetupHome = () => {
         }
     }
 
+    const confirmChannelUser = async () => {
+        try{
+            const res1 = await axios.get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG);
+            const res2 = await axios.get(`${SERVER_URL}/channels`, CONFIG);
+
+            for (let i = 0; i < res2.data.data.length; i++) {
+                if (res2.data.data[i].id === res1.data.data.id) {
+                    localStorage.setItem("memberId", res2.data.data[i].memberId);
+                    localStorage.setItem("channelId", res1.data.data.id);
+                    window.history.replaceState({}, '', `${window.location.origin}${window.location.pathname}`);
+                    navigate(`/${channelCode}/meetup-detail/${meetupId}`);
+                    return;
+                }
+            }
+            
+            alert("해당 채널의 멤버가 아니라 접근이 불가합니다");
+            navigate("/", {replace: true});
+        } catch(err) {
+            console.error(err);
+        }
+    }
+
     useEffect(() => {
         if(meetupId !== null){
-            window.history.replaceState({}, '', `${window.location.origin}${window.location.pathname}`);
-            navigate(`/${channelCode}/meetup-detail/${meetupId}`);
+            confirmChannelUser();
         }
-
-        axios.get(`${SERVER_URL}/channels/${localStorage.getItem("channelId")}/validity`, CONFIG).then((res) => {
-            setIsLess10(!res.data.data.isValid);
-        }).catch((err) => console.error(err));
-
-        getMeetupInfo();
+        else{
+            axios.get(`${SERVER_URL}/channels/${localStorage.getItem("channelId")}/validity`, CONFIG).then((res) => {
+                setIsLess10(!res.data.data.isValid);
+            }).catch((err) => console.error(err));
+    
+            getMeetupInfo();
+        }
 
         const handleResize = () => setWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);

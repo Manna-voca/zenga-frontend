@@ -57,7 +57,6 @@ const ExplainWrapper = ({type, title, text}: ExplainProps) => {
 }
 
 const ProfileZenga = ({memberId}: ZengaProps) => {
-    // const MEMBER_ID = localStorage.getItem("memberId");
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     const CONFIG = {
       headers: {

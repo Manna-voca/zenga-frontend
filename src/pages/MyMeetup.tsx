@@ -3,19 +3,12 @@ import { keyframes } from "@emotion/react";
 import { color } from "../styles/color";
 import styled from "@emotion/styled";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import GatheringList from "../components/GatheringList";
 import axios from "axios";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
-
-interface meetupInfoProps{
-    content: Array<any>;
-    hasNext: boolean;
-    page: number;
-    size: number;
-}
 
 const MyMeetup = () => {
     const location = useLocation();
@@ -30,11 +23,26 @@ const MyMeetup = () => {
       },
     };
 
+    const containerRef = useRef<HTMLDivElement>(null);
+
     const [loading, setLoading] = useState<boolean>(false);
     const [loadState, setLoadState] = useState<boolean>(false);
 
     const [meetupState, setMeetupState] = useState<string|null>(initState);
-    const [meetupInfo, setMeetupInfo] = useState<meetupInfoProps|null>(null);
+
+    const [reMeetupList, setReMeetupList] = useState<Array<any>>([]);
+    const [cursorReMeetupId, setCursorReMeetupId] = useState<number>();
+    const [hasNextRe, setHasNextRe] = useState<boolean>(true);
+
+    const [inMeetupList, setInMeetupList] = useState<Array<any>>([]);
+    const [cursorInMeetupId, setCursorInMeetupId] = useState<number>();
+    const [hasNextIn, setHasNextIn] = useState<boolean>(true);
+    
+    const [coMeetupList, setCoMeetupList] = useState<Array<any>>([]);
+    const [cursorCoMeetupId, setCursorCoMeetupId] = useState<number>();
+    const [hasNextCo, setHasNextCo] = useState<boolean>(true);
+
+    const meetupList = [, reMeetupList, inMeetupList, coMeetupList];
 
     const handleMeetupStateBtnClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         setMeetupState(event.currentTarget.id);
@@ -44,29 +52,68 @@ const MyMeetup = () => {
 
     const getMeetupList = async () => {
         let state = "COMPLETED";
+        let cursor = cursorCoMeetupId;
+        let hasNext = hasNextCo;
         if(meetupState === "1"){
             state = "RECRUITING";
+            cursor = cursorReMeetupId;
+            hasNext = hasNextRe;
         }
         else if(meetupState === "2"){
             state = "IN_PROGRESS";
+            cursor = cursorInMeetupId;
+            hasNext = hasNextIn;
         }
         if(loading) return;
         try{
             const uri = `${SERVER_URL}/members/${MEMBER_ID}/parties?state=${state}` +
-                    
+                    (cursor ? `&cursor=${cursor}` : "") + "&size=15";
+            if(hasNext === false) return;
             setLoading(true);
             setLoadState(false);
-            await axios.get(`${SERVER_URL}/members/${MEMBER_ID}/parties?state=${state}`, CONFIG).then((res) => {
-                setMeetupInfo(res.data.data);
-            })
+            await axios.get(`${uri}`, CONFIG).then((res) => {
+                const newList = res.data.data.content;
+                const newHasNext = res.data.data.hasNext;
+                const newCursorId = newList[newList.length - 1].partyId;
+                if(meetupState === "1"){
+                    setReMeetupList((prev) => [...prev, ...newList]);
+                    if(newHasNext === false){
+                        setHasNextRe(false);
+                    }
+                    setCursorReMeetupId(Number(newCursorId));
+                }
+                else if(meetupState === "2"){
+                    setInMeetupList((prev) => [...prev, ...newList]);
+                    if(newHasNext === false){
+                        setHasNextIn(false);
+                    }
+                    setCursorInMeetupId(Number(newCursorId));
+                }
+                else{
+                    setCoMeetupList((prev) => [...prev, ...newList]);
+                    if(newHasNext === false){
+                        setHasNextCo(false);
+                    }
+                    setCursorCoMeetupId(Number(newCursorId));
+                }
+            });
         } catch(err) {
             console.error(err);
         } finally {
             setLoading(false);
             setLoadState(true);
         }
-        
     };
+
+    const handleScroll = () => {
+        if(
+            containerRef.current &&
+            containerRef.current.scrollHeight - containerRef.current.scrollTop <=
+                containerRef.current.clientHeight + 1
+        ) {
+            getMeetupList();
+        }
+    }
 
     useEffect(() => {
         getMeetupList();
@@ -139,7 +186,7 @@ const MyMeetup = () => {
                     </div>
                 )}
                 {loadState && (
-                    meetupInfo?.content.length === 0 ? (
+                    meetupList[Number(meetupState)]?.length === 0 ? (
                         <>
                             <div style={{ height: '100px' }}></div>
                             <div
@@ -167,21 +214,29 @@ const MyMeetup = () => {
                         </>
                     ) : (
                         <>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                {meetupInfo?.content.map((item, index) => {
+                            <div
+                                ref={containerRef}
+                                onScroll={handleScroll}
+                                style={{ display: 'flex', flexDirection: 'column', gap: '8px',
+                                        height: 'calc(100vh - 110px)', maxHeight: 'calc(100vh - 110px)',
+                                        overflowY: 'scroll', position: 'relative'
+                            }}>
+                                {meetupList[Number(meetupState)]?.map((item, index) => {
                                     return(
-                                        <GatheringList
-                                            key={item.partyId}
-                                            meetupId={item.partyId}
-                                            title={item.title}
-                                            image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
-                                            date={item.partyDate}
-                                            location={item.location}
-                                            userImg={item.openMemberProfileImageUrl}
-                                            userName={item.openMemberName}
-                                            currentNum={item.joinMemberCount}
-                                            maxNum={item.maxCapacity}
-                                        ></GatheringList>
+                                        <div>
+                                            <GatheringList
+                                                key={item.partyId}
+                                                meetupId={item.partyId}
+                                                title={item.title}
+                                                image={item.partyImageUrl === "" ? undefined : item.partyImageUrl}
+                                                date={item.partyDate}
+                                                location={item.location}
+                                                userImg={item.openMemberProfileImageUrl}
+                                                userName={item.openMemberName}
+                                                currentNum={item.joinMemberCount}
+                                                maxNum={item.maxCapacity}
+                                            ></GatheringList>
+                                        </div>
                                     );
                                 })}
                             </div>

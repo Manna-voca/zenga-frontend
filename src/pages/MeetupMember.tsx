@@ -22,17 +22,20 @@ const MeetupMember = ({state, albumId}:Props) => {
     const [memberList, setMemberList] = useState<Array<any>>([]);
 
     const fetchMemberList = async () => {
-        const membersResponse = await axios.get(`${SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, CONFIG);
-        if(membersResponse.status === 200){
-            setMemberList(membersResponse.data.data.joinMemberInfo);
+        try{
+            const membersResponse = await axios.get(`${SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem('channelId')}`, CONFIG);
+            if(membersResponse.status === 200){
+                setMemberList(membersResponse.data.data.joinMemberInfo);
+            }
+        } catch(err) {
+            console.error(err);
         }
     };
 
     const getMemberList = async () => {
         await axios.get(`${SERVER_URL}/album/paticipation/${albumId}/with`, CONFIG).then((res) => {
-            console.log(res.data.data);
             setMemberList(res.data.data.participationList);
-        })
+        }).catch((err) => console.error(err));
     };
 
     useEffect(() => {

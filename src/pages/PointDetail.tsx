@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from "react";
+/** @jsxImportSource @emotion/react */
+import { keyframes } from "@emotion/react";
+import { color } from "../styles/color";
+import styled from "@emotion/styled";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import { ReactComponent as PointsImg } from "../images/points.svg";
 import PointList from "../components/PointList";
@@ -18,20 +22,52 @@ const PointDetail = () => {
       },
     };
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     const [totalPoint, setTotalPoint] = useState<number>();
     const [pointList, setPointList] = useState<Array<any>>([]);
+
+    const [hasNext, setHasNext] = useState<boolean>(true);
+    const [pointId, setPointId] = useState<number>();
+
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const getTotalPoint = async () => {
         await axios.get(`${SERVER_URL}/point/total`, CONFIG).then((res) => {
             setTotalPoint(res.data.data.point);
-        })
+        }).catch((err) => console.error(err));
     };
 
     const getPointInfo = async () => {
-        await axios.get(`${SERVER_URL}/point/info`, CONFIG).then((res) => {
-            setPointList(res.data.data.content);
-        })
+        if(loading) return;
+        try{
+            const uri = `${SERVER_URL}/point/info` +
+                        (pointId ? `?pointId=${pointId}&size=15` : "?size=15");
+            if(hasNext === false) return;
+            setLoading(true);
+            await axios.get(`${uri}`, CONFIG).then((res) => {
+                setPointList((prev) => [...prev, ...res.data.data.content]);
+                if(res.data.data.hasNext === false){
+                    setHasNext(false);
+                }
+                setPointId(Number(res.data.data.content[res.data.data.content.length-1].pointId));
+            })
+        } catch(err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    const handleScroll = () => {
+        if(
+            containerRef.current &&
+            containerRef.current.scrollHeight - containerRef.current.scrollTop <=
+                containerRef.current.clientHeight + 1
+        ) {
+            getPointInfo();
+        }
+    }
 
     useEffect(() => {
         getTotalPoint();
@@ -83,23 +119,56 @@ const PointDetail = () => {
                 포인트 상세정보
             </div>
             <div style={{ height: '24px' }}></div>
-            {pointList.map((item, index) => {
-                const createdAt = dayjs(item.createdAt);
-                const formattedCreatedAt = createdAt.format('YY.MM.DD');
-                return(
-                    <>
-                        <PointList
-                            key={index}
-                            point={item.point}
-                            date={formattedCreatedAt}
-                            text={item.description}
-                        ></PointList>
-                        <div style={{ height: '12px' }}></div>
-                    </>
-                );
-            })}
+            {loading && (
+                <div
+                    style={{ position: "absolute", bottom: "calc((100% - 200px) / 2)", left: "50%",
+                            transform: "translate(-50%, -50%)", display: "flex",
+                            justifyContent: "center", alignItems: "center",
+                            zIndex: "20",
+                }}>
+                    <LoadingSpinner />
+                </div>
+            )}
+            <div
+                ref={containerRef}
+                onScroll={handleScroll}
+                style={{ display: 'flex', flexDirection: 'column',
+                        height: 'calc(100vh - 205px)', maxHeight: 'calc(100vh - 205px)',
+                        overflowY: 'scroll', position: 'relative', gap: '12px'
+            }}>
+                {pointList.map((item, index) => {
+                    const createdAt = dayjs(item.createdAt);
+                    const formattedCreatedAt = createdAt.format('YY.MM.DD');
+                    return(
+                        <div>
+                            
+                            <PointList
+                                key={index}
+                                point={item.point}
+                                date={formattedCreatedAt}
+                                text={item.description}
+                            ></PointList>
+                        </div>
+                    );
+                })}
+            </div>
         </>
     );
 }
 
 export default PointDetail;
+
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+const LoadingSpinner = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 3px solid ${color.surface};
+  border-top-color: ${color.primary300};
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+`;
