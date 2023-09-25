@@ -93,7 +93,8 @@ const Album = () => {
     
                 canvas.width = canvasWidth;
                 canvas.height = canvasHeight;
-    
+
+                setPopupState(true);
                 
                 // 이미지를 그릴 때 border-radius를 적용하여 원 모양으로 자릅니다.
                 const borderRadius = 20;
@@ -109,10 +110,7 @@ const Album = () => {
                 ctx.lineTo(0, borderRadius);
                 ctx.quadraticCurveTo(0, 0, borderRadius, 0);
                 ctx.closePath();
-                ctx.clip();
-
-                setPopupState(true);
-    
+                ctx.clip();    
                 
                 ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight, 0, 0, canvasWidth, canvasHeight);
     
