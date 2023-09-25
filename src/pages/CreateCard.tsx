@@ -209,25 +209,16 @@ const CreateCard = () => {
             const imageDataUrl = canvas.toDataURL('image/png');
 
 
+            // a 태그 이용해서 이미지 다운로드
+            const link = document.createElement('a');
+            link.href = imageDataUrl;
+            link.download = `zenga_${dayjs().format('YYMMDDHHmmss')}`;
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-            fetch(imageDataUrl, {method: 'GET'})
-            .then((response) => response.blob())
-            .then((blob) => {
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-
-                link.setAttribute('href', url);
-                link.setAttribute('download', 'zengaAlbum.png');
-
-                document.body.appendChild(link);
-
-                link.click();
-
-                link.parentNode?.removeChild(link);
-                window.URL.revokeObjectURL(url);
-
-                setPopupState(true);
-            }).catch((err) => alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다'));
+            setPopupState(true);
         }
     };
 
