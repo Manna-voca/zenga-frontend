@@ -129,38 +129,35 @@ const Album = () => {
 
 
 
-            fetch(imageDataUrl, {method: 'GET'})
-            .then((response) => response.blob())
-            .then((blob) => {
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
+            // fetch(imageDataUrl, {method: 'GET'})
+            // .then((response) => response.blob())
+            // .then((blob) => {
+            //     const url = window.URL.createObjectURL(blob);
+            //     const link = document.createElement('a');
 
-                link.setAttribute('href', url);
-                link.setAttribute('download', 'zengaAlbum.png');
+            //     link.setAttribute('href', url);
+            //     link.setAttribute('download', 'zengaAlbum.png');
 
-                document.body.appendChild(link);
+            //     document.body.appendChild(link);
 
-                link.click();
+            //     link.click();
 
-                link.parentNode?.removeChild(link);
-                window.URL.revokeObjectURL(url);
+            //     link.parentNode?.removeChild(link);
+            //     window.URL.revokeObjectURL(url);
 
-                setPopupState(true);
-            }).catch((err) => alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다'));
+            //     setPopupState(true);
+            // }).catch((err) => alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다'));
 
-            // // a 태그 이용해서 이미지 다운로드
-            // const a = document.createElement('a');
-            // a.href = imageDataUrl;
-            // a.download = 'zengaAlbum.png';
+            // a 태그 이용해서 이미지 다운로드
+            const link = document.createElement('a');
+            link.href = imageDataUrl;
+            link.download = `zenga_${dayjs().format('YYMMDDHHmmss')}`;
             
-            // // 다운로드를 시도합니다.
-            // if (document.createEvent) {
-            //     const event = document.createEvent('MouseEvents');
-            //     event.initEvent('click', true, true);
-            //     a.dispatchEvent(event);
-            // } else {
-            //     alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다');
-            // }
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setPopupState(true);
         }
     };
 

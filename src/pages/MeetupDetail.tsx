@@ -122,13 +122,13 @@ const MeetupDetail = () => {
             });
         }
         else if(navigator.clipboard){
-            navigator.clipboard.writeText(`${window.location.origin}/${channelCode}/meetup-home/?meetupId=${meetupId}}`).then(() => {
+            navigator.clipboard.writeText(`${window.location.origin}/${channelCode}/meetup-home/?meetupId=${meetupId}`).then(() => {
                 alert('공유가 불가하여 클립보드에 링크가 복사되었습니다');
             }).catch((error) => setSharePopup(true));
         }
         else{
             const textArea = document.createElement('textarea');
-            textArea.value = `${window.location.origin}/${channelCode}/meetup-home/?meetupId=${meetupId}}`;
+            textArea.value = `${window.location.origin}/${channelCode}/meetup-home/?meetupId=${meetupId}`;
             document.body.appendChild(textArea);
             textArea.select();
             textArea.setSelectionRange(0, 99999);
