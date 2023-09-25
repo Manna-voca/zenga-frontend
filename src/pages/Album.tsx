@@ -70,8 +70,6 @@ const Album = () => {
         image.src = albumList[initialNum].imageUrl + "?timestamp=" + (new Date().getTime());
         image.crossOrigin = 'Anonymous';
 
-        setPopupState(true);
-
         try{
             image.onload = () => {
                 const canvasWidth = window.innerWidth - 40 > 460 ? 460 * 2 : (window.innerWidth - 40) * 2;
@@ -83,6 +81,8 @@ const Album = () => {
                 let drawHeight = image.height;
                 let offsetX = 0;
                 let offsetY = 0;
+
+                setPopupState(true);
     
                 if(image.width / image.height > aspectRatio){
                     drawWidth = drawHeight * aspectRatio;
