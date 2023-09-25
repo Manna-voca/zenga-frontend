@@ -150,7 +150,7 @@ const CreateCard = () => {
         const image = new Image();
 
         if(typeof(cardImage) !== 'string') return;
-        image.src = cardImage + "?timestamp=" + (new Date().getTime());;
+        image.src = cardImage + "?timestamp=" + (new Date().getTime());
         image.crossOrigin = 'Anonymous';
 
         try{
