@@ -66,6 +66,8 @@ const Album = () => {
         const ctx = canvas.getContext('2d');
         if(!ctx) return;
 
+        setPopupState(true);
+
         const image = new Image();
         image.src = albumList[initialNum].imageUrl + "?timestamp=" + (new Date().getTime());;
         image.crossOrigin = 'Anonymous';
@@ -93,8 +95,6 @@ const Album = () => {
     
                 canvas.width = canvasWidth;
                 canvas.height = canvasHeight;
-
-                setPopupState(true);
                 
                 // 이미지를 그릴 때 border-radius를 적용하여 원 모양으로 자릅니다.
                 const borderRadius = 20;
