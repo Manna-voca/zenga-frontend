@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 import React from "react";
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
@@ -16,7 +16,7 @@ import PraiseContainer from "../components/PraiseContainer";
 import Toast from "../components/Toast";
 import { useParams } from "react-router";
 import axios from "axios";
-import TokenRefresh from "../components/TokenRefresh";
+import { spin, LoadingSpinner, Loadingdiv } from "../components/SendPraise";
 
 interface CategoryProps {
   categoryName: string;
@@ -190,7 +190,7 @@ const ChannelCode = ({
 
 const Praise = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
-  const [isChannelActive, setIsChannelActive] = useState<boolean>(true);
+  const [isChannelActive, setIsChannelActive] = useState<boolean | null>(null);
   const [toastState, setToastState] = useState<boolean>(false);
   const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
   const [memberCount, setMemberCount] = useState<number>(0);
@@ -202,6 +202,7 @@ const Praise = () => {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
     },
   };
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [local, setLocal] = useState(() => {
     if (localStorage.getItem("praise")) {
@@ -250,7 +251,10 @@ const Praise = () => {
   };
 
   useEffect(() => {
-    fetchChannelIdAndValidity();
+    fetchChannelIdAndValidity()
+    .then(() => {
+      setIsLoading(false);
+    })
   }, []);
 
   return (
@@ -273,8 +277,12 @@ const Praise = () => {
           onClick={handleCategory3Click}
         />
       </CategoryContainer>
-      {selectedCategory === 1 ? (
-        isChannelActive ? (
+      {isLoading ? 
+      <Loadingdiv>
+        <LoadingSpinner />
+      </Loadingdiv>
+      :selectedCategory === 1 ? (
+        isChannelActive === true ? (
           <SendPraise />
         ) : (
           <>
@@ -303,7 +311,7 @@ const Praise = () => {
         )
       ) : null}
       {selectedCategory === 2 ? (
-        isChannelActive ? (
+        isChannelActive === true ? (
           <PraiseContainer isGetNotPost={true} />
         ) : (
           <div css={inactiveCategoryDivStyle}>
@@ -315,7 +323,7 @@ const Praise = () => {
         )
       ) : null}
       {selectedCategory === 3 ? (
-        isChannelActive ? (
+        isChannelActive === true ? (
           <PraiseContainer isGetNotPost={false} />
         ) : (
           <div css={inactiveCategoryDivStyle}>

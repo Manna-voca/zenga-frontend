@@ -166,7 +166,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
           })
         )}
       </PraiseContainerDiv>
-      {showFirstModal && (
+      {(isGetNotPost && showFirstModal) && (
         <FirstModal
           firstModalNeverShow={firstModalNeverShow}
           setFirstModalNeverShow={setFirstModalNeverShow}
