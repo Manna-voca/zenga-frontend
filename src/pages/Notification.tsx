@@ -25,7 +25,7 @@ const NotificationWrapper = ({
     const month = newDate.getMonth() + 1;
     const date = newDate.getDate();
     const day = daysOfWeek[newDate.getDay()];
-    const hour = String(newDate.getHours() + 1).padStart(2, "0");
+    const hour = String(newDate.getHours()).padStart(2, "0");
     const minute = String(newDate.getMinutes()).padStart(2, "0");
 
     return `${month}월 ${date}일(${day}) ${hour}:${minute}`;
