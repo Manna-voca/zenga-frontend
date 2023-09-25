@@ -68,7 +68,7 @@ const Album = () => {
 
         const image = new Image();
         image.src = albumList[initialNum].imageUrl + "?timestamp=" + (new Date().getTime());
-        //image.crossOrigin = 'Anonymous';
+        image.crossOrigin = 'Anonymous';
 
         try{
             image.onload = () => {
