@@ -110,6 +110,8 @@ const Album = () => {
                 ctx.quadraticCurveTo(0, 0, borderRadius, 0);
                 ctx.closePath();
                 ctx.clip();
+
+                setPopupState(true);
     
                 
                 ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight, 0, 0, canvasWidth, canvasHeight);
@@ -137,7 +139,7 @@ const Album = () => {
                 link.click();
                 document.body.removeChild(link);
 
-                setPopupState(true);
+                
             }
         } catch(err) {
             alert('현재 브라우저에서는 이미지 다운로드가 불가능하여 다른 브라우저에서 이용해 주시길 바랍니다');
