@@ -333,9 +333,12 @@ const SendPraise = () => {
   const end = praiseInfo.shuffleCount ? 8 : 4;
   const [selectedMember, setSelectedMember] = useState<number>(-1);
   const [showPraiseModal, setShowPraiseModal] = useState(false);
-  const [showPraiseNotTimer, setShowPraiseNotTimer] = useState<boolean|null>(null);
-  const [showFirstModal, setShowFirstModal] = useState<boolean|null>(null);
+  const [showPraiseNotTimer, setShowPraiseNotTimer] = useState<boolean | null>(
+    null
+  );
+  const [showFirstModal, setShowFirstModal] = useState<boolean | null>(null);
   const [firstModalNeverShow, setFirstModalNeverShow] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getChannelId = async () => {
     try {
@@ -386,7 +389,8 @@ const SendPraise = () => {
     const checkIdAndFetch = async () => {
       await getChannelId();
       fetchModalInfo();
-      fetchPraiseData();
+      await fetchPraiseData();
+      setIsLoading(false);
     };
     checkIdAndFetch();
     // eslint-disable-next-line
@@ -452,7 +456,45 @@ const SendPraise = () => {
 
   return (
     <>
-      {showPraiseNotTimer ? (
+      {isLoading ? (
+        <Loadingdiv>
+          <LoadingSpinner />
+        </Loadingdiv>
+      ) : showPraiseNotTimer === false ? (
+        <TimerContainer>
+          <WaveWhaleDiv>
+            <img
+              width="65px"
+              style={{ position: "absolute", left: "53px", bottom: "3px" }}
+              src={whaleCharacter4}
+              css={leftWhaleWaveStyle}
+              alt=""
+            />
+            <img
+              width="63px"
+              style={{ position: "absolute", left: "148px", bottom: "8.5px" }}
+              src={whaleCharacter5}
+              css={rightWhaleWaveStyle}
+              alt=""
+            />
+            <img css={waveSvgStyles} src={wave} alt="" />
+          </WaveWhaleDiv>
+
+          <Timer />
+          <span css={helpMessageStyle}>받고 싶은 칭찬이 있다면?</span>
+          <a
+            href="https://forms.gle/dckdnpm441eVWvjp7"
+            target="_blank"
+            rel="noreferrer"
+            css={aTagStyle}
+          >
+            <PraiseAddButton>
+              칭찬 등록
+              <img src={rightArrowIcon} alt="" />
+            </PraiseAddButton>
+          </a>
+        </TimerContainer>
+      ) : (
         <SendPraiseContainer>
           <SendPraiseContent>{praiseInfo.praise}</SendPraiseContent>
           <ShuffleButton
@@ -500,40 +542,6 @@ const SendPraise = () => {
           </PraiseConfirmButton>
           {showPraiseModal && <PraiseModal onClick={modalCloseAndShowTimer} />}
         </SendPraiseContainer>
-      ) : (
-        <TimerContainer>
-          <WaveWhaleDiv>
-            <img
-              width="65px"
-              style={{ position: "absolute", left: "53px", bottom: "3px" }}
-              src={whaleCharacter4}
-              css={leftWhaleWaveStyle}
-              alt=""
-            />
-            <img
-              width="63px"
-              style={{ position: "absolute", left: "148px", bottom: "8.5px" }}
-              src={whaleCharacter5}
-              css={rightWhaleWaveStyle}
-              alt=""
-            />
-            <img css={waveSvgStyles} src={wave} alt="" />
-          </WaveWhaleDiv>
-          
-          <Timer />
-          <span css={helpMessageStyle}>받고 싶은 칭찬이 있다면?</span>
-          <a
-            href="https://forms.gle/dckdnpm441eVWvjp7"
-            target="_blank"
-            rel="noreferrer"
-            css={aTagStyle}
-          >
-            <PraiseAddButton>
-              칭찬 등록
-              <img src={rightArrowIcon} alt="" />
-            </PraiseAddButton>
-          </a>
-        </TimerContainer>
       )}
       {showFirstModal && (
         <FirstModal
@@ -726,4 +734,28 @@ const MySwiperSlide = styled(SwiperSlide)`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+export const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
+export const LoadingSpinner = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 3px solid ${color.surface};
+  border-top-color: ${color.primary300};
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+`;
+export const Loadingdiv = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
 `;
