@@ -72,6 +72,7 @@ const Album = () => {
 
         try{
             image.onload = () => {
+                setPopupState(true);
                 const canvasWidth = window.innerWidth - 40 > 460 ? 460 * 2 : (window.innerWidth - 40) * 2;
                 const canvasHeight = 535 * 2;
     
@@ -81,8 +82,6 @@ const Album = () => {
                 let drawHeight = image.height;
                 let offsetX = 0;
                 let offsetY = 0;
-
-                setPopupState(true);
     
                 if(image.width / image.height > aspectRatio){
                     drawWidth = drawHeight * aspectRatio;
