@@ -40,7 +40,7 @@ export default function ChannelHome() {
   const handleChannelClick = async (item: any) => {
     try {
       localStorage.setItem("memberId", item.memberId);
-      localStorage.setItem("id", item.id);
+      localStorage.setItem("channelId", item.id);
       navigate(`/${item.code}/praise`);
     } catch (error) {
       console.error(error);
