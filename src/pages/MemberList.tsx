@@ -9,7 +9,7 @@ import styled from "@emotion/styled";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
 import MemberWrapper from "../components/MemberWrapper";
-import axios from "axios";
+import axios from "../utils/api";
 import memberNotFoundWhale from "../assets/images/x_whale_character.png";
 
 interface MemberProps {
@@ -21,10 +21,9 @@ interface MemberProps {
 }
 
 export default function MemberList() {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
   };
   const CHANNEL_ID = localStorage.getItem("channelId");
@@ -52,33 +51,33 @@ export default function MemberList() {
   ) => {
     if (loading) return;
     try {
-    const uri =
-      `${SERVER_URL}/channels/${CHANNEL_ID}/members` +
-      (size || cursorId || keyword ? "?" : "") +
-      (size ? `size=${size}` : "") +
-      (cursorId
-        ? size
-          ? `&cursorId=${cursorId}`
-          : `cursorId=${cursorId}`
-        : "") +
-      (cursorName
-        ? size || cursorId
-          ? `&cursorName=${cursorName}`
-          : `cursorName=${cursorName}`
-        : "") +
-      (keyword
-        ? size || cursorId || cursorName
-          ? `&keyword=${keyword}`
-          : `keyword=${keyword}`
-        : "");
-    
+      const uri =
+        `/channels/${CHANNEL_ID}/members` +
+        (size || cursorId || keyword ? "?" : "") +
+        (size ? `size=${size}` : "") +
+        (cursorId
+          ? size
+            ? `&cursorId=${cursorId}`
+            : `cursorId=${cursorId}`
+          : "") +
+        (cursorName
+          ? size || cursorId
+            ? `&cursorName=${cursorName}`
+            : `cursorName=${cursorName}`
+          : "") +
+        (keyword
+          ? size || cursorId || cursorName
+            ? `&keyword=${keyword}`
+            : `keyword=${keyword}`
+          : "");
+
       if (hasMore === false && keyword === "") {
         return;
       }
       setLoading(true);
 
       const membersResponse = await axios.get(`${uri}`, CONFIG);
-      
+
       if (membersResponse.data && membersResponse.status === 200) {
         const newMembers = membersResponse.data.content.map((member: any) => ({
           id: member.id,
@@ -110,14 +109,9 @@ export default function MemberList() {
     }
   };
 
-  
-
   const fetchTotalMemberCount = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/channels/${CHANNEL_ID}/count`,
-        CONFIG
-      );
+      const res = await axios.get(`/channels/${CHANNEL_ID}/count`, CONFIG);
       setTotalMemberCount(res.data.data.count);
       return res.data.data.count as number;
     } catch (error) {
@@ -132,7 +126,7 @@ export default function MemberList() {
   const [cursorId, setCursorId] = useState<number>(0);
   const [cursorName, setCursorName] = useState<string>("");
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const SIZE = 15;
+  const SIZE = 20;
   const [loading, setLoading] = useState<boolean>(false);
   const [searchWord, setSearchWord] = useState<string>("");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -154,8 +148,13 @@ export default function MemberList() {
   };
 
   useEffect(() => {
-    fetchTotalMemberCount();
-    fetchMemberList(cursorId, cursorName, SIZE, "");
+    fetchTotalMemberCount().then(() => {
+      fetchMemberList(cursorId, cursorName, SIZE, "");
+    });
+    document.body.style.overflow = "unset";
+    return () => {
+      document.body.style.overflow = "scroll";
+    };
   }, []);
 
   useEffect(() => {
@@ -203,8 +202,9 @@ export default function MemberList() {
         style={{
           display: "flex",
           flexDirection: "column",
-          height: "calc(100vh - 172px)",
-          maxHeight: "calc(100vh - 172px)",
+          height: "calc(100vh - 169px)",
+          maxHeight: "calc(100vh - 169px)",
+          marginBottom: "57px",
           overflowY: "scroll",
           position: "relative",
         }}
@@ -273,7 +273,6 @@ export default function MemberList() {
           })
         )}
       </div>
-      <div style={{ height: "57px" }}></div>
       <Navbar state={3}></Navbar>
     </>
   );
