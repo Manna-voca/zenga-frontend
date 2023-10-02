@@ -25,8 +25,9 @@ import "swiper/css/pagination";
 import "../styles/sendpraiseSwiper.css";
 import whaleClock from "../assets/images/whale-clock.png";
 import sendPraiseModalImage from "../assets/images/sendPraiseModal.png";
-import axios from "axios";
+import axios from "../utils/api";
 import { useParams, useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/api";
 
 interface MemberProps {
   name: string;
@@ -342,7 +343,7 @@ const SendPraise = () => {
 
   const getChannelId = async () => {
     try {
-      const res = await axios.get(
+      const res = await axiosInstance.get(
         `${SERVER_URL}/channels/info?code=${channelCode}`,
         CONFIG
       );

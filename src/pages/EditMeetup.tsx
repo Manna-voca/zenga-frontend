@@ -15,7 +15,7 @@ import downArrowMutedIcon from "../assets/icons/ic-downArrowMuted.svg";
 import MeetupImageEditor from "../components/MeetupImageEditor";
 import ButtonBasic from "../components/ButtonBasic";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/api";
 
 interface MeetupInfoProps {
   title: string;

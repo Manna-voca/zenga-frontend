@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css, keyframes } from "@emotion/react";
 import { useEffect } from "react";
-import axios from "axios";
+import axios from "../utils/api";
 import { color } from "../styles/color";
 import { useNavigate } from "react-router-dom";
 

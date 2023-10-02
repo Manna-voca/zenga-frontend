@@ -9,7 +9,7 @@ import TextField from "../components/TextField";
 import ButtonBasic from "../components/ButtonBasic";
 import DropDown from "../components/DropDown";
 import DatePicker from "../components/DatePicker";
-import axios from "axios";
+import axios from "../utils/api";
 
 const ModifyProfileInfo = () => {
     const CHANNEL_ID = localStorage.getItem("channelId");

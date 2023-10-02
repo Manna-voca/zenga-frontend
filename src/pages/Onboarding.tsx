@@ -7,7 +7,7 @@ import DatePicker from "../components/DatePicker";
 import ButtonBasic from "../components/ButtonBasic";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import axios from "axios";
+import axios from "../utils/api";
 
 export default function Onboarding() {
   const navigate = useNavigate();

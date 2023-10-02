@@ -3,7 +3,6 @@ import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
 import PraiseWrapper from "./PraiseWrapper";
-import axios from "axios";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
 import whaleCharacter7 from "../assets/images/whale_character7.png";
@@ -20,9 +19,7 @@ import "../styles/sendpraiseSwiper.css";
 import pointIcon from "../images/points.svg";
 import modalImage1 from "../assets/images/receivePraiseModal1.png";
 import modalImage2 from "../assets/images/receivePraiseModal2.png";
-import whaleClock from "../assets/images/whale-clock.png";
-import sendPraiseModalImage from "../assets/images/sendPraiseModal.png";
-import Popup2 from "./Popup2";
+import axiosInstance from "../utils/api";
 
 interface OwnProps {
   isGetNotPost: boolean;
@@ -78,13 +75,13 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
   const fetchPraiseData = async () => {
     try {
       if (isGetNotPost === true) {
-        const res = await axios.get(
+        const res = await axiosInstance.get(
           `${SERVER_URL}/praise/receive?channelId=${CHANNEL_ID}`,
           CONFIG
         );
         setReceivePraiseList(res.data.data.content);
       } else {
-        const res = await axios.get(
+        const res = await axiosInstance.get(
           `${SERVER_URL}/praise/send?channelId=${CHANNEL_ID}`,
           CONFIG
         );
@@ -97,7 +94,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
 
   const fetchModalInfo = async () => {
     try {
-      const res = await axios.get(
+      const res = await axiosInstance.get(
         `${SERVER_URL}/members/modal/${localStorage.getItem("channelId")}`,
         CONFIG
       );
@@ -110,7 +107,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
   const firstModalCloseOnClick = async () => {
     try {
       if (firstModalNeverShow) {
-        await axios.patch(
+        await axiosInstance.patch(
           `${SERVER_URL}/members/modal/point/${localStorage.getItem(
             "channelId"
           )}`,
@@ -125,7 +122,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
   };
 
   useEffect(() => {
-    fetchModalInfo()
+    fetchModalInfo();
     fetchPraiseData().then(() => setIsLoading(false));
   }, []);
 
@@ -166,7 +163,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
           })
         )}
       </PraiseContainerDiv>
-      {(isGetNotPost && showFirstModal) && (
+      {isGetNotPost && showFirstModal && (
         <FirstModal
           firstModalNeverShow={firstModalNeverShow}
           setFirstModalNeverShow={setFirstModalNeverShow}

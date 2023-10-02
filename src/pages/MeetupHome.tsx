@@ -10,7 +10,7 @@ import { ReactComponent as WhiteplusImg } from "../images/whiteplus.svg";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
 import GatheringList from "../components/GatheringList";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/api";
 
 const MeetupHome = () => {
     const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import ChannelList from "./ChannelList";
-import axios from "axios";
+import axios from "../utils/api";
 import { ReactComponent as HomeImg } from "../images/home.svg";
 import { useNavigate } from "react-router-dom";
 

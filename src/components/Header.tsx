@@ -12,8 +12,9 @@ import { ReactComponent as ParticipantImg } from "../images/participant.svg";
 import { ReactComponent as PointsImg } from "../images/points.svg";
 import Sidebar from "./Sidebar";
 import CircularImage from "./CircularImage";
-import axios from "axios";
+import axios from "../utils/api";
 import { color } from "../styles/color";
+import axiosInstance from "../utils/api"
 
 // 타입: 뒤로가기, 기본(동아리명, 알림), 모임 만들기, 모임 상세
 //       알림, 참여한 멤버, 댓글, 모임 수정, 카드 만들기
@@ -99,13 +100,13 @@ const Header = ({type, text, isChannelAdmin, download, downloadFunc, func, share
 
     const getChannelInfo  = async () => {
         try{
-            await axios.get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG).then((res) => {
+            await axiosInstance.get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG).then((res) => {
                 const CHANNEL_ID = res.data.data.id;
-                axios.get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
+                axiosInstance.get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG).then((res) => {
                     setChannelInfo(res.data.data);
                 });
             });
-            axios.get(`${SERVER_URL}/notification/member/${MEMBER_ID}/has-unchecked`, CONFIG).then((res) => {
+            axiosInstance.get(`${SERVER_URL}/notification/member/${MEMBER_ID}/has-unchecked`, CONFIG).then((res) => {
                 setNoticeInfo(res.data.data.hasUncheckedNotification);
             })
     

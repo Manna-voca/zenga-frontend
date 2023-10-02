@@ -6,7 +6,7 @@ import ProfileUpper from "../components/ProfileUpper";
 import ProfileAlbum from "../components/ProfileAlbum";
 import ProfileZenga from "../components/ProfileZenga";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import axios from "../utils/api";
 
 interface memberpageInfoProps{
     intro: string;

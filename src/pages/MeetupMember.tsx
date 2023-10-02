@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import MemberWrapper from "../components/MemberWrapper";
-import axios from "axios";
+import axios from "../utils/api";
 import { useParams } from "react-router-dom";
 
 interface Props{

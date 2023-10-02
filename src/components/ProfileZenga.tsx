@@ -16,7 +16,7 @@ import defaultblockImg from "../images/defaultblock.png";
 import ZengaBigBlock from "./ZengaBigBlock";
 import whaleImg from "../assets/images/whale_character7.png";
 import { ReactComponent as DeleteImg } from "../images/delete.svg"
-import axios from "axios";
+import axios from "../utils/api";
 
 interface ExplainProps{
     type: "Blue" | "Yellow" | "Green" | "Purple" | "Orange" | "Pink" | "Default";

@@ -6,7 +6,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import { ReactComponent as PointsImg } from "../images/points.svg";
 import PointList from "../components/PointList";
-import axios from "axios";
+import axios from "../utils/api";
 import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';

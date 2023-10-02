@@ -12,6 +12,8 @@ import MemberWrapper from "../components/MemberWrapper";
 import axios from "../utils/api";
 import memberNotFoundWhale from "../assets/images/x_whale_character.png";
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 interface MemberProps {
   id: number;
   name: string;
@@ -52,7 +54,7 @@ export default function MemberList() {
     if (loading) return;
     try {
       const uri =
-        `/channels/${CHANNEL_ID}/members` +
+        `channels/${CHANNEL_ID}/members` +
         (size || cursorId || keyword ? "?" : "") +
         (size ? `size=${size}` : "") +
         (cursorId
@@ -76,7 +78,7 @@ export default function MemberList() {
       }
       setLoading(true);
 
-      const membersResponse = await axios.get(`${uri}`, CONFIG);
+      const membersResponse = await axios.get(`${SERVER_URL}/${uri}`, CONFIG);
 
       if (membersResponse.data && membersResponse.status === 200) {
         const newMembers = membersResponse.data.content.map((member: any) => ({
@@ -111,7 +113,7 @@ export default function MemberList() {
 
   const fetchTotalMemberCount = async () => {
     try {
-      const res = await axios.get(`/channels/${CHANNEL_ID}/count`, CONFIG);
+      const res = await axios.get(`${SERVER_URL}/channels/${CHANNEL_ID}/count`, CONFIG);
       setTotalMemberCount(res.data.data.count);
       return res.data.data.count as number;
     } catch (error) {

@@ -15,7 +15,7 @@ import SendPraise from "../components/SendPraise";
 import PraiseContainer from "../components/PraiseContainer";
 import Toast from "../components/Toast";
 import { useParams } from "react-router";
-import axios from "axios";
+import axios from "../utils/api";
 import { spin, LoadingSpinner, Loadingdiv } from "../components/SendPraise";
 
 interface CategoryProps {

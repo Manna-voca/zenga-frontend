@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar";
 import ProfileAlbum from "../components/ProfileAlbum";
 import ProfileZenga from "../components/ProfileZenga";
 import ProfileMeetup from "../components/ProfileMeetup";
-import axios from "axios";
+import axios from "../utils/api";
 
 interface mypageInfoProps{
     intro: string;

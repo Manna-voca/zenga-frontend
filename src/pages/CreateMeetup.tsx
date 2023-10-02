@@ -15,7 +15,7 @@ import downArrowMutedIcon from "../assets/icons/ic-downArrowMuted.svg";
 import MeetupImageEditor from "../components/MeetupImageEditor";
 import ButtonBasic from "../components/ButtonBasic";
 import { typography } from "../styles/typography";
-import axios from "axios";
+import axios from "../utils/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { debounce } from "lodash";
 

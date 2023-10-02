@@ -5,18 +5,18 @@ import React, { useState, useEffect } from "react";
 import { color } from "../styles/color";
 import smallWhale from "../assets/images/smallWhale.png";
 import CircularImage from "./CircularImage";
-import axios from "axios";
 import Popup2 from "./Popup2";
 import Popup1 from "./Popup1";
 import PoorWhale from "../assets/images/poor_whale_character.png";
 import { useNavigate, useParams } from "react-router-dom";
+import axiosInstance from "../utils/api";
 
 interface PraiseProps {
   handlePraiseOpen: () => void;
   praiseId: number;
   isGetNotPost: boolean;
   content: string;
-  memberId: string|null;
+  memberId: string | null;
   image?: string;
   isOpened?: boolean;
   name: string;
@@ -62,7 +62,7 @@ const PraiseWrapper = ({
 
   const fetchPoint = async () => {
     try {
-      await axios
+      await axiosInstance
         .get(`${SERVER_URL}/point/total`, CONFIG)
         .then((res) => {
           setPoint(res.data.data.point);
@@ -76,7 +76,7 @@ const PraiseWrapper = ({
   const getSenderOfPraise = async () => {
     try {
       if (isGetNotPost === true && isOpened === false) {
-        await axios.patch(
+        await axiosInstance.patch(
           `${SERVER_URL}/praise/open`,
           {
             channelId: CHANNEL_ID,
@@ -138,7 +138,7 @@ const PraiseWrapper = ({
                   fetchPoint();
                 }
               : () => {
-                  if(memberId){
+                  if (memberId) {
                     navigate(`/${CHANNEL_CODE}/memberpage/${memberId}`);
                   }
                 }

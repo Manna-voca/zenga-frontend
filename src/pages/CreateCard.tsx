@@ -6,7 +6,7 @@ import { ReactComponent as CameraImg } from "../images/camera.svg";
 import ButtonBasic from "../components/ButtonBasic";
 import MeetupMember from "./MeetupMember";
 import Card from "../components/Card";
-import axios from "axios";
+import axios from "../utils/api";
 import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import relativeTime from 'dayjs/plugin/relativeTime';

@@ -6,7 +6,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import whaleImg from '../images/whalealbum.png';
-import axios from "axios";
+import axios from "../utils/api";
 
 interface Props{
     who: "my" | "member";

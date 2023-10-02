@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import GatheringList from "../components/GatheringList";
-import axios from "axios";
+import axios from "../utils/api";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
 
 const MyMeetup = () => {

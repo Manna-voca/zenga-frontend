@@ -9,7 +9,7 @@ import ButtonBasic from "../components/ButtonBasic";
 import TextField from "../components/TextField";
 import { color } from "../styles/color";
 import InputProfile from "../components/InputProfile";
-import axios from "axios";
+import axios from "../utils/api";
 
 
 const OldChannelOnboarding = () => {

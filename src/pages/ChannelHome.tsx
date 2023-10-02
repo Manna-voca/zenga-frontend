@@ -7,7 +7,7 @@ import { typography } from "../styles/typography";
 import { color } from "../styles/color";
 import btnChannelAdd from "../assets/icons/btn-channel-add.svg";
 import CircularImage from "../components/CircularImage";
-import axios from "axios";
+import axios from "../utils/api";
 
 interface ChannelProps {
   code: string;

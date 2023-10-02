@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as ArrowImg } from "../images/arrow.svg";
 import GatheringList from "./GatheringList";
-import axios from "axios";
+import axios from "../utils/api";
 
 
 const ProfileMeetup = () => {

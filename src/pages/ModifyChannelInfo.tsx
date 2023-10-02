@@ -7,7 +7,7 @@ import ButtonBasic from "../components/ButtonBasic";
 import InputProfile from "../components/InputProfile";
 import Popup2 from "../components/Popup2";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/api";
 
 const ModifyChannelInfo = () => {
     const navigate = useNavigate();

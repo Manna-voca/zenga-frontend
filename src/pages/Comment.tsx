@@ -11,7 +11,7 @@ import ButtonMultiple from "../components/ButtonMultiple";
 import PopupComplaint from "../components/PopupComplaint";
 import Popup2 from "../components/Popup2";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/api";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
