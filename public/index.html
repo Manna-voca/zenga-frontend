@@ -42,12 +42,12 @@
       name="msapplication-TileImage"
       content="%PUBLIC_URL%/favicon/favicon-32x32.png"
     />
-    <link rel="manifest" href="%PUBLIC_URL%/favicon/site.webmanifest" />
+    <link rel="manifest" href="%PUBLIC_URL%/site.webmanifest" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1"
     />
-    <meta name="description" content="Zenga" />
+    <meta name="description" content="나에게 칭찬을 보낸게 누굴까? 쟨가?" />
     <meta property="og:title" content="ZENGA" />
     <meta
       property="og:description"
@@ -56,8 +56,18 @@
     <meta property="og:image" content="%PUBLIC_URL%/zenga_og_image.png" />
     <meta name="theme-color" content="#FFF" />
     <!-- RESET CSS -->
-    <link rel="stylesheet" href="%PUBLIC_URL%/font.css" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/reset.css" />
+    <link
+      rel="preload"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="%PUBLIC_URL%/font.css"
+    />
+    <link
+      rel="preload"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="%PUBLIC_URL%/reset.css"
+    />
     <title>Zenga</title>
   </head>
   <body
