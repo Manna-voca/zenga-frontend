@@ -1,7 +1,3 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { useNavigate } from "react-router-dom";
-import { color } from "../styles/color";
 import styled from "@emotion/styled";
 import kakaoIcon from "../assets/icons/ic-kakao.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,16 +8,14 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 const Login = () => {
-  const navigate = useNavigate();
   let KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
-  console.log(KAKAO_URL);
 
   return (
     <>
-      <div style={{ height: '26px' }}></div>
+      <div style={{ height: "26px" }}></div>
       <Swiper
         className="login"
-        style={{ width: '100%' }}
+        style={{ width: "100%", height: "590px" }}
         pagination={{ clickable: true }}
         mousewheel
         keyboard
@@ -29,67 +23,68 @@ const Login = () => {
         allowTouchMove
       >
         <SwiperSlide>
-          <div
-            style={{ margin: '0 63px 0 62px', justifyContent: 'center',
-                    alignItems: 'center', display: 'flex', flexDirection: 'column'
-          }}>
+          <SliderWrapper>
             <SwiperText>
-              <div>
-                <span style={{ fontWeight: '700' }}>서로에게 칭찬</span>
-                하며<br></br>돈독함을 쌓아요
-              </div>
+              <b>서로에게 칭찬</b>
+              하며
+              <br />
+              돈독함을 쌓아요
             </SwiperText>
-            <div style={{ height: '49px' }}></div>
-            <div 
-              style={{ backgroundImage: 'url(https://image.zenga.club/wt1.png)',
-                      height: '438px', backgroundSize: 'cover', width: '250px'
-            }}></div>
-          </div>
+            <img
+              src="https://image.zenga.club/wt1.png"
+              alt=""
+              style={{
+                height: "437px",
+                width: "250px",
+              }}
+            />
+          </SliderWrapper>
         </SwiperSlide>
 
         <SwiperSlide>
-          <div
-            style={{ margin: '0 63px 0 62px', justifyContent: 'center',
-                    alignItems: 'center', display: 'flex', flexDirection: 'column'
-          }}>
+          <SliderWrapper>
             <SwiperText>
-              <div>
-                모임에 참여하고&nbsp;
-                <span style={{ fontWeight: '700' }}>우리만의<br></br>카드</span>
-                를 만들어요
-              </div>
+              모임에 참여하고&nbsp;
+              <b>
+                <br />
+                우리만의 카드
+              </b>
+              를 만들어요
             </SwiperText>
-            <div style={{ height: '27px' }}></div>
-            <div 
-              style={{ backgroundImage: 'url(https://image.zenga.club/wt2.png)',
-                      height: '460px', backgroundSize: 'cover', width: '250px'
-            }}></div>
-          </div>
+            <img
+              src="https://image.zenga.club/wt2.png"
+              alt=""
+              style={{
+                height: "466px",
+                width: "250px",
+              }}
+              loading="lazy"
+            />
+          </SliderWrapper>
         </SwiperSlide>
 
         <SwiperSlide>
-          <div
-            style={{ margin: '0 63px 0 62px', justifyContent: 'center',
-                    alignItems: 'center', display: 'flex', flexDirection: 'column'
-          }}>
+          <SliderWrapper>
             <SwiperText>
-              <div>
-                칭찬 블록을 모아<br></br>
-                <span style={{ fontWeight: '700' }}>나만의 젠가</span>
-                를 완성해요
-              </div>
+              칭찬 블록을 모아
+              <br />
+              <b>나만의 젠가</b>를 완성해요
             </SwiperText>
-            <div style={{ height: '24px' }}></div>
-            <div 
-              style={{ backgroundImage: 'url(https://image.zenga.club/wt3.png)',
-                      height: '463px', backgroundSize: 'cover', width: '250px'
-            }}></div>
-          </div>
+            <img
+              src="https://image.zenga.club/wt3.png"
+              alt=""
+              style={{
+                height: "469px",
+                width: "250px",
+              }}
+              loading="lazy"
+            />
+          </SliderWrapper>
         </SwiperSlide>
       </Swiper>
 
       <KaKaoLogin href={KAKAO_URL}>
-        <img src={kakaoIcon} alt="" />
+        <img width="20px" height="20px" src={kakaoIcon} alt="" />
         카카오 로그인
       </KaKaoLogin>
     </>
@@ -97,6 +92,28 @@ const Login = () => {
 };
 
 export default Login;
+
+const SliderWrapper = styled.div`
+  height: 528px;
+  margin: 0 63px 0 62px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`;
+
+const SwiperText = styled.div`
+  color: var(--light-text-text-active, #0d0d0d);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 150%;
+  width: 224px;
+  height: 42px;
+  text-align: center;
+  b {
+    font-weight: 700;
+  }
+`;
 
 const KaKaoLogin = styled.a`
   text-decoration: none;
@@ -118,19 +135,4 @@ const KaKaoLogin = styled.a`
   font-family: Pretendard;
   font-size: 15px;
   font-weight: 500;
-`;
-
-const SwiperText = styled.div`
-  color: var(--light-text-text-active, #0D0D0D);
-  font-family: Pretendard;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%;
-  width: 224px;
-  height: 42px;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  display: flex;
 `;
