@@ -17,11 +17,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { debounce } from "lodash";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const CONFIG = {
-  headers: {
-    Authorization: "Bearer " + localStorage.getItem("accessToken"),
-  },
-};
 
 interface CommentData {
   id: string;
@@ -166,6 +161,11 @@ const CommentCreator = ({
   const { meetupId } = useParams();
   const [myImage, setMyImage] = useState<string>("");
   const CHANNEL_ID = localStorage.getItem("channelId");
+  const CONFIG = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  };
 
   const getMyImage = async () => {
     try {
@@ -186,7 +186,7 @@ const CommentCreator = ({
     return () => {
       window.removeEventListener("resize", adjustTextareaHeight);
     };
-  }, []);
+  }, [meetupId]);
 
   useEffect(() => {
     adjustTextareaHeight();
@@ -392,6 +392,11 @@ const Comment = () => {
   const [commentId, setCommentId] = useState<string>();
   // 대댓글 부모 댓글 ID
   const [parentId, setParentId] = useState<string | null>(null);
+  const CONFIG = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  };
 
   dayjs.extend(relativeTime);
   dayjs.locale("ko");
