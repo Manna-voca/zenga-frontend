@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import Header from "../components/Header";
-import exImage1 from "../assets/images/profile-1.png";
 import kebabIcon from "../assets/icons/ic-kebab.svg";
 import xIcon from "../assets/icons/ic-x16.svg";
 import { typography } from "../styles/typography";
@@ -18,11 +17,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { debounce } from "lodash";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const CONFIG = {
-  headers: {
-    Authorization: "Bearer " + localStorage.getItem("accessToken"),
-  },
-};
 
 interface CommentData {
   id: string;
@@ -167,6 +161,11 @@ const CommentCreator = ({
   const { meetupId } = useParams();
   const [myImage, setMyImage] = useState<string>("");
   const CHANNEL_ID = localStorage.getItem("channelId");
+  const CONFIG = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  };
 
   const getMyImage = async () => {
     try {
@@ -187,7 +186,7 @@ const CommentCreator = ({
     return () => {
       window.removeEventListener("resize", adjustTextareaHeight);
     };
-  }, []);
+  }, [meetupId]);
 
   useEffect(() => {
     adjustTextareaHeight();
@@ -220,7 +219,7 @@ const CommentCreator = ({
     try {
       // 새로운 댓글 작성
       if (replyTo === null && commentId === undefined) {
-        const res = await axios.post(
+        await axios.post(
           URL,
           {
             channelId: CHANNEL_ID,
@@ -229,12 +228,11 @@ const CommentCreator = ({
           },
           CONFIG
         );
-        console.log(res);
         window.location.reload();
       }
       // 내 댓글 수정
       else if (replyTo === null && commentId !== undefined) {
-        const res = await axios.patch(
+        await axios.patch(
           URL,
           {
             channelId: CHANNEL_ID,
@@ -243,12 +241,11 @@ const CommentCreator = ({
           },
           CONFIG
         );
-        console.log(res);
         window.location.reload();
       }
       // 남의 댓글에 대댓글
       else if (replyTo !== null && commentId !== undefined) {
-        const res = await axios.post(
+        await axios.post(
           URL,
           {
             channelId: CHANNEL_ID,
@@ -258,10 +255,9 @@ const CommentCreator = ({
           },
           CONFIG
         );
-        console.log(res);
         window.location.reload();
       } else {
-        const res = await axios.patch(
+        await axios.patch(
           URL,
           {
             channelId: CHANNEL_ID,
@@ -270,7 +266,6 @@ const CommentCreator = ({
           },
           CONFIG
         );
-        console.log(res);
         window.location.reload();
       }
 
@@ -397,6 +392,11 @@ const Comment = () => {
   const [commentId, setCommentId] = useState<string>();
   // 대댓글 부모 댓글 ID
   const [parentId, setParentId] = useState<string | null>(null);
+  const CONFIG = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    },
+  };
 
   dayjs.extend(relativeTime);
   dayjs.locale("ko");
@@ -436,7 +436,6 @@ const Comment = () => {
         `${SERVER_URL}/comment/${meetupId}?size=100&channelId=${CHANNEL_ID}`,
         CONFIG
       );
-      console.log(res.data);
       let newComment: any = [];
       if (res.data && res.status === 200) {
         for (let i = 0; i < res.data.data.content.length; i++) {
@@ -493,7 +492,7 @@ const Comment = () => {
 
   useEffect(() => {
     fetchComments();
-  }, []);
+  }, [meetupId]);
 
   return (
     <>
