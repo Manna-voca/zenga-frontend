@@ -1,7 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import React from "react";
 import CircularImage from "./CircularImage";
 import { color } from "../styles/color";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,29 +8,23 @@ interface OwnProps {
   name: string;
   id: number;
   image: string;
-  isChannelAdmin: boolean;
 }
 
-const MemberWrapper = ({ name, image, id, isChannelAdmin }: OwnProps) => {
+const MemberWrapper = ({ name, image, id }: OwnProps) => {
   const navigate = useNavigate();
   const { channelCode } = useParams();
 
   const handleWrapperClick = () => {
-    if(`${id}` === localStorage.getItem("memberId")){
+    if (`${id}` === localStorage.getItem("memberId")) {
       navigate(`/${channelCode}/mypage`);
-    }
-    else{
+    } else {
       navigate(`/${channelCode}/memberpage/${id}`);
     }
   };
 
   return (
-  <Container onClick={handleWrapperClick}>
-      <CircularImage
-        image={image}
-        size="36"
-        isChannelAdmin={isChannelAdmin ? isChannelAdmin : undefined}
-      />
+    <Container onClick={handleWrapperClick}>
+      <CircularImage image={image} size="36" />
       <MemberName>{name}</MemberName>
     </Container>
   );

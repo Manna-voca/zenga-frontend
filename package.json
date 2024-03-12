@@ -27,6 +27,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/lodash": "^4.14.198",
     "@types/react-datepicker": "^4.15.0",
     "react-scripts": "5.0.1"

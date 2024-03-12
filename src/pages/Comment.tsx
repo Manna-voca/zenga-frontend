@@ -25,7 +25,6 @@ interface CommentData {
   createdBefore: string;
   isReply: boolean;
   authorImage: string;
-  isChannelAdmin: boolean;
   writerId: string;
   isMine: boolean;
   parentId: string | null;
@@ -71,11 +70,7 @@ const CommentWrapper = ({
       }}
     >
       <div style={{ cursor: "pointer" }} onClick={navigateHandler}>
-        <CircularImage
-          image={comment.authorImage}
-          size={"36"}
-          isChannelAdmin={comment.isChannelAdmin ? true : undefined}
-        />
+        <CircularImage image={comment.authorImage} size={"36"} />
       </div>
       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
         <span
@@ -186,6 +181,7 @@ const CommentCreator = ({
     return () => {
       window.removeEventListener("resize", adjustTextareaHeight);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meetupId]);
 
   useEffect(() => {
@@ -448,7 +444,6 @@ const Comment = () => {
             ),
             isReply: res.data.data.content[i].parentId !== null,
             authorImage: res.data.data.content[i].writerProfileImageUrl,
-            isChannelAdmin: false,
             writerId: res.data.data.content[i].writerId,
             isMine:
               res.data.data.content[i].writerId ===
@@ -473,7 +468,6 @@ const Comment = () => {
                 authorImage:
                   res.data.data.content[i].childComments[j]
                     .writerProfileImageUrl,
-                isChannelAdmin: false,
                 writerId: res.data.data.content[i].childComments[j].writerId,
                 isMine:
                   res.data.data.content[i].childComments[j].writerId ===
@@ -492,6 +486,7 @@ const Comment = () => {
 
   useEffect(() => {
     fetchComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meetupId]);
 
   return (

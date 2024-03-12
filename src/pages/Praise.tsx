@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css, keyframes } from "@emotion/react";
+import { css } from "@emotion/react";
 import React from "react";
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
@@ -16,7 +16,7 @@ import PraiseContainer from "../components/PraiseContainer";
 import Toast from "../components/Toast";
 import { useParams } from "react-router";
 import axios from "axios";
-import { spin, LoadingSpinner, Loadingdiv } from "../components/SendPraise";
+import { LoadingSpinner, Loadingdiv } from "../components/SendPraise";
 
 interface CategoryProps {
   categoryName: string;
@@ -195,7 +195,6 @@ const Praise = () => {
   const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
   const [memberCount, setMemberCount] = useState<number>(0);
   const { channelCode } = useParams();
-  const [channelId, setChannelId] = useState<number>();
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const CONFIG = {
     headers: {
@@ -203,12 +202,6 @@ const Praise = () => {
     },
   };
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const [local, setLocal] = useState(() => {
-    if (localStorage.getItem("praise")) {
-      setSelectedCategory(Number(localStorage.getItem("praise")));
-    }
-  });
 
   const handleCategory1Click = async () => {
     setSelectedCategory(1);
@@ -251,15 +244,15 @@ const Praise = () => {
   };
 
   useEffect(() => {
-    fetchChannelIdAndValidity()
-    .then(() => {
+    fetchChannelIdAndValidity().then(() => {
       setIsLoading(false);
-    })
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      <Header type="common" isChannelAdmin={true}></Header>
+      <Header type="common" />
       <CategoryContainer>
         <CategoryWrapper
           categoryName="칭찬보내기"
@@ -277,11 +270,11 @@ const Praise = () => {
           onClick={handleCategory3Click}
         />
       </CategoryContainer>
-      {isLoading ? 
-      <Loadingdiv>
-        <LoadingSpinner />
-      </Loadingdiv>
-      :selectedCategory === 1 ? (
+      {isLoading ? (
+        <Loadingdiv>
+          <LoadingSpinner />
+        </Loadingdiv>
+      ) : selectedCategory === 1 ? (
         isChannelActive === true ? (
           <SendPraise />
         ) : (

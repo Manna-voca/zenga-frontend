@@ -52,33 +52,33 @@ export default function MemberList() {
   ) => {
     if (loading) return;
     try {
-    const uri =
-      `${SERVER_URL}/channels/${CHANNEL_ID}/members` +
-      (size || cursorId || keyword ? "?" : "") +
-      (size ? `size=${size}` : "") +
-      (cursorId
-        ? size
-          ? `&cursorId=${cursorId}`
-          : `cursorId=${cursorId}`
-        : "") +
-      (cursorName
-        ? size || cursorId
-          ? `&cursorName=${cursorName}`
-          : `cursorName=${cursorName}`
-        : "") +
-      (keyword
-        ? size || cursorId || cursorName
-          ? `&keyword=${keyword}`
-          : `keyword=${keyword}`
-        : "");
-    
+      const uri =
+        `${SERVER_URL}/channels/${CHANNEL_ID}/members` +
+        (size || cursorId || keyword ? "?" : "") +
+        (size ? `size=${size}` : "") +
+        (cursorId
+          ? size
+            ? `&cursorId=${cursorId}`
+            : `cursorId=${cursorId}`
+          : "") +
+        (cursorName
+          ? size || cursorId
+            ? `&cursorName=${cursorName}`
+            : `cursorName=${cursorName}`
+          : "") +
+        (keyword
+          ? size || cursorId || cursorName
+            ? `&keyword=${keyword}`
+            : `keyword=${keyword}`
+          : "");
+
       if (hasMore === false && keyword === "") {
         return;
       }
       setLoading(true);
 
       const membersResponse = await axios.get(`${uri}`, CONFIG);
-      
+
       if (membersResponse.data && membersResponse.status === 200) {
         const newMembers = membersResponse.data.content.map((member: any) => ({
           id: member.id,
@@ -109,8 +109,6 @@ export default function MemberList() {
       setLoading(false);
     }
   };
-
-  
 
   const fetchTotalMemberCount = async () => {
     try {
@@ -156,6 +154,7 @@ export default function MemberList() {
   useEffect(() => {
     fetchTotalMemberCount();
     fetchMemberList(cursorId, cursorName, SIZE, "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -164,7 +163,7 @@ export default function MemberList() {
 
   return (
     <>
-      <Header type="common" isChannelAdmin={false}></Header>
+      <Header type="common" />
       <div style={{ padding: "0 20px", margin: "8px 0 4px 0" }}>
         <SearchWrapper>
           <img
@@ -254,7 +253,6 @@ export default function MemberList() {
                   id={item.id}
                   name={item.name}
                   image={item.image}
-                  isChannelAdmin={item.level === "MAINTAINER"}
                 />
               );
             })
@@ -267,7 +265,6 @@ export default function MemberList() {
                 id={item.id}
                 name={item.name}
                 image={item.image}
-                isChannelAdmin={item.level === "MAINTAINER"}
               />
             );
           })
