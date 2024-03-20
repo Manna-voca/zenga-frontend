@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import CreateChannel from "./pages/CreateChannel";
@@ -28,74 +27,65 @@ import KaKao from "./pages/KaKao";
 import CheckChannelCode from "./pages/CheckChannelCode";
 import NotFound from "./pages/NotFound";
 import Error400 from "./pages/Error400";
+import CommonHeaderLayout from "./CommonHeaderLayout";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />}></Route>
-      <Route path="/oauth/callback/kakao" element={<KaKao />}></Route>
-      <Route path="/onboarding" element={<Onboarding />}></Route>
-      <Route path="/channel-home" element={<ChannelHome />}></Route>
-      <Route path="/create-channel" element={<CreateChannel />}></Route>
+      <Route path="/" element={<Login />} />
+      <Route path="/oauth/callback/kakao" element={<KaKao />} />
+      <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/channel-home" element={<ChannelHome />} />
+      <Route path="/create-channel" element={<CreateChannel />} />
       <Route
         path="/create-channel/new-onboarding"
         element={<NewChannelOnboarding />}
-      ></Route>
+      />
       <Route
         path="/create-channel/old-onboarding"
         element={<OldChannelOnboarding />}
-      ></Route>
-      <Route path="/:channelCode" element={<CheckChannelCode />}></Route>
-      <Route path="/:channelCode/praise" element={<Praise />}></Route>
-      <Route path="/:channelCode/member-list" element={<MemberList />}></Route>
-      <Route
-        path="/:channelCode/notification"
-        element={<Notification />}
-      ></Route>
-      <Route
-        path="/:channelCode/create-meetup"
-        element={<CreateMeetup />}
-      ></Route>
+      />
+      <Route path="/:channelCode" element={<CheckChannelCode />} />
+      <Route element={<CommonHeaderLayout />}>
+        <Route path="/:channelCode/praise" element={<Praise />} />
+        <Route path="/:channelCode/member-list" element={<MemberList />} />
+        <Route path="/:channelCode/meetup-home" element={<MeetupHome />} />
+      </Route>
+      <Route path="/:channelCode/notification" element={<Notification />} />
+      <Route path="/:channelCode/create-meetup" element={<CreateMeetup />} />
       <Route
         path="/:channelCode/edit-meetup/:meetupId"
         element={<EditMeetup />}
-      ></Route>
+      />
       <Route
         path="/:channelCode/modify-channel-info"
         element={<ModifyChannelInfo />}
-      ></Route>
-      <Route path="/:channelCode/meetup-home" element={<MeetupHome />}></Route>
+      />
       <Route
         path="/:channelCode/meetup-detail/:meetupId"
         element={<MeetupDetail />}
-      ></Route>
+      />
       <Route
         path="/:channelCode/meetup-member/:meetupId"
         element={<MeetupMember />}
-      ></Route>
+      />
       <Route
         path="/:channelCode/create-card/:meetupId"
         element={<CreateCard />}
-      ></Route>
-      <Route
-        path="/:channelCode/comment/:meetupId"
-        element={<Comment />}
-      ></Route>
-      <Route path="/:channelCode/mypage" element={<Mypage />}></Route>
+      />
+      <Route path="/:channelCode/comment/:meetupId" element={<Comment />} />
+      <Route path="/:channelCode/mypage" element={<Mypage />} />
       <Route
         path="/:channelCode/memberpage/:memberId"
         element={<Memberpage />}
-      ></Route>
-      <Route path="/:channelCode/my-meetup" element={<MyMeetup />}></Route>
-      <Route
-        path="/modify-profile-info"
-        element={<ModifyProfileInfo />}
-      ></Route>
-      <Route path="/point" element={<PointDetail />}></Route>
-      <Route path="/:channelCode/album/:memberId" element={<Album />}></Route>
-      <Route path="/error-400" element={<Error400 />}></Route>
-      <Route path="/error-404" element={<NotFound />}></Route>
-      <Route path="/*" element={<NotFound />}></Route>
+      />
+      <Route path="/:channelCode/my-meetup" element={<MyMeetup />} />
+      <Route path="/modify-profile-info" element={<ModifyProfileInfo />} />
+      <Route path="/point" element={<PointDetail />} />
+      <Route path="/:channelCode/album/:memberId" element={<Album />} />
+      <Route path="/error-400" element={<Error400 />} />
+      <Route path="/error-404" element={<NotFound />} />
+      <Route path="/*" element={<NotFound />} />
     </Routes>
   );
 }

@@ -57,6 +57,7 @@ const Header = ({
   const [sidebarState, setSidebarState] = useState<number>(0);
   const [channelInfo, setChannelInfo] = useState<ChannelInfoProps | null>(null);
   const [noticeInfo, setNoticeInfo] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (type === "common") {
@@ -98,6 +99,7 @@ const Header = ({
 
   const getChannelInfo = async () => {
     try {
+      setIsLoading(true);
       await axios
         .get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG)
         .then((res) => {
@@ -106,6 +108,7 @@ const Header = ({
             .get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG)
             .then((res) => {
               setChannelInfo(res.data.data);
+              setIsLoading(false);
             });
         });
       axios
@@ -191,20 +194,33 @@ const Header = ({
               width: "calc(100vw - 140px)",
             }}
           >
-            <CircularImage
-              size="24"
-              image={channelInfo !== null ? channelInfo.logoImageUrl : ""}
-            />
-            <span
-              style={{
-                marginLeft: "10px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {channelInfo !== null ? channelInfo.name : ""}
-            </span>
+            {isLoading ? (
+              <div
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  backgroundColor: "lightgray",
+                  borderRadius: "50%",
+                }}
+              />
+            ) : (
+              <>
+                <CircularImage
+                  size="24"
+                  image={channelInfo !== null ? channelInfo.logoImageUrl : ""}
+                />
+                <span
+                  style={{
+                    marginLeft: "10px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {channelInfo !== null ? channelInfo.name : ""}
+                </span>
+              </>
+            )}
           </div>
           <div
             style={{

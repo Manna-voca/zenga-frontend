@@ -252,7 +252,6 @@ const Praise = () => {
 
   return (
     <>
-      <Header type="common" />
       <CategoryContainer>
         <CategoryWrapper
           categoryName="칭찬보내기"

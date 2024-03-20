@@ -44,7 +44,6 @@ const TokenRefresh = () => {
   };
 
   useEffect(() => {
-    console.log(location.pathname);
     if (!ACCESS_TOKEN) {
       if (
         location.pathname !== "/oauth/callback/kakao" &&

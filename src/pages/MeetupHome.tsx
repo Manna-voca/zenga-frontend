@@ -145,7 +145,6 @@ const MeetupHome = () => {
 
   return (
     <>
-      <Header type="common" />
       {loading && (
         <div
           style={{
