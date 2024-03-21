@@ -1,4 +1,4 @@
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -6,7 +6,6 @@ const CheckChannelCode = () => {
   const { channelCode } = useParams();
   const navigate = useNavigate();
   const ACCESS_TOKEN = localStorage.getItem("accessToken");
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const checkValidation = async () => {
     try {
@@ -22,11 +21,7 @@ const CheckChannelCode = () => {
         return;
       } else {
         localStorage.removeItem("redirectChannelCode");
-        const res = await axios.get(`${SERVER_URL}/channels`, {
-          headers: {
-            Authorization: `Bearer ${ACCESS_TOKEN}`,
-          },
-        });
+        const res = await axiosInstance.get(`/channels`);
         if (res.data) {
           for (let i = 0; i < res.data.data.length; i++) {
             if (res.data.data[i].code === channelCode) {

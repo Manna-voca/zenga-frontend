@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import MemberWrapper from "../components/MemberWrapper";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import { useParams } from "react-router-dom";
 
 interface Props {
@@ -11,23 +11,14 @@ interface Props {
 
 const MeetupMember = ({ state, albumId }: Props) => {
   let { meetupId } = useParams();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      "Content-Type": "application/json",
-    },
-  };
-
   const [memberList, setMemberList] = useState<Array<any>>([]);
 
   const fetchMemberList = async () => {
     try {
-      const membersResponse = await axios.get(
-        `${SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem(
+      const membersResponse = await axiosInstance.get(
+        `/party/detail/${meetupId}?channelId=${localStorage.getItem(
           "channelId"
-        )}`,
-        CONFIG
+        )}`
       );
       if (membersResponse.status === 200) {
         setMemberList(membersResponse.data.data.joinMemberInfo);
@@ -38,8 +29,8 @@ const MeetupMember = ({ state, albumId }: Props) => {
   };
 
   const getMemberList = async () => {
-    await axios
-      .get(`${SERVER_URL}/album/paticipation/${albumId}/with`, CONFIG)
+    await axiosInstance
+      .get(`/album/paticipation/${albumId}/with`)
       .then((res) => {
         setMemberList(res.data.data.participationList);
       })

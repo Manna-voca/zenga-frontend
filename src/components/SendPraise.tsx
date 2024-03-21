@@ -25,7 +25,7 @@ import "swiper/css/pagination";
 import "../styles/sendpraiseSwiper.css";
 import whaleClock from "../assets/images/whale-clock.png";
 import sendPraiseModalImage from "../assets/images/sendPraiseModal.png";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
 
 interface MemberProps {
@@ -307,13 +307,6 @@ const FirstModal = ({
 
 const SendPraise = () => {
   const { channelCode } = useParams();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
-
   const [praiseInfo, setPraiseInfo] = useState({
     praise: "",
     memberList: [
@@ -342,10 +335,7 @@ const SendPraise = () => {
 
   const getChannelId = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/channels/info?code=${channelCode}`,
-        CONFIG
-      );
+      const res = await axiosInstance.get(`/channels/info?code=${channelCode}`);
       if (res.data.data.id !== Number(localStorage.getItem("channelId"))) {
         localStorage.setItem("channelId", res.data.data.id);
       }
@@ -356,9 +346,8 @@ const SendPraise = () => {
 
   const fetchModalInfo = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/members/modal/${localStorage.getItem("channelId")}`,
-        CONFIG
+      const res = await axiosInstance.get(
+        `/members/modal/${localStorage.getItem("channelId")}`
       );
       setShowFirstModal(res.data.data.praiseModal);
     } catch (err) {
@@ -369,11 +358,9 @@ const SendPraise = () => {
   const fetchPraiseData = async () => {
     const CHANNEL_ID = localStorage.getItem("channelId");
     try {
-      const res = await axios.post(
-        `${SERVER_URL}/praise/todo`,
-        { channelId: CHANNEL_ID },
-        CONFIG
-      );
+      const res = await axiosInstance.post(`/praise/todo`, {
+        channelId: CHANNEL_ID,
+      });
       if (res.data.data === null) {
         setShowPraiseNotTimer(false);
       } else {
@@ -400,12 +387,9 @@ const SendPraise = () => {
     try {
       if (firstModalNeverShow) {
         // 다시보지않기 api 전송
-        await axios.patch(
-          `${SERVER_URL}/members/modal/praise/${localStorage.getItem(
-            "channelId"
-          )}`,
-          {},
-          CONFIG
+        await axiosInstance.patch(
+          `/members/modal/praise/${localStorage.getItem("channelId")}`,
+          {}
         );
       }
       setShowFirstModal(false);
@@ -421,27 +405,20 @@ const SendPraise = () => {
         shuffleCount: prev.shuffleCount === 1 ? 0 : 1,
       }));
       setSelectedMember(-1);
-      await axios.patch(
-        `${SERVER_URL}/praise/todo`,
-        { channelId: localStorage.getItem("channelId") },
-        CONFIG
-      );
+      await axiosInstance.patch(`/praise/todo`, {
+        channelId: localStorage.getItem("channelId"),
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleSendPraise = async () => {
-    /* await 칭찬 api 함수 */
     try {
-      await axios.patch(
-        `${SERVER_URL}/praise/choice`,
-        {
-          memberPraiseId: praiseInfo.memberPraiseId,
-          praisedMemberId: selectedMember,
-        },
-        CONFIG
-      );
+      await axiosInstance.patch(`/praise/choice`, {
+        memberPraiseId: praiseInfo.memberPraiseId,
+        praisedMemberId: selectedMember,
+      });
       setSelectedMember(-1);
       setShowPraiseModal(true);
     } catch (error) {

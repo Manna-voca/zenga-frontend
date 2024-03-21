@@ -9,8 +9,7 @@ import ButtonBasic from "../components/ButtonBasic";
 import TextField from "../components/TextField";
 import { color } from "../styles/color";
 import InputProfile from "../components/InputProfile";
-import axios from "axios";
-
+import { axiosInstance } from "../apis/axiosInstance";
 
 const OldChannelOnboarding = () => {
   const navigate = useNavigate();
@@ -54,71 +53,83 @@ const OldChannelOnboarding = () => {
   const [errorState, setErrorState] = useState<boolean>(false);
   const [channelId, setChannelId] = useState<any>();
 
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      'Content-Type':'application/json'
-    },
-  };
-
   const handleButtonClick = async () => {
-    if(step === 1){
-      await axios.get(`${SERVER_URL}/channels/info?code=${code}`, CONFIG).then((res1) => {
-        axios.get(`${SERVER_URL}/channels`, CONFIG).then((res2) => {
-          for(let i = 0; i < res2.data.data.length; i++){
-            if(res2.data.data[i].id === res1.data.data.id){
-              localStorage.setItem("memberId", res2.data.data[i].memberId);
-              navigate(`/${code}/praise`, { replace: true });
-            }
-          }
-          setChannelId(res1.data.data.id);
-          setStep((current) => current + 1);
-          setPreventPopstate(true);
-        }).catch((err) => console.error(err));
-      }).catch((err) => {
-        console.error(err);
-        if(err.response.status === 404){
-          setErrorState(true);
-        }
-      });
-    }
-    if(step === 2){
-      // 이미지 저장하는 부분
-      if(userImageFile !== null){
-        const userImgFormData = new FormData();
-        userImgFormData.append('image', userImageFile);
-        const uploadUserImgResponse = await axios.post(`${SERVER_URL}/image/upload`, userImgFormData, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-            'Content-Type': 'multipart/form-data'
+    if (step === 1) {
+      await axiosInstance
+        .get(`/channels/info?code=${code}`)
+        .then((res1) => {
+          axiosInstance
+            .get(`/channels`)
+            .then((res2) => {
+              for (let i = 0; i < res2.data.data.length; i++) {
+                if (res2.data.data[i].id === res1.data.data.id) {
+                  localStorage.setItem("memberId", res2.data.data[i].memberId);
+                  navigate(`/${code}/praise`, { replace: true });
+                }
+              }
+              setChannelId(res1.data.data.id);
+              setStep((current) => current + 1);
+              setPreventPopstate(true);
+            })
+            .catch((err) => console.error(err));
+        })
+        .catch((err) => {
+          console.error(err);
+          if (err.response.status === 404) {
+            setErrorState(true);
           }
         });
-        if(uploadUserImgResponse.status === 200){
+    }
+    if (step === 2) {
+      // 이미지 저장하는 부분
+      if (userImageFile !== null) {
+        const userImgFormData = new FormData();
+        userImgFormData.append("image", userImageFile);
+        const uploadUserImgResponse = await axiosInstance.post(
+          `/image/upload`,
+          userImgFormData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (uploadUserImgResponse.status === 200) {
           const userFormData = new FormData();
-          userFormData.append('channelId', channelId);
-          userFormData.append('profileImageUrl', uploadUserImgResponse.data.data.url);
-          userFormData.append('nickname', nickname);
-          userFormData.append('introduction', intro);
-          userFormData.append('level', "NORMAL");
-          axios.post(`${SERVER_URL}/members`, userFormData, CONFIG).then((res) => {
-            localStorage.setItem("memberId", res.data.data.id);
-            setStep((current) => current + 1);
-          }).catch((err) => console.error(err));
+          userFormData.append("channelId", channelId);
+          userFormData.append(
+            "profileImageUrl",
+            uploadUserImgResponse.data.data.url
+          );
+          userFormData.append("nickname", nickname);
+          userFormData.append("introduction", intro);
+          userFormData.append("level", "NORMAL");
+          axiosInstance
+            .post(`/members`, userFormData)
+            .then((res) => {
+              localStorage.setItem("memberId", res.data.data.id);
+              setStep((current) => current + 1);
+            })
+            .catch((err) => console.error(err));
         }
-      }
-      else{
+      } else {
         // 이미지 안 넣었을 때
         const userFormData = new FormData();
-        userFormData.append('channelId', channelId);
-        userFormData.append('profileImageUrl', 'https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png');
-        userFormData.append('nickname', nickname);
-        userFormData.append('introduction', intro);
-        userFormData.append('level', "NORMAL");
-        axios.post(`${SERVER_URL}/members`, userFormData, CONFIG).then((res) => {
-          localStorage.setItem("memberId", res.data.data.id);
-          setStep((current) => current + 1);
-        }).catch((err) => console.error(err));
+        userFormData.append("channelId", channelId);
+        userFormData.append(
+          "profileImageUrl",
+          "https://image.zenga.club/fdf39cb8-dea7-4cf1-a553-07c66821b969.png"
+        );
+        userFormData.append("nickname", nickname);
+        userFormData.append("introduction", intro);
+        userFormData.append("level", "NORMAL");
+        axiosInstance
+          .post(`/members`, userFormData)
+          .then((res) => {
+            localStorage.setItem("memberId", res.data.data.id);
+            setStep((current) => current + 1);
+          })
+          .catch((err) => console.error(err));
       }
     }
   };
@@ -126,26 +137,26 @@ const OldChannelOnboarding = () => {
   const getRedirectChannelCode = () => {
     if (localStorage.getItem("redirectChannelCode")) {
       const code = localStorage.getItem("redirectChannelCode");
-      if(code){
+      if (code) {
         setCode(code);
       }
       localStorage.removeItem("redirectChannelCode");
     }
-  }
+  };
 
-  useEffect(() =>{
+  useEffect(() => {
     getRedirectChannelCode();
-  },[])
+  }, []);
 
   const [preventPopState, setPreventPopstate] = useState<boolean>(false);
   useEffect(() => {
-        if(preventPopState){
-            window.history.pushState(null, "", "");
-            window.onpopstate = () => {
-                setStep((current) => (current - 1));
-                setPreventPopstate((current) => !(current));
-            };
-        }
+    if (preventPopState) {
+      window.history.pushState(null, "", "");
+      window.onpopstate = () => {
+        setStep((current) => current - 1);
+        setPreventPopstate((current) => !current);
+      };
+    }
   }, [preventPopState]);
 
   return (

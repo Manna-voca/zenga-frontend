@@ -15,7 +15,7 @@ import downArrowMutedIcon from "../assets/icons/ic-downArrowMuted.svg";
 import MeetupImageEditor from "../components/MeetupImageEditor";
 import ButtonBasic from "../components/ButtonBasic";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 
 interface MeetupInfoProps {
   title: string;
@@ -29,7 +29,7 @@ interface MeetupInfoProps {
 // api로 받아와야함
 const initialMeetupInfo: MeetupInfoProps = {
   title: "",
-  content: "석방 파티 올사람",
+  content: "",
   personNum: "",
 };
 
@@ -80,9 +80,8 @@ const EditMeetup = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/party/detail/${meetupId}?channelId=${CHANNEL_ID}`,
-        CONFIG
+      const res = await axiosInstance.get(
+        `/party/detail/${meetupId}?channelId=${CHANNEL_ID}`
       );
       if (res.status === 200) {
         const prevInfo = res.data.data;
@@ -168,13 +167,12 @@ const EditMeetup = () => {
       } else if (attachment !== null) {
         const formData = new FormData();
         formData.append("image", attachment ? attachment : "");
-        const uploadImageResponse = await axios.post(
-          `${SERVER_URL}/image/upload`,
+        const uploadImageResponse = await axiosInstance.post(
+          `/image/upload`,
           formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           }
         );
@@ -185,11 +183,7 @@ const EditMeetup = () => {
           alert(uploadImageResponse.data.message);
         }
       }
-      const postResponse = await axios.patch(
-        `${SERVER_URL}/party/edit`,
-        partyInfo,
-        CONFIG
-      );
+      const postResponse = await axiosInstance.patch(`/party/edit`, partyInfo);
       if (postResponse.status === 200) {
         navigate(
           `/${channelCode}/meetup-detail/${postResponse.data.data.partyId}`,

@@ -7,7 +7,7 @@ import { typography } from "../styles/typography";
 import { color } from "../styles/color";
 import btnChannelAdd from "../assets/icons/btn-channel-add.svg";
 import CircularImage from "../components/CircularImage";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 
 interface ChannelProps {
   code: string;
@@ -19,16 +19,10 @@ interface ChannelProps {
 export default function ChannelHome() {
   const navigate = useNavigate();
   const [channelList, setChannelList] = useState<Array<ChannelProps>>();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
 
   const fetchChannelData = async () => {
     try {
-      const res = await axios.get(`${SERVER_URL}/channels`, CONFIG);
+      const res = await axiosInstance.get(`/channels`);
       if (res.data && res.data.data) {
         setChannelList(res.data.data as Array<ChannelProps>);
       }

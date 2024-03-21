@@ -2,14 +2,13 @@
 import { keyframes } from "@emotion/react";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import searchIcon from "../assets/icons/ic-search.svg";
 import styled from "@emotion/styled";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
 import MemberWrapper from "../components/MemberWrapper";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import memberNotFoundWhale from "../assets/images/x_whale_character.png";
 
 interface MemberProps {
@@ -21,12 +20,6 @@ interface MemberProps {
 }
 
 export default function MemberList() {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
   const CHANNEL_ID = localStorage.getItem("channelId");
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +46,7 @@ export default function MemberList() {
     if (loading) return;
     try {
       const uri =
-        `${SERVER_URL}/channels/${CHANNEL_ID}/members` +
+        `/channels/${CHANNEL_ID}/members` +
         (size || cursorId || keyword ? "?" : "") +
         (size ? `size=${size}` : "") +
         (cursorId
@@ -77,7 +70,7 @@ export default function MemberList() {
       }
       setLoading(true);
 
-      const membersResponse = await axios.get(`${uri}`, CONFIG);
+      const membersResponse = await axiosInstance.get(`${uri}`);
 
       if (membersResponse.data && membersResponse.status === 200) {
         const newMembers = membersResponse.data.content.map((member: any) => ({
@@ -112,10 +105,7 @@ export default function MemberList() {
 
   const fetchTotalMemberCount = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/channels/${CHANNEL_ID}/count`,
-        CONFIG
-      );
+      const res = await axiosInstance.get(`/channels/${CHANNEL_ID}/count`);
       setTotalMemberCount(res.data.data.count);
       return res.data.data.count as number;
     } catch (error) {

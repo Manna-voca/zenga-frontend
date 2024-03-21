@@ -1,32 +1,28 @@
 /** @jsxImportSource @emotion/react */
 import { css, keyframes } from "@emotion/react";
 import { useEffect } from "react";
-import axios from "axios";
 import { color } from "../styles/color";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const KaKao = () => {
   const navigate = useNavigate();
-  console.log(window.location.origin);
   const authcode = new URL(window.location.href).searchParams.get("code");
-  console.log(authcode);
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const fetchTokenByKaKaoAuthCode = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/auth/login/kakao?code=${authcode}`
+        `${SERVER_URL}/auth/login/kakao?code=${authcode}`
       );
       if (response.data && response.data.data) {
         localStorage.setItem("accessToken", response.data.data.accessToken);
         localStorage.setItem("refreshToken", response.data.data.refreshToken);
-        const userInfoResponse = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/users/info`,
-          {
-            headers: {
-              Authorization: `Bearer ${response.data.data.accessToken}`,
-            },
-          }
-        );
+        const userInfoResponse = await axios.get(`${SERVER_URL}/users/info`, {
+          headers: {
+            Authorization: `Bearer ${response.data.data.accessToken}`,
+          },
+        });
         // if(에러땜시왔다는 로컬스토리지에 플래그 있으면){
         //   navigate(-3);
         // }

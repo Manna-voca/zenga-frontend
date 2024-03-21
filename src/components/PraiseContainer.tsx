@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PraiseWrapper from "./PraiseWrapper";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
 import whaleCharacter7 from "../assets/images/whale_character7.png";
@@ -20,9 +20,6 @@ import "../styles/sendpraiseSwiper.css";
 import pointIcon from "../images/points.svg";
 import modalImage1 from "../assets/images/receivePraiseModal1.png";
 import modalImage2 from "../assets/images/receivePraiseModal2.png";
-import whaleClock from "../assets/images/whale-clock.png";
-import sendPraiseModalImage from "../assets/images/sendPraiseModal.png";
-import Popup2 from "./Popup2";
 
 interface OwnProps {
   isGetNotPost: boolean;
@@ -39,12 +36,6 @@ interface PraiseProps {
 }
 
 const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
   const CHANNEL_ID = localStorage.getItem("channelId");
   const [isLoading, setIsLoading] = useState(true);
   const [newPraiseOpened, setNewPraiseOpened] = useState(false);
@@ -68,28 +59,25 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
     }
   };
 
-  const [receivePraiseList, setReceivePraiseList] =
-    useState<Array<PraiseProps> | null>();
-  const [sendPraiseList, setSendPraiseList] =
-    useState<Array<PraiseProps> | null>();
-
-  const praiseList = isGetNotPost ? receivePraiseList : sendPraiseList;
+  const [praiseList, setPraiseList] = useState<Array<PraiseProps>>([]);
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const pageEnd = useRef<HTMLDivElement>(null);
 
   const fetchPraiseData = async () => {
+    const type = isGetNotPost ? "receive" : "send";
+    if (page > totalPages) {
+      setLoading(false);
+      return;
+    }
     try {
-      if (isGetNotPost === true) {
-        const res = await axios.get(
-          `${SERVER_URL}/praise/receive?channelId=${CHANNEL_ID}`,
-          CONFIG
-        );
-        setReceivePraiseList(res.data.data.content);
-      } else {
-        const res = await axios.get(
-          `${SERVER_URL}/praise/send?channelId=${CHANNEL_ID}`,
-          CONFIG
-        );
-        setSendPraiseList(res.data.data.content);
-      }
+      const res = await axiosInstance.get(
+        `/praise/${type}?channelId=${CHANNEL_ID}&page=${page}`
+      );
+      setPraiseList((prev) => [...prev, ...res.data.data.content]);
+      setTotalPages(res.data.data.totalPages);
+      setLoading(true);
     } catch (err) {
       console.log(err);
     }
@@ -97,9 +85,8 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
 
   const fetchModalInfo = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/members/modal/${localStorage.getItem("channelId")}`,
-        CONFIG
+      const res = await axiosInstance.get(
+        `/members/modal/${localStorage.getItem("channelId")}`
       );
       setShowFirstModal(res.data.data.pointModal);
     } catch (err) {
@@ -110,12 +97,9 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
   const firstModalCloseOnClick = async () => {
     try {
       if (firstModalNeverShow) {
-        await axios.patch(
-          `${SERVER_URL}/members/modal/point/${localStorage.getItem(
-            "channelId"
-          )}`,
-          {},
-          CONFIG
+        await axiosInstance.patch(
+          `/members/modal/point/${localStorage.getItem("channelId")}`,
+          {}
         );
       }
       setShowFirstModal(false);
@@ -125,13 +109,35 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
   };
 
   useEffect(() => {
-    fetchModalInfo()
-    fetchPraiseData().then(() => setIsLoading(false));
+    fetchModalInfo();
   }, []);
 
   useEffect(() => {
     fetchPraiseData().then(() => setIsLoading(false));
-  }, [newPraiseOpened]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  useEffect(() => {
+    if (!pageEnd.current) return;
+
+    if (loading) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setPage((prev) => prev + 1);
+          }
+        },
+        {
+          threshold: 1,
+        }
+      );
+      observer.observe(pageEnd.current);
+    }
+  }, [loading]);
+
+  // useEffect(() => {
+  //   fetchPraiseData().then(() => setIsLoading(false));
+  // }, [newPraiseOpened]);
 
   return (
     <>
@@ -148,25 +154,28 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
             </span>
           </div>
         ) : (
-          praiseList?.map((praise, index) => {
-            return (
-              <PraiseWrapper
-                memberId={praise.memberId}
-                handlePraiseOpen={() => setNewPraiseOpened((prev) => !prev)}
-                praiseId={praise.memberPraiseId}
-                key={index}
-                isGetNotPost={isGetNotPost}
-                content={praise.praiseDescription}
-                image={praise.memberProfileImageUrl}
-                name={praise.memberName}
-                type={blockColor(praise.praiseType)}
-                isOpened={praise.isOpened}
-              />
-            );
-          })
+          <>
+            {praiseList?.map((praise, index) => {
+              return (
+                <PraiseWrapper
+                  memberId={praise.memberId}
+                  handlePraiseOpen={() => setNewPraiseOpened((prev) => !prev)}
+                  praiseId={praise.memberPraiseId}
+                  key={index}
+                  isGetNotPost={isGetNotPost}
+                  content={praise.praiseDescription}
+                  image={praise.memberProfileImageUrl}
+                  name={praise.memberName}
+                  type={blockColor(praise.praiseType)}
+                  isOpened={praise.isOpened}
+                />
+              );
+            })}
+            <div ref={pageEnd} />
+          </>
         )}
       </PraiseContainerDiv>
-      {(isGetNotPost && showFirstModal) && (
+      {isGetNotPost && showFirstModal && (
         <FirstModal
           firstModalNeverShow={firstModalNeverShow}
           setFirstModalNeverShow={setFirstModalNeverShow}

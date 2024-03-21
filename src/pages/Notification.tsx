@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 
 interface OwnProps {
   id: number;
@@ -63,22 +63,11 @@ const NotificationWrapper = ({
 };
 
 export default function Notification() {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
   const MEMBER_ID = localStorage.getItem("memberId");
-
   const [notifications, setNotifications] = useState<Array<OwnProps>>();
-
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/notification/member/${MEMBER_ID}`,
-        CONFIG
-      );
+      const res = await axiosInstance.get(`/notification/member/${MEMBER_ID}`);
       if (res.data && res.status === 200) {
         const newList = res.data.data.notificationList.map((item: any) => ({
           id: item.id,
@@ -96,12 +85,8 @@ export default function Notification() {
 
   const readAllNotifications = async () => {
     try {
-      await axios
-        .put(
-          `${SERVER_URL}/notification/check-all/member/${MEMBER_ID}`,
-          {},
-          CONFIG
-        )
+      await axiosInstance
+        .put(`/notification/check-all/member/${MEMBER_ID}`, {})
         .then();
     } catch (error) {
       console.log(error);
@@ -110,7 +95,7 @@ export default function Notification() {
 
   useEffect(() => {
     fetchNotifications();
-    
+
     readAllNotifications();
   }, []);
 
