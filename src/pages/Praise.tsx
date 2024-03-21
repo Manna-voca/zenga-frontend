@@ -194,12 +194,6 @@ const Praise = () => {
   const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
   const [memberCount, setMemberCount] = useState<number>(0);
   const { channelCode } = useParams();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleCategory1Click = async () => {
