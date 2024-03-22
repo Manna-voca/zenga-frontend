@@ -209,14 +209,20 @@ const MeetupHome = () => {
                   flexDirection: "column",
                   height: "calc(100vh - 125px)",
                   maxHeight: "calc(100vh - 125px)",
-                  overflowY: "scroll",
                   position: "relative",
                   gap: "8px",
                 }}
               >
                 {meetupList.map((item, index) => {
                   return (
-                    <div style={{ margin: "0 20px 0 20px" }}>
+                    <div
+                      style={{
+                        padding:
+                          index === meetupList.length - 1
+                            ? "0 20px 67px 20px"
+                            : "0 20px 0 20px",
+                      }}
+                    >
                       <GatheringList
                         key={item.partyId}
                         title={item.title}
@@ -236,7 +242,6 @@ const MeetupHome = () => {
                     </div>
                   );
                 })}
-                <div style={{ height: "57px" }}></div>
               </div>
             </>
           )}

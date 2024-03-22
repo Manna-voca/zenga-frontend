@@ -19,6 +19,7 @@ const addToken = (config: InternalAxiosRequestConfig) => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN);
 
   if (!accessToken) {
+    console.log("No access token found");
     window.location.href = "/error-400";
   }
 
@@ -53,11 +54,13 @@ const handleExpiredToken = async (error: AxiosError<ResponseDataType>) => {
       originalRequest.headers.Authorization = `Bearer ${accessToken}`;
       localStorage.setItem(ACCESS_TOKEN, accessToken);
       localStorage.setItem(REFRESH_TOKEN, refreshToken);
-
-      return axiosInstance(originalRequest);
     } catch (refreshError) {
-      window.location.href = "/";
-      throw new Error("토큰 재발급에 실패했습니다.");
+      console.log(refreshError);
+    } finally {
+      originalRequest.headers.Authorization = `Bearer ${localStorage.getItem(
+        ACCESS_TOKEN
+      )}`;
+      return axiosInstance(originalRequest);
     }
   }
 

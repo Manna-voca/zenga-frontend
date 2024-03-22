@@ -51,8 +51,8 @@ const PraiseWrapper = ({
   const profileImagePath = image ? image : smallWhale;
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showNotEnoughPointPopup, setShowNotEnoughPointPopup] =
-    useState<boolean>(false);
-  const [point, setPoint] = useState<number>();
+  useState<boolean>(false);
+  const [point, setPoint] = useState<number>(0);
 
   const fetchPoint = async () => {
     try {

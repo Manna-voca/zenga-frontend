@@ -24,7 +24,7 @@ const MemberWrapper = ({ name, image, id }: OwnProps) => {
 
   return (
     <Container onClick={handleWrapperClick}>
-      <CircularImage image={image} size="36" />
+      <CircularImage image={image} size='36' />
       <MemberName>{name}</MemberName>
     </Container>
   );
@@ -34,9 +34,10 @@ export default MemberWrapper;
 
 const Container = styled.div`
   display: flex;
-  width: 100%;
+  width: calc(100% - 40px);
   box-sizing: border-box;
-  padding: 12px 20px;
+  padding: 12px 0;
+  margin: 0 20px;
   gap: 24px;
   align-items: center;
   border-bottom: 0.5px solid ${color.outline};

@@ -8,7 +8,7 @@ export const fetchNewToken = async (): Promise<TokenData> => {
   const { data } = await axios.post<ResponseData<TokenData>>(
     SERVER_URL + END_POINTS.AUTH_REFRESH,
     {
-      refreshToken: localStorage.getItem(REFRESH_TOKEN),
+      refreshToken: `${localStorage.getItem(REFRESH_TOKEN)}`,
     }
   );
   return data.data;

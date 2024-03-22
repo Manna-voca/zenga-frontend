@@ -156,15 +156,15 @@ export default function MemberList() {
       <div style={{ padding: "0 20px", margin: "8px 0 4px 0" }}>
         <SearchWrapper>
           <img
-            width="18px"
+            width='18px'
             onClick={() => callSearchApi(searchWord)}
             src={searchIcon}
-            alt="검색"
+            alt='검색'
             style={{ cursor: "pointer" }}
           />
           <SearchInput
-            placeholder="멤버를 검색해 보세요"
-            name="member-search"
+            placeholder='멤버를 검색해 보세요'
+            name='member-search'
             style={{
               ...typography.body3Regular,
               marginLeft: "8px",
@@ -191,9 +191,7 @@ export default function MemberList() {
         style={{
           display: "flex",
           flexDirection: "column",
-          height: "calc(100vh - 172px)",
-          maxHeight: "calc(100vh - 172px)",
-          overflowY: "scroll",
+          paddingBottom: "56px",
           position: "relative",
         }}
       >
@@ -224,7 +222,7 @@ export default function MemberList() {
                 gap: "20px",
               }}
             >
-              <img width={"72px"} src={memberNotFoundWhale} alt="" />
+              <img width={"72px"} src={memberNotFoundWhale} alt='' />
               <div
                 style={{
                   ...typography.body1Regular,
@@ -259,7 +257,6 @@ export default function MemberList() {
           })
         )}
       </div>
-      <div style={{ height: "57px" }}></div>
       <Navbar state={3}></Navbar>
     </>
   );
