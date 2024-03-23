@@ -2,14 +2,13 @@
 import { keyframes } from "@emotion/react";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import searchIcon from "../assets/icons/ic-search.svg";
 import styled from "@emotion/styled";
 import { color } from "../styles/color";
 import { typography } from "../styles/typography";
 import MemberWrapper from "../components/MemberWrapper";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import memberNotFoundWhale from "../assets/images/x_whale_character.png";
 
 interface MemberProps {
@@ -21,12 +20,6 @@ interface MemberProps {
 }
 
 export default function MemberList() {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
   const CHANNEL_ID = localStorage.getItem("channelId");
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +46,7 @@ export default function MemberList() {
     if (loading) return;
     try {
       const uri =
-        `${SERVER_URL}/channels/${CHANNEL_ID}/members` +
+        `/channels/${CHANNEL_ID}/members` +
         (size || cursorId || keyword ? "?" : "") +
         (size ? `size=${size}` : "") +
         (cursorId
@@ -77,7 +70,7 @@ export default function MemberList() {
       }
       setLoading(true);
 
-      const membersResponse = await axios.get(`${uri}`, CONFIG);
+      const membersResponse = await axiosInstance.get(`${uri}`);
 
       if (membersResponse.data && membersResponse.status === 200) {
         const newMembers = membersResponse.data.content.map((member: any) => ({
@@ -112,10 +105,7 @@ export default function MemberList() {
 
   const fetchTotalMemberCount = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/channels/${CHANNEL_ID}/count`,
-        CONFIG
-      );
+      const res = await axiosInstance.get(`/channels/${CHANNEL_ID}/count`);
       setTotalMemberCount(res.data.data.count);
       return res.data.data.count as number;
     } catch (error) {
@@ -166,15 +156,15 @@ export default function MemberList() {
       <div style={{ padding: "0 20px", margin: "8px 0 4px 0" }}>
         <SearchWrapper>
           <img
-            width="18px"
+            width='18px'
             onClick={() => callSearchApi(searchWord)}
             src={searchIcon}
-            alt="검색"
+            alt='검색'
             style={{ cursor: "pointer" }}
           />
           <SearchInput
-            placeholder="멤버를 검색해 보세요"
-            name="member-search"
+            placeholder='멤버를 검색해 보세요'
+            name='member-search'
             style={{
               ...typography.body3Regular,
               marginLeft: "8px",
@@ -201,9 +191,7 @@ export default function MemberList() {
         style={{
           display: "flex",
           flexDirection: "column",
-          height: "calc(100vh - 172px)",
-          maxHeight: "calc(100vh - 172px)",
-          overflowY: "scroll",
+          paddingBottom: "56px",
           position: "relative",
         }}
       >
@@ -234,7 +222,7 @@ export default function MemberList() {
                 gap: "20px",
               }}
             >
-              <img width={"72px"} src={memberNotFoundWhale} alt="" />
+              <img width={"72px"} src={memberNotFoundWhale} alt='' />
               <div
                 style={{
                   ...typography.body1Regular,
@@ -269,7 +257,6 @@ export default function MemberList() {
           })
         )}
       </div>
-      <div style={{ height: "57px" }}></div>
       <Navbar state={3}></Navbar>
     </>
   );

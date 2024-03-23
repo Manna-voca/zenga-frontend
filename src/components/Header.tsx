@@ -12,8 +12,8 @@ import { ReactComponent as ParticipantImg } from "../images/participant.svg";
 import { ReactComponent as PointsImg } from "../images/points.svg";
 import Sidebar from "./Sidebar";
 import CircularImage from "./CircularImage";
-import axios from "axios";
 import { color } from "../styles/color";
+import { axiosInstance } from "../apis/axiosInstance";
 
 // 타입: 뒤로가기, 기본(동아리명, 알림), 모임 만들기, 모임 상세
 //       알림, 참여한 멤버, 댓글, 모임 수정, 카드 만들기
@@ -46,13 +46,6 @@ const Header = ({
   const navigate = useNavigate();
   const { channelCode } = useParams();
   const MEMBER_ID = localStorage.getItem("memberId");
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      "Content-Type": "application/json",
-    },
-  };
 
   const [sidebarState, setSidebarState] = useState<number>(0);
   const [channelInfo, setChannelInfo] = useState<ChannelInfoProps | null>(null);
@@ -100,22 +93,17 @@ const Header = ({
   const getChannelInfo = async () => {
     try {
       setIsLoading(true);
-      await axios
-        .get(`${SERVER_URL}/channels/info?code=${channelCode}`, CONFIG)
+      await axiosInstance
+        .get(`/channels/info?code=${channelCode}`)
         .then((res) => {
           const CHANNEL_ID = res.data.data.id;
-          axios
-            .get(`${SERVER_URL}/channels/${CHANNEL_ID}`, CONFIG)
-            .then((res) => {
-              setChannelInfo(res.data.data);
-              setIsLoading(false);
-            });
+          axiosInstance.get(`/channels/${CHANNEL_ID}`).then((res) => {
+            setChannelInfo(res.data.data);
+            setIsLoading(false);
+          });
         });
-      axios
-        .get(
-          `${SERVER_URL}/notification/member/${MEMBER_ID}/has-unchecked`,
-          CONFIG
-        )
+      axiosInstance
+        .get(`/notification/member/${MEMBER_ID}/has-unchecked`)
         .then((res) => {
           setNoticeInfo(res.data.data.hasUncheckedNotification);
         });

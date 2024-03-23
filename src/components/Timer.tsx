@@ -19,7 +19,7 @@ const Timer: React.FC = () => {
 
       if (targetHour !== undefined) {
         const targetTime = new Date(now);
-        targetTime.setHours(targetHour, 0, -1, 0);
+        targetTime.setHours(targetHour, 1, -1, 0);
         const timeDifference = targetTime.getTime() - now.getTime();
         if (timeDifference <= 0) {
           clearInterval(interval);

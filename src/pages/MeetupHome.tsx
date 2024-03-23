@@ -2,41 +2,27 @@
 import { keyframes } from "@emotion/react";
 import { color } from "../styles/color";
 import styled from "@emotion/styled";
-import React from "react";
 import { useState, useEffect, useRef } from "react";
-import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import { ReactComponent as WhiteplusImg } from "../images/whiteplus.svg";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
 import GatheringList from "../components/GatheringList";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 
 const MeetupHome = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const meetupId = searchParams.get("meetupId");
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      "Content-Type": "application/json",
-    },
-  };
   const { channelCode } = useParams();
 
   const [width, setWidth] = useState(window.innerWidth);
-
   const [loading, setLoading] = useState<boolean>(false);
   const [loadState, setLoadState] = useState<boolean>(false);
-
   const [isLess10, setIsLess10] = useState<boolean>(false);
-
   const [meetupList, setMeetupList] = useState<Array<any>>([]);
-
   const [cursorMeetupId, setCursorMeetupId] = useState<number>();
-
   const [hasNext, setHasNext] = useState<boolean>(true);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,14 +31,12 @@ const MeetupHome = () => {
     if (loading) return;
     try {
       const uri =
-        `${SERVER_URL}/party/list?channelId=${localStorage.getItem(
-          "channelId"
-        )}` +
+        `/party/list?channelId=${localStorage.getItem("channelId")}` +
         (cursorMeetupId ? `&partyId=${cursorMeetupId}` : "") +
         "&size=15";
       if (hasNext === false) return;
       setLoading(true);
-      await axios.get(`${uri}`, CONFIG).then((res) => {
+      await axiosInstance.get(`${uri}`).then((res) => {
         setMeetupList((prev) => [...prev, ...res.data.data.content]);
         if (res.data.data.hasNext === false) {
           setHasNext(false);
@@ -89,11 +73,10 @@ const MeetupHome = () => {
 
   const confirmChannelUser = async () => {
     try {
-      const res1 = await axios.get(
-        `${SERVER_URL}/channels/info?code=${channelCode}`,
-        CONFIG
+      const res1 = await axiosInstance.get(
+        `/channels/info?code=${channelCode}`
       );
-      const res2 = await axios.get(`${SERVER_URL}/channels`, CONFIG);
+      const res2 = await axiosInstance.get(`/channels`);
 
       for (let i = 0; i < res2.data.data.length; i++) {
         if (res2.data.data[i].id === res1.data.data.id) {
@@ -120,13 +103,8 @@ const MeetupHome = () => {
     if (meetupId !== null) {
       confirmChannelUser();
     } else {
-      axios
-        .get(
-          `${SERVER_URL}/channels/${localStorage.getItem(
-            "channelId"
-          )}/validity`,
-          CONFIG
-        )
+      axiosInstance
+        .get(`/channels/${localStorage.getItem("channelId")}/validity`)
         .then((res) => {
           setIsLess10(!res.data.data.isValid);
         })
@@ -231,14 +209,20 @@ const MeetupHome = () => {
                   flexDirection: "column",
                   height: "calc(100vh - 125px)",
                   maxHeight: "calc(100vh - 125px)",
-                  overflowY: "scroll",
                   position: "relative",
                   gap: "8px",
                 }}
               >
                 {meetupList.map((item, index) => {
                   return (
-                    <div style={{ margin: "0 20px 0 20px" }}>
+                    <div
+                      style={{
+                        padding:
+                          index === meetupList.length - 1
+                            ? "0 20px 67px 20px"
+                            : "0 20px 0 20px",
+                      }}
+                    >
                       <GatheringList
                         key={item.partyId}
                         title={item.title}
@@ -258,7 +242,6 @@ const MeetupHome = () => {
                     </div>
                   );
                 })}
-                <div style={{ height: "57px" }}></div>
               </div>
             </>
           )}

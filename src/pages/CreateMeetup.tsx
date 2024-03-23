@@ -14,8 +14,7 @@ import downArrowActiveIcon from "../assets/icons/ic-downArrowActive.svg";
 import downArrowMutedIcon from "../assets/icons/ic-downArrowMuted.svg";
 import MeetupImageEditor from "../components/MeetupImageEditor";
 import ButtonBasic from "../components/ButtonBasic";
-import { typography } from "../styles/typography";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
 import { debounce } from "lodash";
 
@@ -37,15 +36,8 @@ const initialMeetupInfo: MeetupInfoProps = {
 
 const CreateMeetup = () => {
   const navigate = useNavigate();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const { channelCode } = useParams();
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
   const CHANNEL_ID = localStorage.getItem("channelId");
-
   const [meetupInfo, setMeetupInfo] =
     useState<MeetupInfoProps>(initialMeetupInfo);
 
@@ -107,13 +99,12 @@ const CreateMeetup = () => {
       if (attachment !== null) {
         const formData = new FormData();
         formData.append("image", attachment ? attachment : "");
-        const uploadImageResponse = await axios.post(
-          `${SERVER_URL}/image/upload`,
+        const uploadImageResponse = await axiosInstance.post(
+          `/image/upload`,
           formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           }
         );
@@ -124,11 +115,7 @@ const CreateMeetup = () => {
           alert(uploadImageResponse.data.message);
         }
       }
-      const postResponse = await axios.post(
-        `${SERVER_URL}/party/create`,
-        partyInfo,
-        CONFIG
-      );
+      const postResponse = await axiosInstance.post(`/party/create`, partyInfo);
       if (postResponse.status === 200) {
         navigate(
           `/${channelCode}/meetup-detail/${postResponse.data.data.partyId}`,

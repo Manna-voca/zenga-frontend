@@ -15,7 +15,7 @@ import ButtonMultiple from "../components/ButtonMultiple";
 import PopupComplaint from "../components/PopupComplaint";
 import Popup2 from "../components/Popup2";
 import Popup1 from "../components/Popup1";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -59,11 +59,8 @@ const MeetupDetail = () => {
   };
 
   const handleMeetupDeleteBtnClick = async () => {
-    await axios
-      .delete(
-        `${SERVER_URL}/party/cancel?channelId=${CHANNEL_ID}&partyId=${meetupId}`,
-        CONFIG
-      )
+    await axiosInstance
+      .delete(`/party/cancel?channelId=${CHANNEL_ID}&partyId=${meetupId}`)
       .then((res) => {
         setShowDeletePopup(false);
         navigate(-1);
@@ -72,15 +69,11 @@ const MeetupDetail = () => {
   };
 
   const handleMeetupParticipateBtnClick = async () => {
-    await axios
-      .post(
-        `${SERVER_URL}/party/apply`,
-        {
-          channelId: CHANNEL_ID,
-          partyId: meetupId,
-        },
-        CONFIG
-      )
+    await axiosInstance
+      .post(`/party/apply`, {
+        channelId: CHANNEL_ID,
+        partyId: meetupId,
+      })
       .then((res) => {
         setButtonState(2);
         setShowMeetupPopup(false);
@@ -89,11 +82,8 @@ const MeetupDetail = () => {
   };
 
   const handleMeetupCancelBtnClick = async () => {
-    await axios
-      .delete(
-        `${SERVER_URL}/party/apply/cancel?channelId=${CHANNEL_ID}&partyId=${meetupId}`,
-        CONFIG
-      )
+    await axiosInstance
+      .delete(`/party/apply/cancel?channelId=${CHANNEL_ID}&partyId=${meetupId}`)
       .then((res) => {
         setButtonState(1);
         setShowMeetupCancelPopup(false);
@@ -102,15 +92,11 @@ const MeetupDetail = () => {
   };
 
   const handleMeetupCompleteBtnClick = async () => {
-    await axios
-      .patch(
-        `${SERVER_URL}/party/close`,
-        {
-          channelId: CHANNEL_ID,
-          partyId: meetupId,
-        },
-        CONFIG
-      )
+    await axiosInstance
+      .patch(`/party/close`, {
+        channelId: CHANNEL_ID,
+        partyId: meetupId,
+      })
       .then((res) => {
         setButtonState(6);
         setShowMeetupCompletePopup(false);
@@ -200,12 +186,11 @@ const MeetupDetail = () => {
     useState<string>("");
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(
-        `${SERVER_URL}/party/detail/${meetupId}?channelId=${localStorage.getItem(
+        `/party/detail/${meetupId}?channelId=${localStorage.getItem(
           "channelId"
-        )}`,
-        CONFIG
+        )}`
       )
       .then((res) => {
         const meetupData = res.data.data;

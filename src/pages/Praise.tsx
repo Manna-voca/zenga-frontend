@@ -2,7 +2,6 @@
 import { css } from "@emotion/react";
 import React from "react";
 import { useState, useEffect } from "react";
-import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import styled from "@emotion/styled";
 import { color } from "../styles/color";
@@ -15,7 +14,7 @@ import SendPraise from "../components/SendPraise";
 import PraiseContainer from "../components/PraiseContainer";
 import Toast from "../components/Toast";
 import { useParams } from "react-router";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import { LoadingSpinner, Loadingdiv } from "../components/SendPraise";
 
 interface CategoryProps {
@@ -195,12 +194,6 @@ const Praise = () => {
   const [isDuplicateSuccess, setIsDuplicateSuccess] = useState<boolean>(false);
   const [memberCount, setMemberCount] = useState<number>(0);
   const { channelCode } = useParams();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleCategory1Click = async () => {
@@ -218,16 +211,14 @@ const Praise = () => {
 
   const fetchChannelIdAndValidity = async () => {
     try {
-      const infoResponse = await axios.get(
-        `${SERVER_URL}/channels/info?code=${channelCode}`,
-        CONFIG
+      const infoResponse = await axiosInstance.get(
+        `/channels/info?code=${channelCode}`
       );
       if (infoResponse.data && infoResponse.data.data) {
         const channelId = infoResponse.data.data.id;
         localStorage.setItem("channelId", channelId);
-        const validityResponse = await axios.get(
-          `${SERVER_URL}/channels/${channelId}/validity`,
-          CONFIG
+        const validityResponse = await axiosInstance.get(
+          `/channels/${channelId}/validity`
         );
         if (validityResponse.data) {
           if (validityResponse.data.data.isValid === true) {

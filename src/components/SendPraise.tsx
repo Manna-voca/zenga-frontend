@@ -25,8 +25,9 @@ import "swiper/css/pagination";
 import "../styles/sendpraiseSwiper.css";
 import whaleClock from "../assets/images/whale-clock.png";
 import sendPraiseModalImage from "../assets/images/sendPraiseModal.png";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 interface MemberProps {
   name: string;
@@ -74,7 +75,7 @@ const PraiseMemberWrapper = ({
         cursor: "pointer",
       }}
     >
-      <CircularImage image={profileImage} size="36" />
+      <CircularImage image={profileImage} size='36' />
       <span
         style={{
           color: `${color.onSurfaceActive}`,
@@ -134,7 +135,7 @@ const PraiseModal = ({ onClick }: PraiseModalProps) => {
           alignItems: "center",
         }}
       >
-        <img width="48px" src={whaleCharacter7} alt="" />
+        <img width='48px' src={whaleCharacter7} alt='' />
         <h2
           style={{
             margin: "10px 0 6px 0",
@@ -235,7 +236,7 @@ const FirstModal = ({
           <img
             onClick={firstModalCloseOnClick}
             src={xIcon}
-            alt=""
+            alt=''
             style={{ cursor: "pointer" }}
           />
         </div>
@@ -251,7 +252,7 @@ const FirstModal = ({
             <div css={firstPraiseModalPstyle} style={{ marginBottom: "20px" }}>
               4시간마다 <b>칭찬 질문</b>이 <br /> 달라져요!
             </div>
-            <img width={"176px"} src={whaleClock} alt="" />
+            <img width={"176px"} src={whaleClock} alt='' />
           </MySwiperSlide>
           <MySwiperSlide>
             <div css={firstPraiseModalPstyle} style={{ marginBottom: "35px" }}>
@@ -259,9 +260,9 @@ const FirstModal = ({
               <br /> 사람을 선택하면 <br /> <b>익명으로 전달돼요!</b>
             </div>
             <img
-              width="100%"
+              width='100%'
               src={sendPraiseModalImage}
-              alt=""
+              alt=''
               style={{ paddingLeft: "20px" }}
             />
             <div
@@ -296,7 +297,7 @@ const FirstModal = ({
         >
           <img
             src={firstModalNeverShow ? checkedboxIcon : checkboxIcon}
-            alt=""
+            alt=''
           />
           다시 보지 않기
         </div>
@@ -307,13 +308,6 @@ const FirstModal = ({
 
 const SendPraise = () => {
   const { channelCode } = useParams();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
-
   const [praiseInfo, setPraiseInfo] = useState({
     praise: "",
     memberList: [
@@ -342,10 +336,7 @@ const SendPraise = () => {
 
   const getChannelId = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/channels/info?code=${channelCode}`,
-        CONFIG
-      );
+      const res = await axiosInstance.get(`/channels/info?code=${channelCode}`);
       if (res.data.data.id !== Number(localStorage.getItem("channelId"))) {
         localStorage.setItem("channelId", res.data.data.id);
       }
@@ -356,9 +347,8 @@ const SendPraise = () => {
 
   const fetchModalInfo = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/members/modal/${localStorage.getItem("channelId")}`,
-        CONFIG
+      const res = await axiosInstance.get(
+        `/members/modal/${localStorage.getItem("channelId")}`
       );
       setShowFirstModal(res.data.data.praiseModal);
     } catch (err) {
@@ -369,11 +359,9 @@ const SendPraise = () => {
   const fetchPraiseData = async () => {
     const CHANNEL_ID = localStorage.getItem("channelId");
     try {
-      const res = await axios.post(
-        `${SERVER_URL}/praise/todo`,
-        { channelId: CHANNEL_ID },
-        CONFIG
-      );
+      const res = await axiosInstance.post(`/praise/todo`, {
+        channelId: CHANNEL_ID,
+      });
       if (res.data.data === null) {
         setShowPraiseNotTimer(false);
       } else {
@@ -381,7 +369,23 @@ const SendPraise = () => {
         setPraiseInfo(res.data.data);
       }
     } catch (error) {
-      console.log(error);
+      const err = error as AxiosError;
+      // FIXME: 404(errorcode: 800) should be fixed in backend
+      // This API call(POST /praise/todo) should be removed
+      if (err.response?.status === 404) {
+        await axiosInstance
+          .post(`/praise/todo`, {
+            channelId: CHANNEL_ID,
+          })
+          .then((res) => {
+            if (res.data.data === null) setShowPraiseNotTimer(true);
+            else {
+              setShowPraiseNotTimer(true);
+              setPraiseInfo(res.data.data);
+            }
+          })
+          .catch((err) => console.log(err));
+      }
     }
   };
 
@@ -400,12 +404,9 @@ const SendPraise = () => {
     try {
       if (firstModalNeverShow) {
         // 다시보지않기 api 전송
-        await axios.patch(
-          `${SERVER_URL}/members/modal/praise/${localStorage.getItem(
-            "channelId"
-          )}`,
-          {},
-          CONFIG
+        await axiosInstance.patch(
+          `/members/modal/praise/${localStorage.getItem("channelId")}`,
+          {}
         );
       }
       setShowFirstModal(false);
@@ -421,27 +422,20 @@ const SendPraise = () => {
         shuffleCount: prev.shuffleCount === 1 ? 0 : 1,
       }));
       setSelectedMember(-1);
-      await axios.patch(
-        `${SERVER_URL}/praise/todo`,
-        { channelId: localStorage.getItem("channelId") },
-        CONFIG
-      );
+      await axiosInstance.patch(`/praise/todo`, {
+        channelId: localStorage.getItem("channelId"),
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleSendPraise = async () => {
-    /* await 칭찬 api 함수 */
     try {
-      await axios.patch(
-        `${SERVER_URL}/praise/choice`,
-        {
-          memberPraiseId: praiseInfo.memberPraiseId,
-          praisedMemberId: selectedMember,
-        },
-        CONFIG
-      );
+      await axiosInstance.patch(`/praise/choice`, {
+        memberPraiseId: praiseInfo.memberPraiseId,
+        praisedMemberId: selectedMember,
+      });
       setSelectedMember(-1);
       setShowPraiseModal(true);
     } catch (error) {
@@ -464,33 +458,33 @@ const SendPraise = () => {
         <TimerContainer>
           <WaveWhaleDiv>
             <img
-              width="65px"
+              width='65px'
               style={{ position: "absolute", left: "53px", bottom: "3px" }}
               src={whaleCharacter4}
               css={leftWhaleWaveStyle}
-              alt=""
+              alt=''
             />
             <img
-              width="63px"
+              width='63px'
               style={{ position: "absolute", left: "148px", bottom: "8.5px" }}
               src={whaleCharacter5}
               css={rightWhaleWaveStyle}
-              alt=""
+              alt=''
             />
-            <img css={waveSvgStyles} src={wave} alt="" />
+            <img css={waveSvgStyles} src={wave} alt='' />
           </WaveWhaleDiv>
 
           <Timer />
           <span css={helpMessageStyle}>받고 싶은 칭찬이 있다면?</span>
           <a
-            href="https://forms.gle/dckdnpm441eVWvjp7"
-            target="_blank"
-            rel="noreferrer"
+            href='https://forms.gle/dckdnpm441eVWvjp7'
+            target='_blank'
+            rel='noreferrer'
             css={aTagStyle}
           >
             <PraiseAddButton>
               칭찬 등록
-              <img src={rightArrowIcon} alt="" />
+              <img src={rightArrowIcon} alt='' />
             </PraiseAddButton>
           </a>
         </TimerContainer>

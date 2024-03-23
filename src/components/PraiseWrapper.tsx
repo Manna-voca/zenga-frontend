@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { color } from "../styles/color";
 import smallWhale from "../assets/images/smallWhale.png";
 import CircularImage from "./CircularImage";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import Popup2 from "./Popup2";
 import Popup1 from "./Popup1";
 import PoorWhale from "../assets/images/poor_whale_character.png";
@@ -16,7 +16,7 @@ interface PraiseProps {
   praiseId: number;
   isGetNotPost: boolean;
   content: string;
-  memberId: string|null;
+  memberId: string | null;
   image?: string;
   isOpened?: boolean;
   name: string;
@@ -35,12 +35,6 @@ const PraiseWrapper = ({
   type,
 }: PraiseProps) => {
   const navigate = useNavigate();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
   const { channelCode: CHANNEL_CODE } = useParams();
   const CHANNEL_ID = localStorage.getItem("channelId");
   const blockType = `block${type}`;
@@ -57,17 +51,13 @@ const PraiseWrapper = ({
   const profileImagePath = image ? image : smallWhale;
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showNotEnoughPointPopup, setShowNotEnoughPointPopup] =
-    useState<boolean>(false);
-  const [point, setPoint] = useState<number>();
+  useState<boolean>(false);
+  const [point, setPoint] = useState<number>(0);
 
   const fetchPoint = async () => {
     try {
-      await axios
-        .get(`${SERVER_URL}/point/total`, CONFIG)
-        .then((res) => {
-          setPoint(res.data.data.point);
-        })
-        .catch((err) => console.log(err));
+      const { data } = await axiosInstance.get(`/point/total`);
+      setPoint(data.data.point);
     } catch (error) {
       console.log(error);
     }
@@ -76,14 +66,10 @@ const PraiseWrapper = ({
   const getSenderOfPraise = async () => {
     try {
       if (isGetNotPost === true && isOpened === false) {
-        await axios.patch(
-          `${SERVER_URL}/praise/open`,
-          {
-            channelId: CHANNEL_ID,
-            memberPraiseId: praiseId,
-          },
-          CONFIG
-        );
+        await axiosInstance.patch(`/praise/open`, {
+          channelId: CHANNEL_ID,
+          memberPraiseId: praiseId,
+        });
         handlePraiseOpen();
         setShowPopup(false);
       }
@@ -97,16 +83,12 @@ const PraiseWrapper = ({
     }
   };
 
-  useEffect(() => {
-    fetchPoint();
-  }, []);
-
   return (
     <>
       {showPopup && (
         <Popup2
-          leftBtnText="취소"
-          rightBtnText="확인"
+          leftBtnText='취소'
+          rightBtnText='확인'
           title={"300 포인트를 차감하시겠어요?"}
           text={`(현재포인트 : ${point})
           포인트 차감 시, 보낸 멤버가 누구인지 알 수 있어요`}
@@ -117,15 +99,15 @@ const PraiseWrapper = ({
       {showNotEnoughPointPopup && (
         <Popup1
           image={PoorWhale}
-          title="포인트가 부족해요"
+          title='포인트가 부족해요'
           text={`포인트가 부족해서
           칭찬을 보낸 멤버를 확인할 수 없어요`}
-          btnText="확인"
+          btnText='확인'
           func={() => setShowNotEnoughPointPopup(false)}
         />
       )}
       <PraiseWrapperDiv>
-        <img width="21px" height="21px" src={blockImagePath} alt="" />
+        <img width='21px' height='21px' src={blockImagePath} alt='' />
         <PraiseContentDiv>
           <B>{content}</B>
           {defaultMessage}
@@ -134,18 +116,18 @@ const PraiseWrapper = ({
           onClick={
             isGetNotPost === true && isOpened === false
               ? () => {
-                  setShowPopup(true);
                   fetchPoint();
+                  setShowPopup(true);
                 }
               : () => {
-                  if(memberId){
+                  if (memberId) {
                     navigate(`/${CHANNEL_CODE}/memberpage/${memberId}`);
                   }
                 }
           }
           css={imageNameStyle}
         >
-          <CircularImage size="24" image={profileImagePath} />
+          <CircularImage size='24' image={profileImagePath} />
           {name}
         </div>
       </PraiseWrapperDiv>

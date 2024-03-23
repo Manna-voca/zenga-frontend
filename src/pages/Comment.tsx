@@ -10,13 +10,11 @@ import ButtonMultiple from "../components/ButtonMultiple";
 import PopupComplaint from "../components/PopupComplaint";
 import Popup2 from "../components/Popup2";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { debounce } from "lodash";
-
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 interface CommentData {
   id: string;
@@ -156,17 +154,11 @@ const CommentCreator = ({
   const { meetupId } = useParams();
   const [myImage, setMyImage] = useState<string>("");
   const CHANNEL_ID = localStorage.getItem("channelId");
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
 
   const getMyImage = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/members/info?channelId=${CHANNEL_ID}`,
-        CONFIG
+      const res = await axiosInstance.get(
+        `/members/info?channelId=${CHANNEL_ID}`
       );
       setMyImage(res.data.data.profileImageUrl);
     } catch (err) {
@@ -211,57 +203,40 @@ const CommentCreator = ({
       alert("댓글을 입력해주세요.");
       return;
     }
-    const URL = `${SERVER_URL}/comment`;
     try {
       // 새로운 댓글 작성
       if (replyTo === null && commentId === undefined) {
-        await axios.post(
-          URL,
-          {
-            channelId: CHANNEL_ID,
-            partyId: meetupId,
-            content: comment,
-          },
-          CONFIG
-        );
+        await axiosInstance.post("/comment", {
+          channelId: CHANNEL_ID,
+          partyId: meetupId,
+          content: comment,
+        });
         window.location.reload();
       }
       // 내 댓글 수정
       else if (replyTo === null && commentId !== undefined) {
-        await axios.patch(
-          URL,
-          {
-            channelId: CHANNEL_ID,
-            commentId: commentId,
-            content: comment,
-          },
-          CONFIG
-        );
+        await axiosInstance.patch("/comment", {
+          channelId: CHANNEL_ID,
+          commentId: commentId,
+          content: comment,
+        });
         window.location.reload();
       }
       // 남의 댓글에 대댓글
       else if (replyTo !== null && commentId !== undefined) {
-        await axios.post(
-          URL,
-          {
-            channelId: CHANNEL_ID,
-            partyId: meetupId,
-            parentId: parentId ? parentId : commentId,
-            content: comment,
-          },
-          CONFIG
-        );
+        await axiosInstance.post("/comment", {
+          channelId: CHANNEL_ID,
+          partyId: meetupId,
+          parentId: parentId ? parentId : commentId,
+          content: comment,
+        });
         window.location.reload();
       } else {
-        await axios.patch(
-          URL,
-          {
-            channelId: CHANNEL_ID,
-            commentId: commentId,
-            content: comment,
-          },
-          CONFIG
-        );
+        await axiosInstance.patch("/comment", {
+          channelId: CHANNEL_ID,
+          commentId: commentId,
+          content: comment,
+        });
         window.location.reload();
       }
 
@@ -388,11 +363,6 @@ const Comment = () => {
   const [commentId, setCommentId] = useState<string>();
   // 대댓글 부모 댓글 ID
   const [parentId, setParentId] = useState<string | null>(null);
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
-  };
 
   dayjs.extend(relativeTime);
   dayjs.locale("ko");
@@ -411,9 +381,8 @@ const Comment = () => {
   }
   const deleteComment = async () => {
     try {
-      const res = await axios.delete(
-        `${SERVER_URL}/comment?channelId=${CHANNEL_ID}&commentId=${commentId}`,
-        CONFIG
+      const res = await axiosInstance.delete(
+        `/comment?channelId=${CHANNEL_ID}&commentId=${commentId}`
       );
       if (res === undefined || null) {
         alert("삭제 실패");
@@ -428,9 +397,8 @@ const Comment = () => {
 
   const fetchComments = async () => {
     try {
-      const res = await axios.get(
-        `${SERVER_URL}/comment/${meetupId}?size=100&channelId=${CHANNEL_ID}`,
-        CONFIG
+      const res = await axiosInstance.get(
+        `/comment/${meetupId}?size=100&channelId=${CHANNEL_ID}`
       );
       let newComment: any = [];
       if (res.data && res.status === 200) {

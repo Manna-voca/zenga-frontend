@@ -7,19 +7,13 @@ import DatePicker from "../components/DatePicker";
 import ButtonBasic from "../components/ButtonBasic";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import axios from "axios";
+import { axiosInstance } from "../apis/axiosInstance";
 
 export default function Onboarding() {
   const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
-  };
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const CONFIG = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    },
   };
   const [gender, setGender] = useState<string>("");
   const genderChoices = ["여자", "남자"];
@@ -37,11 +31,7 @@ export default function Onboarding() {
         gender: gender === "남자" ? "MAN" : "WOMAN",
         birthDate: formatDate(birthDate),
       };
-      const onboardingRes = await axios.put(
-        `${SERVER_URL}/users/update`,
-        data,
-        CONFIG
-      );
+      const onboardingRes = await axiosInstance.put(`/users/update`, data);
       if (onboardingRes.data) {
         navigate("/channel-home");
       }
