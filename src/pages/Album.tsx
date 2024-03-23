@@ -122,7 +122,48 @@ const Album = () => {
       // 텍스트 추가
       const createdAt = dayjs(albumList[initialNum].albumCreatedDate);
       const formattedCreatedAt = createdAt.format("YYYY.MM.DD");
-      ctx.fillText(formattedCreatedAt, 40, 68);
+
+      // 회색 박스 그리기
+      const boxPadding = 20;
+      const boxWidth =
+        ctx.measureText(formattedCreatedAt).width + boxPadding * 2;
+      const boxHeight = 40;
+      const textBorderRadius = 22.5; // border-radius 값 설정
+      ctx.fillStyle = "rgba(10, 10, 10, 0.45)";
+      ctx.beginPath(); // 경로를 시작합니다.
+      ctx.moveTo(20 + textBorderRadius, 20); // 좌상단 꼭지점에서 시작
+      ctx.lineTo(20 + boxWidth - textBorderRadius, 20); // 윗변
+      ctx.quadraticCurveTo(
+        20 + boxWidth,
+        20,
+        20 + boxWidth,
+        20 + textBorderRadius
+      ); // 우상단 꼭지점
+      ctx.lineTo(20 + boxWidth, 20 + boxHeight - textBorderRadius); // 오른쪽 변
+      ctx.quadraticCurveTo(
+        20 + boxWidth,
+        20 + boxHeight,
+        20 + boxWidth - textBorderRadius,
+        20 + boxHeight
+      ); // 우하단 꼭지점
+      ctx.lineTo(20 + textBorderRadius, 20 + boxHeight); // 아랫변
+      ctx.quadraticCurveTo(
+        20,
+        20 + boxHeight,
+        20,
+        20 + boxHeight - textBorderRadius
+      ); // 좌하단 꼭지점
+      ctx.lineTo(20, 20 + textBorderRadius); // 왼쪽 변
+      ctx.quadraticCurveTo(20, 20, 20 + textBorderRadius, 20); // 좌상단 꼭지점
+      ctx.closePath(); // 경로를 닫습니다.
+      ctx.fill(); // 채우기를 수행합니다.
+
+      ctx.fillStyle = "#FCFCFC";
+      ctx.fillText(
+        formattedCreatedAt,
+        20 + boxPadding,
+        20 + boxHeight / 2 + 10
+      );
 
       ctx.restore(); // clip 상태를 해제하여 다음 그림을 영향받지 않게 합니다.
 
@@ -168,21 +209,21 @@ const Album = () => {
       {memberState ? (
         <>
           <MeetupMember
-            state="album"
+            state='album'
             albumId={`${albumList[initialNum].id}`}
           ></MeetupMember>
         </>
       ) : (
         <>
           <Header
-            type="card"
+            type='card'
             download={who === "my" ? undefined : false}
             downloadFunc={handleDownloadImgClick}
             func={handleParticipantImgClick}
           ></Header>
           <div style={{ height: "20px" }}></div>
           <Swiper
-            className="album"
+            className='album'
             style={{ width: "100%", height: "600px", zIndex: "0" }}
             effect={"coverflow"}
             pagination={{
@@ -241,11 +282,11 @@ const Album = () => {
           <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
           {popupState && (
             <Popup1
-              title="저장 완료"
+              title='저장 완료'
               text={
                 "카드에 있는 텍스트는 제외하고\n모임 날짜만 함께 저장했어요"
               }
-              btnText="확인"
+              btnText='확인'
               func={() => setPopupState(false)}
             />
           )}
