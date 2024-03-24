@@ -16,6 +16,9 @@ import CircularImage from "./CircularImage";
 import { color } from "../styles/color";
 import { axiosInstance } from "../apis/axiosInstance";
 import { typography } from "../styles/typography";
+import { fetchMyRankInfo } from "../apis/ranking";
+import { fetchZengaPoint } from "../apis/zengaPoint";
+import { 점수최대치처리 } from "../utils/addCommas";
 
 // 타입: 뒤로가기, 기본(동아리명, 알림), 모임 만들기, 모임 상세
 //       알림, 참여한 멤버, 댓글, 모임 수정, 카드 만들기
@@ -54,16 +57,23 @@ const Header = ({
   const [noticeInfo, setNoticeInfo] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [rankPoint, setRankPoint] = useState<string>("1,234");
-  const [zengaPoint, setZengaPoint] = useState<string>("99,999+");
+  const [rankPoint, setRankPoint] = useState<string>("");
+  const [zengaPoint, setZengaPoint] = useState<string>("");
 
   useEffect(() => {
     if (type === "common") {
       getChannelInfo();
     }
     if (type === "my") {
-      // TODO: get rank point and zenga point
-      // If points over than 99999 points display "99,999+"
+      const myRankPoint = fetchMyRankInfo();
+      const myZengaPoint = fetchZengaPoint();
+
+      myRankPoint.then((res) => {
+        setRankPoint(점수최대치처리(res.point));
+      });
+      myZengaPoint.then((res) => {
+        setZengaPoint(점수최대치처리(res));
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -424,12 +434,12 @@ const Header = ({
             }}
           >
             <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
-              <RankPointIcon height={18} width={18} />
-              {rankPoint}
-            </div>
-            <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
               <PointsImg height={18} width={18} />
               {zengaPoint}
+            </div>
+            <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+              <RankPointIcon height={18} width={18} />
+              {rankPoint}
             </div>
           </div>
         </div>

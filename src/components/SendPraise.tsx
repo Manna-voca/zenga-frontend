@@ -443,7 +443,8 @@ const SendPraise = () => {
         memberPraiseId: praiseInfo.memberPraiseId,
         praisedMemberId: selectedMember,
       });
-      setSelectedMember(-1);
+      if (praiseInfo.shuffleCount === praiseInfo.memberList.length / 4 - 1)
+        setSelectedMember(-1);
       setShowPraiseModal(true);
     } catch (error) {
       console.log(error);
@@ -522,7 +523,9 @@ const SendPraise = () => {
                   : `${color.onPrimaryActive}`,
               }}
             />
-            이름 셔플 {praiseInfo.shuffleCount}/1
+            이름 셔플{" "}
+            {praiseInfo.memberList.length / 4 - 1 - praiseInfo.shuffleCount}/
+            {praiseInfo.memberList.length / 4 - 1}
           </ShuffleButton>
           <PraiseMemberContainer>
             {praiseInfo.memberList.slice(start, end).map((member, index) => (

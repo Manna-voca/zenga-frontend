@@ -14,6 +14,12 @@ import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Popup1 from "../components/Popup1";
 import { POINT_HELP_MESSAGE } from "../constants/POINT_HELP_MESSAGE";
+import {
+  RankPointHistoryType,
+  fetchMyRankInfo,
+  fetchMyRankPointHistory,
+} from "../apis/ranking";
+import { 세자리콤마추가 } from "../utils/addCommas";
 
 const PointDetail = () => {
   dayjs.extend(relativeTime);
@@ -21,8 +27,12 @@ const PointDetail = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [helpToastState, setHelpToastState] = useState<boolean>(false);
-  const [totalPoint, setTotalPoint] = useState<number>();
+  const [zengaPoint, setZengaPoint] = useState<number>(0);
+  const [rankPoint, setRankPoint] = useState<number>(0);
   const [pointList, setPointList] = useState<Array<any>>([]);
+  const [rankHistoryList, setRankHistoryList] = useState<
+    Array<RankPointHistoryType>
+  >([]);
   const [hasNext, setHasNext] = useState<boolean>(true);
   const [pointId, setPointId] = useState<number>();
   const [selectedTab, setSelectedTab] = useState<string>("zenga");
@@ -32,7 +42,7 @@ const PointDetail = () => {
     await axiosInstance
       .get(`/point/total`)
       .then((res) => {
-        setTotalPoint(res.data.data.point);
+        setZengaPoint(res.data.data.point);
       })
       .catch((err) => console.error(err));
   };
@@ -74,7 +84,15 @@ const PointDetail = () => {
 
   useEffect(() => {
     getTotalPoint();
+    const rankPoint = fetchMyRankInfo();
+    rankPoint.then((res) => {
+      setRankPoint(res.point);
+    });
     getPointInfo();
+    const rankPointHistory = fetchMyRankPointHistory();
+    rankPointHistory.then((res) => {
+      setRankHistoryList(res);
+    });
   }, []);
 
   return (
@@ -89,7 +107,7 @@ const PointDetail = () => {
       )}
       <Header type='back' text='내 포인트' />
       <PointViewContainer>
-        <div>
+        <div className='point-help-div'>
           <h1>포인트</h1>
           <img
             src={QuestionIcon}
@@ -99,19 +117,19 @@ const PointDetail = () => {
         </div>
 
         <PointViewElementWrapper id='zenga-point'>
-          <div>
+          <div className='point-name'>
             <PointsImg height={21} width={21} />
             젠가 포인트
           </div>
-          <span>{totalPoint}</span>
+          <span>{세자리콤마추가(zengaPoint)}</span>
         </PointViewElementWrapper>
 
         <PointViewElementWrapper id='ranking-point'>
-          <div>
+          <div className='point-name'>
             <RankPointIcon height={21} width={21} />
             랭킹 포인트
           </div>
-          <span>{totalPoint}</span>
+          <span>{세자리콤마추가(rankPoint)}</span>
         </PointViewElementWrapper>
       </PointViewContainer>
 
@@ -135,19 +153,33 @@ const PointDetail = () => {
             <LoadingSpinner />
           </LoadingBg>
         )}
-        <DetailList ref={containerRef} onScroll={handleScroll}>
-          {pointList.map((item) => {
-            const createdAt = dayjs(item.createdAt);
-            const formattedCreatedAt = createdAt.format("YY.MM.DD");
-            return (
-              <PointDetailItem
-                key={item.pointId}
-                point={item.point}
-                date={formattedCreatedAt}
-                text={item.description}
-              />
-            );
-          })}
+        <DetailList
+          ref={containerRef}
+          onScroll={selectedTab === "zenga" ? handleScroll : undefined}
+        >
+          {selectedTab === "zenga"
+            ? pointList.map((item) => {
+                const createdAt = dayjs(item.createdAt);
+                const formattedCreatedAt = createdAt.format("YY.MM.DD");
+                return (
+                  <PointDetailItem
+                    key={item.pointId}
+                    point={item.point}
+                    date={formattedCreatedAt}
+                    text={item.description}
+                  />
+                );
+              })
+            : rankHistoryList.map((item, index) => {
+                return (
+                  <PointDetailItem
+                    key={index}
+                    point={item.point}
+                    date={item.date}
+                    text={item.contents}
+                  />
+                );
+              })}
         </DetailList>
       </PointDetailContainer>
     </>
@@ -186,7 +218,7 @@ const LoadingSpinner = styled.div`
 const PointViewContainer = styled.div`
   margin: 16px 20px 32px 20px;
 
-  div:first-child {
+  .point-help-div {
     margin-bottom: 12px;
 
     display: flex;
@@ -226,7 +258,7 @@ const PointViewElementWrapper = styled.div`
   font-weight: 600;
   line-height: 150%;
 
-  div:first-child {
+  .point-name {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -268,7 +300,7 @@ const DetailList = styled.div`
   position: relative;
 
   max-height: calc(100vh - 339px);
-  overflow: scroll;
+  overflow-y: scroll;
 
   display: flex;
   flex-direction: column;

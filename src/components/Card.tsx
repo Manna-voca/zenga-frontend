@@ -69,6 +69,10 @@ const Card = ({ date, title, text, image }: Props) => {
             background:
               "linear-gradient(rgba(38, 38,38, 0) 0%, rgba(8,8,8,1) 100%)",
             padding: "20px 0",
+            borderBottomLeftRadius: "10px",
+            borderBottomRightRadius: "10px",
+            WebkitBorderBottomLeftRadius: "10px",
+            WebkitBorderBottomRightRadius: "10px",
           }}
         >
           <div

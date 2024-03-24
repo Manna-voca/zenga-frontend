@@ -32,5 +32,6 @@ const ImageBg = styled.div<{ rank: number }>`
 
     background-color: white;
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
