@@ -324,8 +324,9 @@ const SendPraise = () => {
     shuffleCount: 0,
     memberPraiseId: 0,
   });
-  const start = praiseInfo.shuffleCount ? 4 : 0;
-  const end = praiseInfo.shuffleCount ? 8 : 4;
+  const start = praiseInfo.shuffleCount === 0 ? 0 : praiseInfo.shuffleCount * 4;
+  const end =
+    praiseInfo.shuffleCount === 0 ? 4 : praiseInfo.shuffleCount * 4 + 4;
   const [selectedMember, setSelectedMember] = useState<number>(-1);
   const [showPraiseModal, setShowPraiseModal] = useState(false);
   const [showPraiseNotTimer, setShowPraiseNotTimer] = useState<boolean | null>(
@@ -426,7 +427,7 @@ const SendPraise = () => {
     try {
       setPraiseInfo((prev) => ({
         ...prev,
-        shuffleCount: prev.shuffleCount === 1 ? 0 : 1,
+        shuffleCount: prev.shuffleCount + 1,
       }));
       setSelectedMember(-1);
       await axiosInstance.patch(`/praise/todo`, {
@@ -443,8 +444,7 @@ const SendPraise = () => {
         memberPraiseId: praiseInfo.memberPraiseId,
         praisedMemberId: selectedMember,
       });
-      if (praiseInfo.shuffleCount === praiseInfo.memberList.length / 4 - 1)
-        setSelectedMember(-1);
+      setSelectedMember(-1);
       setShowPraiseModal(true);
     } catch (error) {
       console.log(error);
@@ -502,25 +502,34 @@ const SendPraise = () => {
         <SendPraiseContainer>
           <SendPraiseContent>{praiseInfo.praise}</SendPraiseContent>
           <ShuffleButton
-            disabled={praiseInfo.shuffleCount === 1}
+            disabled={
+              praiseInfo.shuffleCount === praiseInfo.memberList.length / 4 - 1
+            }
             onClick={handleShuffleClick}
             style={{
-              cursor: praiseInfo.shuffleCount === 1 ? "unset" : "pointer",
-              color: praiseInfo.shuffleCount
-                ? `${color.onPrimaryDisabled}`
-                : "",
-              borderColor: praiseInfo.shuffleCount
-                ? `${color.onPrimaryDisabled}`
-                : "",
+              cursor:
+                praiseInfo.shuffleCount === praiseInfo.memberList.length / 4 - 1
+                  ? "unset"
+                  : "pointer",
+              color:
+                praiseInfo.shuffleCount === praiseInfo.memberList.length / 4 - 1
+                  ? `${color.onPrimaryDisabled}`
+                  : "",
+              borderColor:
+                praiseInfo.shuffleCount === praiseInfo.memberList.length / 4 - 1
+                  ? `${color.onPrimaryDisabled}`
+                  : "",
             }}
           >
             <ShuffleIcon
               style={{
                 width: "21px",
                 height: "21px",
-                fill: praiseInfo.shuffleCount
-                  ? `${color.onPrimaryDisabled}`
-                  : `${color.onPrimaryActive}`,
+                fill:
+                  praiseInfo.shuffleCount ===
+                  praiseInfo.memberList.length / 4 - 1
+                    ? `${color.onPrimaryDisabled}`
+                    : `${color.onPrimaryActive}`,
               }}
             />
             이름 셔플{" "}
