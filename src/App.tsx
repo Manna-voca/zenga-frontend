@@ -28,6 +28,7 @@ import CheckChannelCode from "./pages/CheckChannelCode";
 import NotFound from "./pages/NotFound";
 import Error400 from "./pages/Error400";
 import CommonHeaderLayout from "./CommonHeaderLayout";
+import Ranking from "./pages/ranking";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
       <Route element={<CommonHeaderLayout />}>
         <Route path="/:channelCode/praise" element={<Praise />} />
         <Route path="/:channelCode/member-list" element={<MemberList />} />
+        <Route path="/:channelCode/ranking" element={<Ranking />} />
         <Route path="/:channelCode/meetup-home" element={<MeetupHome />} />
       </Route>
       <Route path="/:channelCode/notification" element={<Notification />} />

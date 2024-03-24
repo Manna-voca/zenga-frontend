@@ -257,7 +257,7 @@ export default function MemberList() {
           })
         )}
       </div>
-      <Navbar state={3}></Navbar>
+      <Navbar state={4} />
     </>
   );
 }

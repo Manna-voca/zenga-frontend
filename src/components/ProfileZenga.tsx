@@ -146,13 +146,13 @@ const ProfileZenga = ({ memberId }: ZengaProps) => {
           cursor: "pointer",
         }}
       >
-        <BlockNumber type="Pink" number={blockNum[0]}></BlockNumber>
-        <BlockNumber type="Orange" number={blockNum[1]}></BlockNumber>
-        <BlockNumber type="Blue" number={blockNum[2]}></BlockNumber>
-        <BlockNumber type="Green" number={blockNum[3]}></BlockNumber>
-        <BlockNumber type="Yellow" number={blockNum[4]}></BlockNumber>
-        <BlockNumber type="Purple" number={blockNum[5]}></BlockNumber>
-        <BlockNumber type="Default" number={blockNum[6]}></BlockNumber>
+        <BlockNumber type='Pink' number={blockNum[0]}></BlockNumber>
+        <BlockNumber type='Orange' number={blockNum[1]}></BlockNumber>
+        <BlockNumber type='Blue' number={blockNum[2]}></BlockNumber>
+        <BlockNumber type='Green' number={blockNum[3]}></BlockNumber>
+        <BlockNumber type='Yellow' number={blockNum[4]}></BlockNumber>
+        <BlockNumber type='Purple' number={blockNum[5]}></BlockNumber>
+        <BlockNumber type='Default' number={blockNum[6]}></BlockNumber>
       </div>
       <div style={{ height: "50px" }}></div>
       {loading && (
@@ -328,39 +328,39 @@ const ProfileZenga = ({ memberId }: ZengaProps) => {
               }}
             >
               <ExplainWrapper
-                type="Default"
-                title="내가 한 칭찬"
-                text="칭찬을 보낸 횟수에 따라 블록을 획득할 수 있어요"
+                type='Default'
+                title='내가 한 칭찬'
+                text='칭찬을 보낸 횟수에 따라 블록을 획득할 수 있어요'
               />
               <ExplainWrapper
-                type="Pink"
-                title="외적 칭찬"
-                text="ex. 눈이 가장 매력적인 사람은?"
+                type='Pink'
+                title='외적 칭찬'
+                text='ex. 눈이 가장 매력적인 사람은?'
               />
               <ExplainWrapper
-                type="Orange"
-                title="성격 칭찬"
-                text="ex. 고민을 제일 잘 들어줄 것 같은 사람은?"
+                type='Orange'
+                title='성격 칭찬'
+                text='ex. 고민을 제일 잘 들어줄 것 같은 사람은?'
               />
               <ExplainWrapper
-                type="Yellow"
-                title="도전・열정 칭찬"
-                text="ex. 가장 자기계발에 힘쓰는 사람은?"
+                type='Yellow'
+                title='도전/열정 칭찬'
+                text='ex. 가장 자기계발에 힘쓰는 사람은?'
               />
               <ExplainWrapper
-                type="Green"
-                title="능력 칭찬"
-                text="ex. 가장 말을 잘하는 사람은?"
+                type='Green'
+                title='능력 칭찬'
+                text='ex. 가장 말을 잘하는 사람은?'
               />
               <ExplainWrapper
-                type="Blue"
-                title="그 외 칭찬"
-                text="ex. 하루만 이 사람으로 살아보고 싶은 사람은?"
+                type='Blue'
+                title='그 외 칭찬'
+                text='ex. 하루만 이 사람으로 살아보고 싶은 사람은?'
               />
               <ExplainWrapper
-                type="Purple"
-                title="모임"
-                text="모임 참여 횟수에 따라 블록을 획득할 수 있어요"
+                type='Purple'
+                title='모임'
+                text='모임 참여 횟수에 따라 블록을 획득할 수 있어요'
               />
             </div>
           </div>

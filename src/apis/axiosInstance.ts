@@ -55,11 +55,14 @@ const handleExpiredToken = async (error: AxiosError<ResponseDataType>) => {
       localStorage.setItem(ACCESS_TOKEN, accessToken);
       localStorage.setItem(REFRESH_TOKEN, refreshToken);
     } catch (refreshError) {
-      console.log(refreshError);
+      setTimeout(() => {
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${localStorage.getItem(
+            ACCESS_TOKEN
+          )}`;
+        }
+      }, 1000);
     } finally {
-      originalRequest.headers.Authorization = `Bearer ${localStorage.getItem(
-        ACCESS_TOKEN
-      )}`;
       return axiosInstance(originalRequest);
     }
   }

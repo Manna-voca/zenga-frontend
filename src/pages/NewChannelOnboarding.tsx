@@ -121,10 +121,18 @@ const NewChannelOnboarding = () => {
               "logoImageUrl",
               uploadChannelImgResponse.data.data.url
             );
-            const channelDataResponse = await axiosInstance.post(`/channels`, {
-              name: clubname,
-              logoImageUrl: uploadChannelImgResponse.data.data.url,
-            });
+            const channelDataResponse = await axiosInstance.post(
+              `/channels`,
+              {
+                name: clubname,
+                logoImageUrl: uploadChannelImgResponse.data.data.url,
+              },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
             if (channelDataResponse.status === 200) {
               if (adminImageFile !== null) {
                 const adminImgFormData = new FormData();
@@ -153,7 +161,12 @@ const NewChannelOnboarding = () => {
                   adminFormData.append("level", "MAINTAINER");
                   const adminDataResponse = await axiosInstance.post(
                     `/members`,
-                    adminFormData
+                    adminFormData,
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                    }
                   );
                   if (adminDataResponse.status === 200) {
                     setCode(channelDataResponse.data.data.code);
@@ -178,7 +191,12 @@ const NewChannelOnboarding = () => {
                 adminFormData.append("level", "MAINTAINER");
                 const adminDataResponse = await axiosInstance.post(
                   `/members`,
-                  adminFormData
+                  adminFormData,
+                  {
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
                 );
                 if (adminDataResponse.status === 200) {
                   setCode(channelDataResponse.data.data.code);
@@ -199,7 +217,12 @@ const NewChannelOnboarding = () => {
           );
           const channelDataResponse = await axiosInstance.post(
             `/channels`,
-            channelFormData
+            channelFormData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
           );
           if (channelDataResponse.status === 200) {
             if (adminImageFile !== null) {
@@ -229,7 +252,12 @@ const NewChannelOnboarding = () => {
                 adminFormData.append("level", "MAINTAINER");
                 const adminDataResponse = await axiosInstance.post(
                   `/members`,
-                  adminFormData
+                  adminFormData,
+                  {
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
                 );
                 if (adminDataResponse.status === 200) {
                   setCode(channelDataResponse.data.data.code);
@@ -254,7 +282,12 @@ const NewChannelOnboarding = () => {
               adminFormData.append("level", "MAINTAINER");
               const adminDataResponse = await axiosInstance.post(
                 `/members`,
-                adminFormData
+                adminFormData,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
               );
               if (adminDataResponse.status === 200) {
                 setCode(channelDataResponse.data.data.code);
@@ -273,7 +306,7 @@ const NewChannelOnboarding = () => {
 
   return (
     <>
-      {step === 1 || step === 2 ? <Header type="back"></Header> : <div></div>}
+      {step === 1 || step === 2 ? <Header type='back'></Header> : <div></div>}
       <div style={{ height: "16px" }}></div>
 
       {step === 1 || step === 2 ? (
@@ -390,15 +423,15 @@ const NewChannelOnboarding = () => {
               <div style={{ height: "40px" }}></div>
               <div style={{ margin: "0 20px 0 20px" }}>
                 <BtnInfoDuplicate
-                  label="링크"
+                  label='링크'
                   text={`www.zenga.club/${code}`}
-                  message="링크를 누르면 생성한 채널로 들어갈 수 있어요."
+                  message='링크를 누르면 생성한 채널로 들어갈 수 있어요.'
                 ></BtnInfoDuplicate>
                 <div style={{ height: "30px" }}></div>
                 <BtnInfoDuplicate
-                  label="코드"
+                  label='코드'
                   text={code}
-                  message="코드를 입력하면 생성한 채널로 들어갈 수 있어요."
+                  message='코드를 입력하면 생성한 채널로 들어갈 수 있어요.'
                 ></BtnInfoDuplicate>
               </div>
               <div style={{ height: "109px" }}></div>
@@ -418,7 +451,7 @@ const NewChannelOnboarding = () => {
               >
                 <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
                   <ButtonBasic
-                    innerText="확인"
+                    innerText='확인'
                     onClick={() => {
                       navigate(`/${code}/praise`, { replace: true });
                       localStorage.setItem("memberId", `${memberId}`);
@@ -444,8 +477,8 @@ const NewChannelOnboarding = () => {
           <div style={{ margin: "0 20px 0 20px" }}>
             <InputText
               isNecessary={true}
-              label="채널명"
-              placeholder="채널명을 입력해 주세요."
+              label='채널명'
+              placeholder='채널명을 입력해 주세요.'
               value={clubname}
               onChange={handleClubnameChange}
             />
@@ -467,7 +500,7 @@ const NewChannelOnboarding = () => {
           >
             <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
               <ButtonBasic
-                innerText="다음"
+                innerText='다음'
                 onClick={handleNextButtonClick}
                 disable={clubname === ""}
               ></ButtonBasic>
@@ -488,8 +521,8 @@ const NewChannelOnboarding = () => {
           <div style={{ margin: "0 20px 0 20px" }}>
             <InputText
               isNecessary={true}
-              label="방장 닉네임(본인)"
-              placeholder="닉네임을 입력해 주세요."
+              label='방장 닉네임(본인)'
+              placeholder='닉네임을 입력해 주세요.'
               value={nickname}
               onChange={handleNicknameChange}
             />
@@ -497,8 +530,8 @@ const NewChannelOnboarding = () => {
           <div style={{ height: "32px" }}></div>
           <div style={{ margin: "0 20px 0 20px" }}>
             <TextField
-              label="자기소개"
-              placeholder="나를 한줄로 소개해 보세요."
+              label='자기소개'
+              placeholder='나를 한줄로 소개해 보세요.'
               value={intro}
               onChange={handleIntroChange}
               maxLength={50}
@@ -521,7 +554,7 @@ const NewChannelOnboarding = () => {
           >
             <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
               <ButtonBasic
-                innerText="확인"
+                innerText='확인'
                 onClick={handleNextButtonClick}
                 disable={nickname === ""}
               ></ButtonBasic>

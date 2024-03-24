@@ -5,24 +5,27 @@ import styled from "@emotion/styled";
 import React, { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import { ReactComponent as PointsImg } from "../images/points.svg";
-import PointList from "../components/PointList";
+import { ReactComponent as RankPointIcon } from "../images/rankPointIcon.svg";
+import QuestionIcon from "../assets/icons/ic-question-mark.png";
+import PointDetailItem from "../components/PointList";
 import { axiosInstance } from "../apis/axiosInstance";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Popup1 from "../components/Popup1";
+import { POINT_HELP_MESSAGE } from "../constants/POINT_HELP_MESSAGE";
 
 const PointDetail = () => {
   dayjs.extend(relativeTime);
   dayjs.locale("ko");
 
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [helpToastState, setHelpToastState] = useState<boolean>(false);
   const [totalPoint, setTotalPoint] = useState<number>();
   const [pointList, setPointList] = useState<Array<any>>([]);
-
   const [hasNext, setHasNext] = useState<boolean>(true);
   const [pointId, setPointId] = useState<number>();
-
+  const [selectedTab, setSelectedTab] = useState<string>("zenga");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const getTotalPoint = async () => {
@@ -76,113 +79,77 @@ const PointDetail = () => {
 
   return (
     <>
-      <Header type="back" text="내 포인트"></Header>
-      <div style={{ height: "16px" }}></div>
-      <div
-        style={{
-          margin: "0 20px 0 20px",
-          borderRadius: "8px",
-          background: "var(--surface-surface, #FAFAFA)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          height: "60px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginLeft: "20px",
-            gap: "8px",
-          }}
-        >
-          <PointsImg height={21} width={21} />
-          <div
-            style={{
-              color: "var(--on-surface-default, rgba(10, 10, 10, 0.70))",
-              fontSize: "14px",
-              fontStyle: "normal",
-              fontWeight: "600",
-              lineHeight: "150%",
-            }}
-          >
-            내 포인트
-          </div>
-        </div>
-        <div
-          style={{
-            marginRight: "20px",
-            textAlign: "right",
-            color: "var(--on-surface-default, rgba(10, 10, 10, 0.70))",
-            fontSize: "14px",
-            fontStyle: "normal",
-            fontWeight: "600",
-            lineHeight: "150%",
-          }}
-        >
-          {totalPoint}
-        </div>
-      </div>
-      <div style={{ height: "36px" }}></div>
-      <div
-        style={{
-          marginLeft: "20px",
-          height: "20px",
-          color: "var(--on-surface-active, #0A0A0A)",
-          fontSize: "16px",
-          fontStyle: "normal",
-          fontWeight: "600",
-          lineHeight: "150%",
-        }}
-      >
-        포인트 상세정보
-      </div>
-      <div style={{ height: "24px" }}></div>
-      {loading && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "calc((100% - 200px) / 2)",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "20",
-          }}
-        >
-          <LoadingSpinner />
-        </div>
+      {helpToastState && (
+        <Popup1
+          title='포인트 안내사항'
+          text={POINT_HELP_MESSAGE}
+          btnText='확인'
+          func={() => setHelpToastState(false)}
+        />
       )}
-      <div
-        ref={containerRef}
-        onScroll={handleScroll}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "calc(100vh - 205px)",
-          maxHeight: "calc(100vh - 205px)",
-          overflowY: "scroll",
-          position: "relative",
-          gap: "12px",
-        }}
-      >
-        {pointList.map((item, index) => {
-          const createdAt = dayjs(item.createdAt);
-          const formattedCreatedAt = createdAt.format("YY.MM.DD");
-          return (
-            <div>
-              <PointList
-                key={index}
+      <Header type='back' text='내 포인트' />
+      <PointViewContainer>
+        <div>
+          <h1>포인트</h1>
+          <img
+            src={QuestionIcon}
+            alt='포인트 도움말'
+            onClick={() => setHelpToastState(true)}
+          />
+        </div>
+
+        <PointViewElementWrapper id='zenga-point'>
+          <div>
+            <PointsImg height={21} width={21} />
+            젠가 포인트
+          </div>
+          <span>{totalPoint}</span>
+        </PointViewElementWrapper>
+
+        <PointViewElementWrapper id='ranking-point'>
+          <div>
+            <RankPointIcon height={21} width={21} />
+            랭킹 포인트
+          </div>
+          <span>{totalPoint}</span>
+        </PointViewElementWrapper>
+      </PointViewContainer>
+
+      <PointDetailContainer>
+        <DetailTab>
+          <Tab
+            isSelected={selectedTab === "zenga"}
+            onClick={() => setSelectedTab("zenga")}
+          >
+            젠가 포인트
+          </Tab>
+          <Tab
+            isSelected={selectedTab === "ranking"}
+            onClick={() => setSelectedTab("ranking")}
+          >
+            랭킹 포인트
+          </Tab>
+        </DetailTab>
+        {loading && (
+          <LoadingBg>
+            <LoadingSpinner />
+          </LoadingBg>
+        )}
+        <DetailList ref={containerRef} onScroll={handleScroll}>
+          {pointList.map((item) => {
+            const createdAt = dayjs(item.createdAt);
+            const formattedCreatedAt = createdAt.format("YY.MM.DD");
+            return (
+              <PointDetailItem
+                key={item.pointId}
                 point={item.point}
                 date={formattedCreatedAt}
                 text={item.description}
-              ></PointList>
-            </div>
-          );
-        })}
-      </div>
+              />
+            );
+          })}
+        </DetailList>
+      </PointDetailContainer>
     </>
   );
 };
@@ -194,6 +161,19 @@ const spin = keyframes`
     transform: rotate(360deg);
   }
 `;
+
+const LoadingBg = styled.div`
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: calc((100% - 200px) / 2);
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const LoadingSpinner = styled.div`
   width: 20px;
   height: 20px;
@@ -201,4 +181,96 @@ const LoadingSpinner = styled.div`
   border-top-color: ${color.primary300};
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
+`;
+
+const PointViewContainer = styled.div`
+  margin: 16px 20px 32px 20px;
+
+  div:first-child {
+    margin-bottom: 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    h1 {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 150%;
+    }
+    img {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+  }
+
+  #zenga-point {
+    margin-bottom: 8px;
+  }
+`;
+
+const PointViewElementWrapper = styled.div`
+  height: 60px;
+  padding: 0 20px;
+
+  border-radius: 8px;
+  background-color: #fafafa;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  color: rgba(10, 10, 10, 0.7);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 150%;
+
+  div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+`;
+
+const PointDetailContainer = styled.div``;
+
+const DetailTab = styled.div`
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
+
+  margin-bottom: 20px;
+
+  display: flex;
+`;
+
+const Tab = styled.div<{ isSelected: boolean }>`
+  flex: 1;
+
+  border-bottom: ${({ isSelected }) =>
+    isSelected
+      ? `2px solid ${color.onSurfaceActive}`
+      : `1px solid ${color.divider}`};
+
+  color: ${({ isSelected }) =>
+    isSelected ? color.onSurfaceActive : color.onSurfaceMuted};
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 150%;
+  line-height: 48px;
+  text-align: center;
+
+  cursor: pointer;
+`;
+
+const DetailList = styled.div`
+  position: relative;
+
+  max-height: calc(100vh - 339px);
+  overflow: scroll;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;

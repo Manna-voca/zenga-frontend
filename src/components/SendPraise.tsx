@@ -28,6 +28,7 @@ import sendPraiseModalImage from "../assets/images/sendPraiseModal.png";
 import { axiosInstance } from "../apis/axiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
+import NotFound from "../pages/NotFound";
 
 interface MemberProps {
   name: string;
@@ -330,6 +331,7 @@ const SendPraise = () => {
   const [showPraiseNotTimer, setShowPraiseNotTimer] = useState<boolean | null>(
     null
   );
+  const [showNotFoundUI, setShowNotFoundUI] = useState<boolean | null>(null);
   const [showFirstModal, setShowFirstModal] = useState<boolean | null>(null);
   const [firstModalNeverShow, setFirstModalNeverShow] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -378,13 +380,18 @@ const SendPraise = () => {
             channelId: CHANNEL_ID,
           })
           .then((res) => {
-            if (res.data.data === null) setShowPraiseNotTimer(true);
+            if (res.data.data === null) setShowPraiseNotTimer(false);
             else {
               setShowPraiseNotTimer(true);
               setPraiseInfo(res.data.data);
             }
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            if (err.response?.status === 404) {
+              setShowPraiseNotTimer(false);
+              setShowNotFoundUI(true);
+            }
+          });
       }
     }
   };
@@ -488,6 +495,8 @@ const SendPraise = () => {
             </PraiseAddButton>
           </a>
         </TimerContainer>
+      ) : showNotFoundUI ? (
+        <NotFound home={true} />
       ) : (
         <SendPraiseContainer>
           <SendPraiseContent>{praiseInfo.praise}</SendPraiseContent>
