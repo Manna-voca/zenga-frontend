@@ -5,6 +5,7 @@ import { ReactComponent as ComplimentImg } from "../images/compliment.svg";
 import { ReactComponent as GatheringImg } from "../images/gathering.svg";
 import { ReactComponent as MemberImg } from "../images/member.svg";
 import { ReactComponent as MyImg } from "../images/my.svg";
+import { ReactComponent as RankImg } from "../images/rank.svg";
 
 // 나중에 필요한 요소 더 추가할 예정
 interface Props {
@@ -29,13 +30,18 @@ const Navbar = ({state = 1}: Props) => {
         navigate(`/${channelCode}/meetup-home`, {replace: true});
     };
 
-    const handleMemberImgClick = () => {
+    const handleRankImgClick = () => {
         setCheck(3);
+        navigate(`/${channelCode}/ranking`, {replace: true});
+    };
+
+    const handleMemberImgClick = () => {
+        setCheck(4);
         navigate(`/${channelCode}/member-list`, {replace: true});
     };
 
     const handleMyImgClick = () => {
-        setCheck(4);
+        setCheck(5);
         localStorage.removeItem("mypage");
         navigate(`/${channelCode}/mypage`, {replace: true});
     };
@@ -85,12 +91,12 @@ const Navbar = ({state = 1}: Props) => {
                     </div>
                 </div>
                 <div
-                    onClick={handleMemberImgClick}
+                    onClick={handleRankImgClick} 
                     style={{ alignItems: 'center', justifyContent: 'center',
                             height: '44px', width: '44px', display: 'flex',
                             flexDirection: 'column', cursor: 'pointer'
                  }}>
-                    <MemberImg
+                    <RankImg
                         fill={check === 3 ? '#1F94FF' : '#0A0A0A'}
                         fillOpacity={check === 3 ? 1 : 0.7 }
                     />
@@ -98,6 +104,24 @@ const Navbar = ({state = 1}: Props) => {
                     <div style={{ fontSize: '8px', fontStyle: 'normal',
                                 fontWeight: '500', lineHeight: '150%',
                                 color : check === 3 ? 'var(--primary-primary-500, #1F94FF)' : ''
+                    }}>
+                        <span>랭킹</span>
+                    </div>
+                </div>
+                <div
+                    onClick={handleMemberImgClick}
+                    style={{ alignItems: 'center', justifyContent: 'center',
+                            height: '44px', width: '44px', display: 'flex',
+                            flexDirection: 'column', cursor: 'pointer'
+                 }}>
+                    <MemberImg
+                        fill={check === 4 ? '#1F94FF' : '#0A0A0A'}
+                        fillOpacity={check === 4 ? 1 : 0.7 }
+                    />
+                    <div style={{ height: '4px' }}></div>
+                    <div style={{ fontSize: '8px', fontStyle: 'normal',
+                                fontWeight: '500', lineHeight: '150%',
+                                color : check === 4 ? 'var(--primary-primary-500, #1F94FF)' : ''
                     }}>
                         <span>멤버</span>
                     </div>
@@ -109,13 +133,13 @@ const Navbar = ({state = 1}: Props) => {
                             flexDirection: 'column', cursor: 'pointer'
                  }}>
                     <MyImg
-                        fill={check === 4 ? '#1F94FF' : '#0A0A0A'}
-                        fillOpacity={check === 4 ? 1 : 0.7 }
+                        fill={check === 5 ? '#1F94FF' : '#0A0A0A'}
+                        fillOpacity={check === 5 ? 1 : 0.7 }
                     />
                     <div style={{ height: '4px' }}></div>
                     <div style={{ fontSize: '8px', fontStyle: 'normal',
                                 fontWeight: '500', lineHeight: '150%',
-                                color : check === 4 ? 'var(--primary-primary-500, #1F94FF)' : ''
+                                color : check === 5 ? 'var(--primary-primary-500, #1F94FF)' : ''
                     }}>
                         <span>MY</span>
                     </div>

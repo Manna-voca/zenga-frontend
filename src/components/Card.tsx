@@ -18,12 +18,10 @@ const Card = ({ date, title, text, image }: Props) => {
   const [moreBtnState, setMoreBtnState] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(textRef.current?.scrollHeight);
     if (
       textRef.current?.scrollHeight !== undefined &&
       textRef.current?.scrollHeight > 42
     ) {
-      console.log(textRef.current?.scrollHeight);
       setMoreBtnState(true);
     }
   }, []);

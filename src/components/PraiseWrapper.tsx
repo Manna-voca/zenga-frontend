@@ -89,9 +89,9 @@ const PraiseWrapper = ({
         <Popup2
           leftBtnText='취소'
           rightBtnText='확인'
-          title={"300 포인트를 차감하시겠어요?"}
-          text={`(현재포인트 : ${point})
-          포인트 차감 시, 보낸 멤버가 누구인지 알 수 있어요`}
+          title={"칭찬을 보낸 멤버를 확인하시겠어요?"}
+          text={`보유 젠가 포인트 : ${point}
+          확인 버튼을 누르면 보낸 멤버가 누구인지 알 수 있어요`}
           leftFunc={() => setShowPopup(false)}
           rightFunc={() => getSenderOfPraise()}
         />

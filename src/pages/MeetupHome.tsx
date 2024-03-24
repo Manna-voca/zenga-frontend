@@ -222,9 +222,9 @@ const MeetupHome = () => {
                             ? "0 20px 67px 20px"
                             : "0 20px 0 20px",
                       }}
+                      key={item.partyId}
                     >
                       <GatheringList
-                        key={item.partyId}
                         title={item.title}
                         image={
                           item.partyImageUrl === ""

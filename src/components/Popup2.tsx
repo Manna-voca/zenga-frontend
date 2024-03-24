@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 // 나중에 필요한 요소 추가 예정
 interface Props {
     title : string;
-    text : string;
+    text : string | ReactNode;
     leftBtnText : string;
     rightBtnText : string;
     leftFunc? : any;

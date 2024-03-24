@@ -66,7 +66,7 @@ const Mypage = () => {
 
   return (
     <>
-      <Header type="my"></Header>
+      <Header type='my'></Header>
       <div style={{ height: "16px" }}></div>
       <div style={{ margin: "0 20px 0 20px" }}>
         <ProfileUpper
@@ -102,6 +102,8 @@ const Mypage = () => {
       <div style={{ height: "28px" }}></div>
       <div
         style={{
+          position: "sticky",
+          top: "44px",
           display: "flex",
           height: "29px",
           fontSize: "14px",
@@ -109,6 +111,8 @@ const Mypage = () => {
           fontWeight: "600",
           lineHeight: "150%",
           alignItems: "flex-start",
+          backgroundColor: "white",
+          zIndex: "1",
         }}
       >
         <div
@@ -211,7 +215,7 @@ const Mypage = () => {
       {textState === "앨범" ? (
         <>
           <ProfileAlbum
-            who="my"
+            who='my'
             memberId={localStorage.getItem("memberId")}
           ></ProfileAlbum>
         </>
@@ -227,7 +231,7 @@ const Mypage = () => {
         </>
       )}
       <div style={{ height: "57px" }}></div>
-      <Navbar state={4}></Navbar>
+      <Navbar state={5} />
     </>
   );
 };

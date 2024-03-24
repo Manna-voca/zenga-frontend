@@ -103,6 +103,7 @@ const ProfileAlbum = ({ who, memberId }: Props) => {
             {albumList?.map((item, index) => {
               return (
                 <CardContainer
+                 key={item.id}
                   onClick={() =>
                     navigate(
                       `/${channelCode}/album/${memberId}/?who=${who}&index=${index}`

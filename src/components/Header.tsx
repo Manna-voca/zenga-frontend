@@ -10,10 +10,12 @@ import { ReactComponent as KebabImg } from "../images/kebab.svg";
 import { ReactComponent as DownloadImg } from "../images/download.svg";
 import { ReactComponent as ParticipantImg } from "../images/participant.svg";
 import { ReactComponent as PointsImg } from "../images/points.svg";
+import { ReactComponent as RankPointIcon } from "../images/rankPointIcon.svg";
 import Sidebar from "./Sidebar";
 import CircularImage from "./CircularImage";
 import { color } from "../styles/color";
 import { axiosInstance } from "../apis/axiosInstance";
+import { typography } from "../styles/typography";
 
 // 타입: 뒤로가기, 기본(동아리명, 알림), 모임 만들기, 모임 상세
 //       알림, 참여한 멤버, 댓글, 모임 수정, 카드 만들기
@@ -52,9 +54,16 @@ const Header = ({
   const [noticeInfo, setNoticeInfo] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [rankPoint, setRankPoint] = useState<string>("1,234");
+  const [zengaPoint, setZengaPoint] = useState<string>("99,999+");
+
   useEffect(() => {
     if (type === "common") {
       getChannelInfo();
+    }
+    if (type === "my") {
+      // TODO: get rank point and zenga point
+      // If points over than 99999 points display "99,999+"
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -129,8 +138,8 @@ const Header = ({
       >
         <div onClick={handleBackButtonClick} style={{ cursor: "pointer" }}>
           <img
-            width="24px"
-            height="24px"
+            width='24px'
+            height='24px'
             src={type === "back" ? backButton : outButton}
             alt={type === "back" ? "back" : "out"}
           ></img>
@@ -194,7 +203,7 @@ const Header = ({
             ) : (
               <>
                 <CircularImage
-                  size="24"
+                  size='24'
                   image={channelInfo !== null ? channelInfo.logoImageUrl : ""}
                 />
                 <span
@@ -302,7 +311,7 @@ const Header = ({
           }}
         >
           <div onClick={handleBackButtonClick} style={{ cursor: "pointer" }}>
-            <img width="24px" height="24px" src={backButton} alt="back"></img>
+            <img width='24px' height='24px' src={backButton} alt='back'></img>
           </div>
           <div
             style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}
@@ -341,8 +350,8 @@ const Header = ({
           >
             <img
               style={{ cursor: "pointer" }}
-              width="24px"
-              height="24px"
+              width='24px'
+              height='24px'
               src={backButton}
               alt={"back"}
             ></img>
@@ -404,12 +413,25 @@ const Header = ({
           >
             마이페이지
           </div>
-          <PointsImg
+          <div
             onClick={() => navigate("/point")}
-            height={24}
-            width={24}
-            style={{ cursor: "pointer" }}
-          />
+            style={{
+              ...typography.caption1Medium,
+              color: `${color.onSurfaceActive}`,
+              display: "flex",
+              gap: "8px",
+              cursor: "pointer",
+            }}
+          >
+            <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+              <RankPointIcon height={18} width={18} />
+              {rankPoint}
+            </div>
+            <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+              <PointsImg height={18} width={18} />
+              {zengaPoint}
+            </div>
+          </div>
         </div>
       </>
     );

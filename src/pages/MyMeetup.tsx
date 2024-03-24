@@ -117,13 +117,13 @@ const MyMeetup = () => {
 
   return (
     <>
-      <Header type="back" text="나의 모임"></Header>
+      <Header type='back' text='나의 모임'></Header>
       <div style={{ height: "12px" }}></div>
       <div style={{ margin: "0 20px 0 20px" }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
           <div
             onClick={handleMeetupStateBtnClick}
-            id="1"
+            id='1'
             style={{
               height: "22px",
               padding: "4px 14px",
@@ -154,7 +154,7 @@ const MyMeetup = () => {
           </div>
           <div
             onClick={handleMeetupStateBtnClick}
-            id="2"
+            id='2'
             style={{
               height: "22px",
               padding: "4px 14px",
@@ -185,7 +185,7 @@ const MyMeetup = () => {
           </div>
           <div
             onClick={handleMeetupStateBtnClick}
-            id="3"
+            id='3'
             style={{
               height: "22px",
               padding: "4px 14px",
@@ -280,9 +280,8 @@ const MyMeetup = () => {
               >
                 {meetupList[Number(meetupState)]?.map((item, index) => {
                   return (
-                    <div>
+                    <div key={item.partyId}>
                       <GatheringList
-                        key={item.partyId}
                         meetupId={item.partyId}
                         title={item.title}
                         image={
