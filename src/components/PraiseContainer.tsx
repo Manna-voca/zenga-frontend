@@ -38,7 +38,6 @@ interface PraiseProps {
 const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
   const CHANNEL_ID = localStorage.getItem("channelId");
   const [isLoading, setIsLoading] = useState(true);
-  const [newPraiseOpened, setNewPraiseOpened] = useState(false);
   const [showFirstModal, setShowFirstModal] = useState(false);
   const [firstModalNeverShow, setFirstModalNeverShow] = useState(false);
 
@@ -148,7 +147,7 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
           </LoadingDiv>
         ) : praiseList?.length === 0 ? (
           <div css={inactiveCategoryDivStyle}>
-            <img width="72px" src={whaleCharacter7} alt="" />
+            <img width='72px' src={whaleCharacter7} alt='' />
             <span css={inactiveCategorySpanStyle}>
               아직 <b>{isGetNotPost ? "받은" : "보낸"} 칭찬</b>이 없어요
             </span>
@@ -159,7 +158,6 @@ const PraiseContainer = ({ isGetNotPost }: OwnProps) => {
               return (
                 <PraiseWrapper
                   memberId={praise.memberId}
-                  handlePraiseOpen={() => setNewPraiseOpened((prev) => !prev)}
                   praiseId={praise.memberPraiseId}
                   key={index}
                   isGetNotPost={isGetNotPost}
@@ -286,7 +284,7 @@ const FirstModal = ({
           <img
             onClick={firstModalCloseOnClick}
             src={xIcon}
-            alt=""
+            alt=''
             style={{ cursor: "pointer" }}
           />
         </div>
@@ -305,14 +303,14 @@ const FirstModal = ({
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img
                   style={{ marginRight: "4px" }}
-                  width="15px"
+                  width='15px'
                   src={pointIcon}
-                  alt=""
+                  alt=''
                 />
                 <b>포인트로 확인</b>해 보세요!
               </div>
             </div>
-            <img width={"240px"} src={modalImage1} alt="" />
+            <img width={"240px"} src={modalImage1} alt='' />
             <span
               style={{
                 ...typography.caption1Regular,
@@ -330,17 +328,17 @@ const FirstModal = ({
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img
                   style={{ marginRight: "4px" }}
-                  width="15px"
+                  width='15px'
                   src={pointIcon}
-                  alt=""
+                  alt=''
                 />
                 <b>포인트로 확인</b>해 보세요!
               </div>
             </div>
             <img
-              width="240px"
+              width='240px'
               src={modalImage2}
-              alt=""
+              alt=''
               style={{ paddingLeft: "20px" }}
             />
             <span
@@ -371,7 +369,7 @@ const FirstModal = ({
         >
           <img
             src={firstModalNeverShow ? checkedboxIcon : checkboxIcon}
-            alt=""
+            alt=''
           />
           다시 보지 않기
         </div>

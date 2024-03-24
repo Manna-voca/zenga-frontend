@@ -10,9 +10,9 @@ import Popup2 from "./Popup2";
 import Popup1 from "./Popup1";
 import PoorWhale from "../assets/images/poor_whale_character.png";
 import { useNavigate, useParams } from "react-router-dom";
+import { PRAISE_OPEN_MESSAGE } from "../constants/PRAISE_OPEN_MESSAGE";
 
 interface PraiseProps {
-  handlePraiseOpen: () => void;
   praiseId: number;
   isGetNotPost: boolean;
   content: string;
@@ -24,7 +24,6 @@ interface PraiseProps {
 }
 
 const PraiseWrapper = ({
-  handlePraiseOpen,
   praiseId,
   isGetNotPost,
   isOpened,
@@ -36,6 +35,12 @@ const PraiseWrapper = ({
 }: PraiseProps) => {
   const navigate = useNavigate();
   const { channelCode: CHANNEL_CODE } = useParams();
+  const [openedInfo, setOpenedInfo] = useState({
+    memberId,
+    name,
+    image,
+    isOpened,
+  });
   const CHANNEL_ID = localStorage.getItem("channelId");
   const blockType = `block${type}`;
   const blockImagePath = `/assets/ic-${blockType}.svg`;
@@ -45,13 +50,14 @@ const PraiseWrapper = ({
   const imageNameStyle =
     isGetNotPost === false
       ? postImageNameStyle
-      : isOpened === false
+      : openedInfo.isOpened === false
       ? getImageNameStyle
       : postImageNameStyle;
-  const profileImagePath = image ? image : smallWhale;
+
+  const profileImagePath = openedInfo.image ? openedInfo.image : smallWhale;
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showNotEnoughPointPopup, setShowNotEnoughPointPopup] =
-  useState<boolean>(false);
+    useState<boolean>(false);
   const [point, setPoint] = useState<number>(0);
 
   const fetchPoint = async () => {
@@ -65,12 +71,20 @@ const PraiseWrapper = ({
 
   const getSenderOfPraise = async () => {
     try {
-      if (isGetNotPost === true && isOpened === false) {
-        await axiosInstance.patch(`/praise/open`, {
-          channelId: CHANNEL_ID,
-          memberPraiseId: praiseId,
-        });
-        handlePraiseOpen();
+      if (isGetNotPost === true && openedInfo.isOpened === false) {
+        await axiosInstance
+          .patch(`/praise/open`, {
+            channelId: CHANNEL_ID,
+            memberPraiseId: praiseId,
+          })
+          .then((res) => {
+            setOpenedInfo({
+              memberId: res.data.data.memberId,
+              name: res.data.data.memberName,
+              image: res.data.data.memberProfileImageUrl,
+              isOpened: res.data.data.isOpened,
+            });
+          });
         setShowPopup(false);
       }
     } catch (error) {
@@ -90,8 +104,7 @@ const PraiseWrapper = ({
           leftBtnText='취소'
           rightBtnText='확인'
           title={"칭찬을 보낸 멤버를 확인하시겠어요?"}
-          text={`보유 젠가 포인트 : ${point}
-          확인 버튼을 누르면 보낸 멤버가 누구인지 알 수 있어요`}
+          text={<PRAISE_OPEN_MESSAGE />}
           leftFunc={() => setShowPopup(false)}
           rightFunc={() => getSenderOfPraise()}
         />
@@ -114,21 +127,23 @@ const PraiseWrapper = ({
         </PraiseContentDiv>
         <div
           onClick={
-            isGetNotPost === true && isOpened === false
+            isGetNotPost === true && openedInfo.isOpened === false
               ? () => {
                   fetchPoint();
                   setShowPopup(true);
                 }
               : () => {
-                  if (memberId) {
-                    navigate(`/${CHANNEL_CODE}/memberpage/${memberId}`);
+                  if (openedInfo.memberId) {
+                    navigate(
+                      `/${CHANNEL_CODE}/memberpage/${openedInfo.memberId}`
+                    );
                   }
                 }
           }
           css={imageNameStyle}
         >
           <CircularImage size='24' image={profileImagePath} />
-          {name}
+          {openedInfo.name}
         </div>
       </PraiseWrapperDiv>
     </>
