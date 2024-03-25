@@ -4,6 +4,7 @@ import { color } from "../../styles/color";
 import RankIcon from "../../images/rankPointIcon.svg";
 import { RankingType } from "../../apis/ranking";
 import { 세자리콤마추가 } from "../../utils/addCommas";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function RankingItem({
   memberId,
@@ -12,8 +13,19 @@ export function RankingItem({
   nickname,
   point,
 }: RankingType) {
+  const navigate = useNavigate();
+  const { channelCode } = useParams();
+  const myMemberId = Number(localStorage.getItem("memberId"));
+  const navigateToMyPage = () => {
+    if (memberId === myMemberId) {
+      navigate(`/${channelCode}/mypage`);
+    } else {
+      navigate(`/${channelCode}/memberpage/${memberId}`);
+    }
+  };
+
   return (
-    <ItemContainer>
+    <ItemContainer onClick={navigateToMyPage}>
       <div className='item-left-section'>
         <h4>{rank}</h4>
         <RankProfileImage rank={rank} image={userProfileImage} />
@@ -35,6 +47,8 @@ const ItemContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  cursor: pointer;
 
   .item-left-section {
     display: flex;

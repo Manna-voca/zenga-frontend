@@ -120,7 +120,7 @@ export default function MemberList() {
   const [cursorId, setCursorId] = useState<number>(0);
   const [cursorName, setCursorName] = useState<string>("");
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const SIZE = 15;
+  const SIZE = 20;
   const [loading, setLoading] = useState<boolean>(false);
   const [searchWord, setSearchWord] = useState<string>("");
   const containerRef = useRef<HTMLDivElement>(null);

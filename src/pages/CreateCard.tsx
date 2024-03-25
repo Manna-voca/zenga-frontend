@@ -25,9 +25,11 @@ const CreateCard = () => {
   const [memberState, setMemberState] = useState<boolean>(false);
   const [meetupData, setMeetupData] = useState<any>();
   const [popupState, setPopupState] = useState<boolean>(false);
+  const [loadState, setLoadState] = useState<boolean>(false);
 
   const handleCardMakingBtnClick = async () => {
     try {
+      setLoadState(true);
       if (cardImageFile !== null) {
         const cardImgFormData = new FormData();
         cardImgFormData.append("image", cardImageFile);
@@ -55,7 +57,10 @@ const CreateCard = () => {
         }
       }
     } catch (err) {
+      alert("사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
       console.error(err);
+    } finally {
+      setLoadState(false);
     }
   };
 
@@ -261,7 +266,7 @@ const CreateCard = () => {
         <>
           <Header
             type={cardState ? "card" : "back"}
-            text="카드 만들기"
+            text='카드 만들기'
             downloadFunc={handleDownloadImgClick}
             func={handleParticipantImgClick}
           ></Header>
@@ -277,18 +282,18 @@ const CreateCard = () => {
                 />
                 <div style={{ height: "39px" }}></div>
                 <ButtonBasic
-                  innerText="확인"
+                  innerText='확인'
                   onClick={handleConfirmBtnClick}
                   disable={false}
                 ></ButtonBasic>
                 <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
                 {popupState && (
                   <Popup1
-                    title="저장 완료"
+                    title='저장 완료'
                     text={
                       "카드에 있는 텍스트는 제외하고\n모임 날짜만 함께 저장했어요"
                     }
-                    btnText="확인"
+                    btnText='확인'
                     func={() => setPopupState(false)}
                   />
                 )}
@@ -307,7 +312,7 @@ const CreateCard = () => {
                   }}
                 >
                   <label
-                    htmlFor="ex_file"
+                    htmlFor='ex_file'
                     style={{
                       width: "100%",
                       height: "100%",
@@ -385,10 +390,10 @@ const CreateCard = () => {
                         clip: "rect(0, 0, 0, 0)",
                         border: "0",
                       }}
-                      type="file"
-                      id="ex_file"
-                      name="cardImage"
-                      accept="image/*"
+                      type='file'
+                      id='ex_file'
+                      name='cardImage'
+                      accept='image/*'
                       onChange={handleCardImageUpload}
                     />
                     <canvas
@@ -399,9 +404,9 @@ const CreateCard = () => {
                 </div>
                 <div style={{ height: "39px" }}></div>
                 <ButtonBasic
-                  innerText="카드 만들기 완료"
+                  innerText={loadState ? "업로드 중..." : "카드 만들기 완료"}
                   onClick={handleCardMakingBtnClick}
-                  disable={cardImage === undefined}
+                  disable={cardImage === undefined || loadState === true}
                 ></ButtonBasic>
               </>
             )}
