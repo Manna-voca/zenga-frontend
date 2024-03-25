@@ -561,7 +561,7 @@ const MeetupDetail = () => {
         <div
           style={{
             display: "flex",
-            gap: "20px",
+            gap: "6px",
             color: "var(--on-surface-default, rgba(10, 10, 10, 0.70))",
             alignItems: "center",
           }}
@@ -619,7 +619,7 @@ const MeetupDetail = () => {
               <div
                 style={{
                   fontWeight: "500",
-                  width: "45px",
+                  maxWidth: "60px",
                   display: "block",
                   alignItems: "center",
                   overflow: "hidden",
