@@ -26,11 +26,11 @@ const BtnProfileThumbnail = ({ userImg, userName, userId }: Props) => {
         onClick={handleProfileClick}
         title={userName}
         style={{
-          width: "36px",
+          width: "46px",
           height: "56px",
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "center",
           gap: "4px",
           cursor: "pointer",
         }}
@@ -39,7 +39,7 @@ const BtnProfileThumbnail = ({ userImg, userName, userId }: Props) => {
         <div
           style={{
             height: "16px",
-            width: "36px",
+            width: "46px",
             display: "block",
             alignItems: "center",
             overflow: "hidden",
@@ -47,7 +47,7 @@ const BtnProfileThumbnail = ({ userImg, userName, userId }: Props) => {
             whiteSpace: "nowrap",
             color: "var(--on-surface-default, rgba(10, 10, 10, 0.70))",
             textAlign: "center",
-            fontSize: "12px",
+            fontSize: "11px",
             fontStyle: "normal",
             fontWeight: "500",
             wordBreak: "break-all",
