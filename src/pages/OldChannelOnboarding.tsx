@@ -105,7 +105,11 @@ const OldChannelOnboarding = () => {
           userFormData.append("introduction", intro);
           userFormData.append("level", "NORMAL");
           axiosInstance
-            .post(`/members`, userFormData)
+            .post(`/members`, userFormData, {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
             .then((res) => {
               localStorage.setItem("memberId", res.data.data.id);
               setStep((current) => current + 1);
@@ -124,7 +128,11 @@ const OldChannelOnboarding = () => {
         userFormData.append("introduction", intro);
         userFormData.append("level", "NORMAL");
         axiosInstance
-          .post(`/members`, userFormData)
+          .post(`/members`, userFormData, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
           .then((res) => {
             localStorage.setItem("memberId", res.data.data.id);
             setStep((current) => current + 1);
@@ -162,7 +170,7 @@ const OldChannelOnboarding = () => {
   return (
     <>
       {step === 1 || step === 2 ? (
-        <Header type="back"></Header>
+        <Header type='back'></Header>
       ) : (
         <div style={{ height: "44px" }}></div>
       )}
@@ -237,12 +245,12 @@ const OldChannelOnboarding = () => {
             <InputText
               maxLength={8}
               isNecessary={false}
-              label="코드"
-              placeholder="8자리 코드를 입력해 주세요"
+              label='코드'
+              placeholder='8자리 코드를 입력해 주세요'
               value={code}
               onChange={handleCodeChange}
               errorStatus={errorState}
-              onErrorHelpMessage="없는 코드입니다."
+              onErrorHelpMessage='없는 코드입니다.'
             />
             <div style={{ height: "399px" }}></div>
           </div>
@@ -262,7 +270,7 @@ const OldChannelOnboarding = () => {
           >
             <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
               <ButtonBasic
-                innerText="채널 입장하기"
+                innerText='채널 입장하기'
                 onClick={handleButtonClick}
                 disable={code.length !== 8}
               ></ButtonBasic>
@@ -283,15 +291,15 @@ const OldChannelOnboarding = () => {
           <div style={{ margin: "0 20px 0 20px" }}>
             <InputText
               isNecessary={true}
-              label="닉네임"
-              placeholder="닉네임을 입력해 주세요."
+              label='닉네임'
+              placeholder='닉네임을 입력해 주세요.'
               value={nickname}
               onChange={handleNicknameChange}
             />
             <div style={{ height: "32px" }}></div>
             <TextField
-              label="자기소개"
-              placeholder="나를 한줄로 소개해 보세요."
+              label='자기소개'
+              placeholder='나를 한줄로 소개해 보세요.'
               value={intro}
               onChange={handleIntroChange}
               maxLength={50}
@@ -314,7 +322,7 @@ const OldChannelOnboarding = () => {
           >
             <div style={{ width: "calc(100% - 40px)", maxWidth: "460px" }}>
               <ButtonBasic
-                innerText="확인"
+                innerText='확인'
                 onClick={handleButtonClick}
                 disable={nickname === ""}
               ></ButtonBasic>
