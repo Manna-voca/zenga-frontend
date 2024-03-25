@@ -191,8 +191,11 @@ export default function MemberList() {
         style={{
           display: "flex",
           flexDirection: "column",
+          height: "calc(100vh - 172px)",
+          maxHeight: "calc(100vh - 172px)",
           paddingBottom: "56px",
           position: "relative",
+          overflowY: "scroll",
         }}
       >
         {loading && (
