@@ -258,7 +258,7 @@ const MeetupDetail = () => {
   return (
     <>
       <Header
-        type="detail"
+        type='detail'
         func={handleKebabClick}
         shareFunc={handleShareButtonClick}
       ></Header>
@@ -281,7 +281,7 @@ const MeetupDetail = () => {
             cursor: "pointer",
           }}
         >
-          <CircularImage image={meetupAdminImg} size="24" />
+          <CircularImage image={meetupAdminImg} size='24' />
           <div
             style={{ fontSize: "14px", fontStyle: "normal", fontWeight: "500" }}
           >
@@ -379,7 +379,9 @@ const MeetupDetail = () => {
       <div style={{ height: "12px" }}></div>
       <div
         style={{
-          margin: "0 20px 0 20px",
+          margin: "0 20px",
+          width: "calc(100% - 72px)",
+          maxWidth: "calc(100% - 72px)",
           height: "48px",
           background: "var(--surface-surface, #FAFAFA)",
           borderRadius: "8px",
@@ -410,7 +412,14 @@ const MeetupDetail = () => {
             {meetupDate}
           </div>
         </div>
-        <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
             <LocationImg width={18} height={18} fillOpacity={0.7} />
             <div
@@ -418,13 +427,27 @@ const MeetupDetail = () => {
                 fontSize: "14px",
                 fontStyle: "normal",
                 fontWeight: "600",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                wordBreak: "break-all",
+                flexShrink: "0",
               }}
             >
               장소
             </div>
           </div>
           <div
-            style={{ fontSize: "14px", fontStyle: "normal", fontWeight: "400" }}
+            style={{
+              width: "calc(100%)",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: "400",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              wordBreak: "break-all",
+            }}
           >
             {meetupLocation}
           </div>
@@ -615,7 +638,7 @@ const MeetupDetail = () => {
                 color: "var(--on-surface-default, rgba(10, 10, 10, 0.70))",
               }}
             >
-              <CircularImage size="24" image={commentWriterProfileImg} />
+              <CircularImage size='24' image={commentWriterProfileImg} />
               <div
                 style={{
                   fontWeight: "500",
@@ -732,49 +755,49 @@ const MeetupDetail = () => {
       {showComplaint && <PopupComplaint func={() => setShowComplaint(false)} />}
       {showDeletePopup && (
         <Popup2
-          title="모임을 삭제하시나요?"
+          title='모임을 삭제하시나요?'
           text={"모임을 삭제한 이후에는\n다시 복구할 수 없어요"}
-          leftBtnText="취소"
-          rightBtnText="확인"
+          leftBtnText='취소'
+          rightBtnText='확인'
           leftFunc={() => setShowDeletePopup(false)}
           rightFunc={() => handleMeetupDeleteBtnClick()}
         />
       )}
       {showMeetupPopup && (
         <Popup1
-          title="알림"
+          title='알림'
           text={
             "모임 신청이 완료되었어요!\n방장이 모집 완료를 하기 전까지\n잠시만 기다려주세요"
           }
-          btnText="확인"
+          btnText='확인'
           func={() => handleMeetupParticipateBtnClick()}
         />
       )}
       {showMeetupCancelPopup && (
         <Popup2
-          title="모임 참여를 취소하시나요?"
+          title='모임 참여를 취소하시나요?'
           text={"참여를 취소해도 모임이 모집 중이라면\n다시 참여 할 수 있어요"}
-          leftBtnText="취소"
-          rightBtnText="확인"
+          leftBtnText='취소'
+          rightBtnText='확인'
           leftFunc={() => setShowMeetupCancelPopup(false)}
           rightFunc={() => handleMeetupCancelBtnClick()}
         />
       )}
       {showMeetupCompletePopup && (
         <Popup2
-          title="모임 모집을 완료하시나요?"
+          title='모임 모집을 완료하시나요?'
           text={"모집을 완료한 이후에는\n추가로 멤버를 모집할 수 없어요"}
-          leftBtnText="취소"
-          rightBtnText="확인"
+          leftBtnText='취소'
+          rightBtnText='확인'
           leftFunc={() => setShowMeetupCompletePopup(false)}
           rightFunc={() => handleMeetupCompleteBtnClick()}
         />
       )}
       {sharePopup && (
         <Popup1
-          title="공유하기 실패"
+          title='공유하기 실패'
           text={`오류로 인해 공유하기에 실패했습니다\n아래의 링크를 복사해주세요\n${window.location.origin}/${channelCode}/meetup-home/?meetupId=${meetupId}`}
-          btnText="닫기"
+          btnText='닫기'
           func={() => setSharePopup(false)}
         />
       )}

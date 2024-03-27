@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import { ReactComponent as WhiteplusImg } from "../images/whiteplus.svg";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
-import GatheringList from "../components/GatheringList";
+import MeetupList from "../components/MeetupList";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../apis/axiosInstance";
 
@@ -224,7 +224,7 @@ const MeetupHome = () => {
                       }}
                       key={item.partyId}
                     >
-                      <GatheringList
+                      <MeetupList
                         title={item.title}
                         image={
                           item.partyImageUrl === ""
