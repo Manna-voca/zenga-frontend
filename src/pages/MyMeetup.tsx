@@ -6,7 +6,7 @@ import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
-import GatheringList from "../components/GatheringList";
+import MeetupList from "../components/MeetupList";
 import { axiosInstance } from "../apis/axiosInstance";
 import { ReactComponent as TwowhaleImg } from "../images/twowhale.svg";
 
@@ -281,7 +281,7 @@ const MyMeetup = () => {
                 {meetupList[Number(meetupState)]?.map((item, index) => {
                   return (
                     <div key={item.partyId}>
-                      <GatheringList
+                      <MeetupList
                         meetupId={item.partyId}
                         title={item.title}
                         image={
@@ -295,7 +295,7 @@ const MyMeetup = () => {
                         userName={item.openMemberName}
                         currentNum={item.joinMemberCount}
                         maxNum={item.maxCapacity}
-                      ></GatheringList>
+                      ></MeetupList>
                     </div>
                   );
                 })}

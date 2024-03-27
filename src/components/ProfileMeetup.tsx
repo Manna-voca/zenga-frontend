@@ -5,7 +5,7 @@ import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as ArrowImg } from "../images/arrow.svg";
-import GatheringList from "./GatheringList";
+import MeetupList from "./MeetupList";
 import { axiosInstance } from "../apis/axiosInstance";
 
 const ProfileMeetup = () => {
@@ -118,7 +118,7 @@ const ProfileMeetup = () => {
             >
               {recruitingList.map((item, index) => {
                 return (
-                  <GatheringList
+                  <MeetupList
                     key={item.partyId}
                     meetupId={item.partyId}
                     title={item.title}
@@ -131,7 +131,7 @@ const ProfileMeetup = () => {
                     userName={item.openMemberName}
                     currentNum={item.joinMemberCount}
                     maxNum={item.maxCapacity}
-                  ></GatheringList>
+                  ></MeetupList>
                 );
               })}
             </div>
@@ -195,7 +195,7 @@ const ProfileMeetup = () => {
             >
               {inProgressList.map((item, index) => {
                 return (
-                  <GatheringList
+                  <MeetupList
                     key={item.partyId}
                     meetupId={item.partyId}
                     title={item.title}
@@ -208,7 +208,7 @@ const ProfileMeetup = () => {
                     userName={item.openMemberName}
                     currentNum={item.joinMemberCount}
                     maxNum={item.maxCapacity}
-                  ></GatheringList>
+                  ></MeetupList>
                 );
               })}
             </div>
@@ -272,7 +272,7 @@ const ProfileMeetup = () => {
             >
               {completedList.map((item, index) => {
                 return (
-                  <GatheringList
+                  <MeetupList
                     key={item.partyId}
                     meetupId={item.partyId}
                     title={item.title}
@@ -286,7 +286,7 @@ const ProfileMeetup = () => {
                     currentNum={item.joinMemberCount}
                     maxNum={item.maxCapacity}
                     isEnd={true}
-                  ></GatheringList>
+                  ></MeetupList>
                 );
               })}
             </div>
