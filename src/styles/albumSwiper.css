@@ -2,8 +2,8 @@
   width: 100% !important;
   position: absolute !important;
   bottom: 0 !important;
-  left: 50% !important;
-  transform: translateX(-25%) !important;
+  left: calc(50% - 28px) !important;
+  transform: translateX(calc(-25% + 40px)) !important;
 }
 
 .album .swiper-slide-active {
